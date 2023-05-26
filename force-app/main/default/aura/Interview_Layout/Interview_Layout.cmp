@@ -1,0 +1,33 @@
+<aura:component implements="lightning:appHomeTemplate" description="Interview_Layout" access="global">    
+    <aura:attribute name="recId" type="String"/>
+    <aura:attribute name="ProjectDetails" type="Aura.Component[]" required="false"/>
+    <aura:attribute name="Questions" type="Aura.Component[]" required="false"/>
+    <aura:attribute name="Actions" type="Aura.Component[]" required="false"/>
+    <aura:handler event="aura:waiting" action="{!c.waiting}"/>
+	<aura:handler event="aura:doneWaiting" action="{!c.doneWaiting}"/>
+	
+	<aura:attribute name="HideSpinner" type="Boolean" default="true"/>
+	<aura:renderIf isTrue="{!v.HideSpinner}">
+	    <div class="slds-spinner_container" >
+	        <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+	            <span class="slds-assistive-text">Loading, Please Wait...</span>
+	            <div class="slds-spinner__dot-a"></div>
+	            <div class="slds-spinner__dot-b"></div>
+	        </div>
+	    </div>
+	</aura:renderIf>
+	
+    <div class="slds-grid slds-wrap">
+        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12 slds-col--padded-around">
+            <span><c:InterviewViewQuestions recordId="{!v.recId}"/></span>
+        </div>
+        <!--<div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-grid_vertical positioned">
+            <div class="slds-col">
+                <span><c:RscViewProjectDetails recordId="{!v.recId}"/></span>
+            </div><br/>
+            <div class="slds-col">
+                <span><c:RscViewActions recordId="{!v.recId}"/></span>
+            </div>
+        </div>-->
+    </div>
+</aura:component>

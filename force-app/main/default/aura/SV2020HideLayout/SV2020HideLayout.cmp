@@ -1,0 +1,68 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global">    
+<aura:attribute name="Opportunity__c" type="Object" description="The record object to be displayed"/>
+<aura:attribute name="OppRecord" type="Object" description="A simplified view record object to be displayed"/>
+<aura:attribute name="recordSaveError" type="String" description="An error message bound to force:recordData"/>
+<force:recordData aura:id="record"
+				  layoutType="FULL"
+				  recordId="{!v.recordId}"
+				  targetError="{!v.recordError}"
+				  targetRecord="{!v.Opportunity__c}"
+				  targetFields="{!v.OppRecord}"
+				  fields="Name, Account__c,Opportunity_Closed__c" 
+				  mode="VIEW"/>     
+
+	<lightning:accordion aura:id="accordion" activeSectionName="B">
+		<lightning:accordionSection name="A" label="Opportunity Details" class="header">             
+				<div class="slds-grid slds-wrap box">
+					<div class="slds-col slds-size_1-of-2 slds-p-right_small slds-p-bottom_medium">
+						<lightning:input name="input5" disabled="true" value="{!v.OppRecord.Name}" label="Name :"  />                            
+					</div>
+					<div class="slds-col slds-size_1-of-2">                                                       
+						<lightning:input name="input5" disabled="true" value="{!v.OppRecord.Account__r.Name}" label="Account :"  />
+					   
+					</div>
+					<div class="slds-col slds-size_1-of-2">
+						<ui:inputCheckbox class="slds-checkbox" value="{!v.OppRecord.Opportunity_Closed__c}" disabled="true" label="Opportunity Closed : "/>
+					</div>
+				</div>               
+		</lightning:accordionSection>
+		<lightning:accordionSection name="B" label="Internal Sourcing" class="header">
+			<div class="slds-grid slds-wrap box">
+				<div class="slds-col slds-size_1-of-2 slds-p-right_small">
+					<lightning:input name="input5" disabled="true" value="{!v.OppRecord.BOM__r.Name}" label="BOM : "  />
+					
+				</div>
+				<div class="slds-col slds-size_1-of-2">
+					<lightning:input name="input5" disabled="true" value="{!v.OppRecord.Finance_Lead__r.Name}" label="Finance Lead : " />
+					
+				</div>
+				<div class="slds-col slds-size_1-of-2 slds-p-right_small">
+					<lightning:input name="input5" disabled="true" value="{!v.OppRecord.Commercial_Support__r.Name}" label="Commercial Support : " />                    
+					
+				</div>      
+				<div class="slds-col slds-size_1-of-2">
+					<lightning:input name="input5" disabled="true" value="{!v.OppRecord.Finance_Support__r.Name}" label="Finance Support : " />                    
+					
+				</div>  
+				<div class="slds-col slds-size_1-of-2 slds-p-right_small">
+					<lightning:input name="input5" disabled="true" value="{!v.OppRecord.Business_Lead__r.Name}" label="Business Lead : " />                    
+					
+				</div>      
+				<div class="slds-col slds-size_1-of-2">
+					<lightning:input name="input5" disabled="true" value="{!v.OppRecord.Business_Support__r.Name}" label="Business Support : " />                    
+					
+				</div> 
+				<div class="slds-col slds-size_1-of-2 slds-p-right_small">
+					<lightning:input name="input5" disabled="true" value="{!v.OppRecord.Technical_Lead__r.Name}" label="Technical Lead : " />                    
+					
+				</div>      
+				<div class="slds-col slds-size_1-of-2">
+					
+						<lightning:input name="input5" disabled="true" value="{!v.OppRecord.Legal__r.Name}" label="Legal : " />   
+						
+					
+				</div> 
+			</div>
+		</lightning:accordionSection>
+	</lightning:accordion>
+</aura:component>

@@ -1,0 +1,18 @@
+<apex:page standardController="Lead" extensions="leadextention">
+
+<apex:outputPanel rendered="{!checkbox}">
+
+<script>
+  function toAction() {
+  
+        window.open('/apex/et4ae5__LeadActions?id={!Lead.Id}', '_blank'); 
+        
+       // window.location.href = '/apex/et4ae5__LeadActions/{!Lead.Id}'; 
+    }
+</script>
+  <input type="button" value="Leadaction" class="btn" onclick="toAction()" />
+  
+ 
+</apex:outputPanel>
+
+</apex:page>

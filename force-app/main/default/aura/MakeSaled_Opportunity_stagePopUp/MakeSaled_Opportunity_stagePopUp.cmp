@@ -1,0 +1,376 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+                access="global" controller="MakeSaled_Opportunity_stagePopUp"> 
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="variant" type="String" default="linear"/>
+    <aura:attribute name="hideUpdateButton" type="boolean" default="True"/>
+    <aura:attribute name="previousStage" type="String"/>
+    <aura:attribute name="selectedStage" type="String"/>
+    <aura:attribute name="dependantPicklistMap" type="Map" />
+    <aura:attribute name="dependantWakeupMap" type="Map" />
+    <aura:attribute name="dependantPicklist" type="List" />
+    <aura:attribute name="dependantWakeuplist" type="List" />
+    <aura:attribute name="dependantPicklistWakeUp" type="List" />
+    <aura:attribute name="isButtonActive" type="Boolean" default ="true"/>
+    <aura:attribute name="isTrueFalse" type="Boolean" default ="false"/>
+    <aura:attribute name="isClosedWon" type="Boolean" default ="false"/>
+    <aura:attribute name="modalWindow" type="boolean" default="false" />
+    <aura:attribute name="lossreason" type="String[]" default="['Loss_Reason__c']" />
+    <aura:attribute name="winreason" type="String[]" default="['Status_Reason__c']" />
+    <aura:handler event="force:refreshView" action="{!c.refresh}"/>
+    <aura:attribute name="isCheckboxTrue" type="Boolean" default ="true"/>
+    <aura:attribute name="StatusReasonValue" type="String"/> 
+    <aura:attribute name="WakeUpValue" type="String"/> 
+    <aura:attribute name="StatusReasonWin" type="String[]" default="Choose one..,Product quality,Price,Product availability,Relationship,Integrated offer,Reputation,Innovation,Other"/>
+    <aura:attribute name="StatusReasonLoss" type="String[]" default="Choose one..,Price,Product availability,Non-responsive customer,Too small size,Too large size,Poor relationship,
+Product quality,Timing gap,No budget,Other"/>
+    <aura:attribute name="StageComment" type="String[]" default="['Status_Comment__c']" /> 
+    <aura:attribute name="options" type="List" default="[
+                                                        {'label': 'Closed Won', 'value': 'Closed Won'},
+                                                        {'label': 'Closed Lost', 'value': 'Closed Lost'},
+                                                        {'label': 'Sleeping', 'value': 'Sleeping'},
+                                                        {'label': 'Prepare/Build', 'value': 'Prepare/Build'},
+                                                        {'label': 'Delivery', 'value': 'Delivery'},
+                                                        ]"/>
+    
+    
+    
+    <lightning:path aura:id="path" recordId="{!v.recordId}"
+                    variant="{!v.variant}"
+                    hideUpdateButton="{!v.hideUpdateButton}"
+                    onselect="{!c.handleSelect}"
+                    />
+    
+    <div class="slds-float--right" style="float:right">
+        <lightning:button variant="brand" label="Change Closed Stage" title="Choose Stage" onclick="{! c.handleClick }" disabled= "{!v.isButtonActive}"/>
+        
+    </div>
+    <!--popup-->
+    <div class="slds-m-around_xx-large">
+        
+        <!--display or hide modal pop up-->
+        <aura:if isTrue= "{!v.modalWindow}">
+            <!--to blur the background-->
+            <div class="slds-backdrop slds-backdrop_open">
+                <!--code for stucture of modalpopup-->
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <lightning:buttonIcon iconName="utility:close" onclick= "{!c.closeModel}" alternativeText ="close" variant="bare-inverse" class ="slds-modal__close"/>
+                            
+                            <h2 id="modal-heading-01" class="slds-test-heading_medium slds-hyphenate">{!v.previousStage} --> {!v.selectedStage}</h2> 
+                            
+                        </header>
+                        <aura:if isTrue="{!v.selectedStage == 'Prospect'}">
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                
+                                <p><b> Before moving this opportunity to the Prospect stage ensure that 
+                                    you have evaluated the company and determined a possible good fit for 
+                                    Shell’s solution(s) Hint: It’s worth your time to pursue further.
+                                    </b>
+                                </p>
+                            </div>
+                        </aura:if>
+                        <!--
+                        <aura:if isTrue="{!v.selectedStage == 'Sleeping'}">
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                
+                                <p><b> You are about to move this Opportunity to a paused state, in which 
+                                    no work is currently being done. Ensure Wake-up Date and Stage Comments 
+                                    are filled out appropriately.
+                                    </b>
+                                </p>
+                                <lightning:select aura:id="select2" name="select" label="Wake-up date" required="true" onchange="{! c.handleChangeWakeUp }">
+                                        <aura:iteration items="{!v.dependantWakeuplist}" var="color1" indexVar="key">
+                                            <option text="{!color1}" value ="{!color1}" selected="{!color1.selected}">{!v.color1}</option>
+                                        	
+                                        </aura:iteration>
+                                    </lightning:select>
+                                <lightning:recordForm
+        								recordId="{!v.recordId}"
+        								objectApiName="Opportunity"
+                                        fields="{!v.StageComment}"
+        								mode="view" />
+                                
+                            </div>
+                        </aura:if> -->
+                        <aura:if isTrue="{!v.selectedStage == 'Align'}">
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <p><b> Before moving this opportunity to the Align stage ensure that 
+                                    the customer has provided an invite to engage to learn more 
+                                    (e.g. RFI or meeting with additional stakeholders).
+                                    </b>
+                                </p>
+                            </div>
+                        </aura:if>
+                        <aura:if isTrue="{!v.selectedStage == 'Negotiate'}">
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <p><b> Before moving this opportunity to the Negotiate stage ensure that the 
+                                    customer has accepted the initial offer and scope 
+                                    (e.g. formal RFP or written indicative scope/pricing) and provides invitation to proceed.
+                                    </b>
+                                </p>
+                            </div>
+                        </aura:if>
+                        
+                        <aura:if isTrue="{!v.isTrueFalse}">
+                            <div class="slds-modal__content slds-p-around_medium" style="overflow: visible" id="modal-content-id-1">
+                                <lightning:combobox name="progress" label="Stage" value="Closed" placeholder="Closed" options="{! v.options }" onchange="{! c.handleChange }" required='true'/>
+                                
+                            </div>
+                            <aura:if isTrue="{!v.selectedStage == 'Closed Won'}">
+                                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                    <!--<lightning:recordForm recordId="{!v.recordId}" 
+                                                          objectApiName="Opportunity"
+                                                          mode="view"
+                                                          fields="{!v.statusreason}" /> -->
+                                    <!-- <div class="slds-modal__content slds-p-around_medium" style="overflow: visible" id="modal-content-id-1">
+                                <lightning:combobox name="progress" label="Status Reason" value="None" placeholder="None" options="{! v.StatusReasonWin }" onchange="{! c.handleChange1 }" required='true'/>
+                                
+                                    </div> 
+                                    <lightning:select aura:id="select1" name="select" label="Select an Option" required="true" onchange="{! c.handleChange1 }">
+                                        <aura:iteration items="{!v.StatusReasonWin}" var="color">
+                                            <option text="{!color}" value ="{!color}" selected="{!color.selected}">{!v.color}</option>
+                                        </aura:iteration>
+                                    </lightning:select>-->
+                                    
+                                    <lightning:select aura:id="select1" name="select" label="Stage Reason" required="true" onchange="{! c.handleChange1 }">
+                                        <aura:iteration items="{!v.dependantPicklist}" var="color" indexVar="key">
+                                            <option text="{!color}" value ="{!color}" selected="{!color.selected}">{!v.color}</option>
+                                        	
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    <br/>
+                                    <p><b> Before moving this opportunity to the Closed Won stage, ensure that
+                                        the customer has made a written commitment to purchase.
+                                        <br/>
+                                        <br/>
+                                        </b>
+                                    </p>
+                                    <lightning:recordForm
+        								recordId="{!v.recordId}"
+        								objectApiName="Opportunity"
+                                        fields="{!v.StageComment}"
+        								mode="view" />
+                                    
+                                    
+                                    
+                                    <lightning:layout horizontalAlign="space">
+                                        <lightning:layoutItem>
+                                            <p style="color:red;"><b> After an Opportunity is moved to stage Closed, you will not be able to move this Opportunity back to a previous stage. Please check the box to proceed.
+                                                </b>
+                                            </p>
+                                        </lightning:layoutItem>
+                                        <br/>
+                                        <lightning:layoutItem padding="around-medium">
+                                            <ui:inputCheckbox aura:id="checkbox" label="" change="{!c.onCheck}"/>
+                                            
+                                            
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
+                                </div>
+                            </aura:if>
+                            <aura:if isTrue="{!v.selectedStage == 'Closed Lost'}" >
+                               <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1"> 
+                                 <!--   <lightning:recordForm recordId="{!v.recordId}"
+									 objectApiName="Opportunity"
+                                    mode="view"
+                                    fields="{!v.statusreason}" /> 
+                                     <div class="slds-modal__content slds-p-around_medium" style="overflow: visible" id="modal-content-id-1">
+                                        <lightning:combobox name="progress" label="Status Reason" value="None" placeholder="None" options="{! v.StatusReasonLoss }" onchange="{! c.handleChange2 }" required='true'/>
+                                        
+                                    </div> 
+                                    <lightning:select name="select" label="Select an Option" required="true" onchange="{! c.handleChange2 }">
+                                        <aura:iteration items="{!v.StatusReasonLoss}" var="color">
+                                            <option text="{!color}">{!v.color}</option>
+                                        </aura:iteration>
+                                    </lightning:select>-->
+                                   <lightning:select aura:id="select1" name="select" label="Stage Reason" required="true" onchange="{! c.handleChange2 }">
+                                        <aura:iteration items="{!v.dependantPicklist}" var="color" indexVar="key">
+                                            <option text="{!color}" value ="{!color}" selected="{!color.selected}">{!v.color}</option>
+                                        	
+                                        </aura:iteration>
+                                    </lightning:select>
+                                   
+                                   <br/>
+                                    <p><b> If this opportunity is Closed Lost, then please provide a reason by 
+                                        selecting an option from the "Loss Reason" box.
+                                        <br/>
+                                        <br/>
+                                        </b>
+                                    </p>
+                                   <lightning:recordForm
+        								recordId="{!v.recordId}"
+        								objectApiName="Opportunity"
+                                        fields="{!v.StageComment}"
+        								mode="view" />
+                                   <lightning:layout horizontalAlign="space">
+                                        <lightning:layoutItem>
+                                            <p style="color:red;"><b> After an Opportunity is moved to stage Closed, you will not be able to move this Opportunity back to a previous stage. Please check the box to proceed.
+                                                </b>
+                                            </p>
+                                        </lightning:layoutItem>
+                                        <br/>
+                                        <lightning:layoutItem padding="around-medium">
+                                            <ui:inputCheckbox aura:id="checkbox" label="" change="{!c.onCheck}"/>
+                                            
+                                            
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
+                                   
+                                   
+                                </div>
+                            </aura:if>
+                            <aura:if isTrue="{!v.selectedStage == 'Sleeping'}">
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                
+                                <lightning:select aura:id="select2" name="select" label="Sleep Duration" required="true" onchange="{! c.handleChangeWakeUp }">
+                                        <aura:iteration items="{!v.dependantWakeuplist}" var="color1" indexVar="key">
+                                            <option text="{!color1}" value ="{!color1}" selected="{!color1.selected}">{!v.color1}</option>
+                                        	
+                                        </aura:iteration>
+                                 </lightning:select>
+                                <br/>
+                                <p><b> You are about to move this Opportunity to a paused state, in which 
+                                    no work is currently being done. Ensure Sleep Duration and Stage Comments 
+                                    are filled out appropriately.
+                                    </b>
+                                </p>
+                                
+                                
+                                <br/>
+                                <lightning:recordForm
+        								recordId="{!v.recordId}"
+        								objectApiName="Opportunity"
+                                        fields="{!v.StageComment}"
+        								mode="view" />
+                                
+                            </div>
+                        </aura:if>
+                            <aura:if isTrue="{!v.selectedStage == 'Prepare/Build'}">
+                                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                    <!-- <lightning:recordForm recordId="{!v.recordId}" 
+                                                          objectApiName="Opportunity"
+                                                          mode="view"
+                                                          fields="{!v.statusreason}" /> 
+                                    <div class="slds-modal__content slds-p-around_medium" style="overflow: visible" id="modal-content-id-1">
+                                        <lightning:combobox name="progress" label="Status Reason" value="None" placeholder="None" options="{! v.StatusReasonWin }" onchange="{! c.handleChange1 }" required='true'/>
+                                        
+                                    </div>
+                                    <lightning:select name="select" label="Select an Option" required="true" onchange="{! c.handleChange1 }">
+                                        <aura:iteration items="{!v.StatusReasonWin}" var="color">
+                                            <option text="{!color}">{!v.color}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    -->
+                                    <lightning:select aura:id="select1" name="select" label="Stage Reason" required="true" onchange="{! c.handleChange1 }">
+                                        <aura:iteration items="{!v.dependantPicklist}" var="color" indexVar="key">
+                                            <option text="{!color}" value ="{!color}" selected="{!color.selected}">{!v.color}</option>
+                                        	
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    
+                                     <br/>
+                                    <p><b> Before moving this opportunity to the Prepare/Build stage, ensure that 
+                                        the customer has issued signed contract(s).
+                                        <br/>
+                                        <br/>
+                                        </b>	
+                                    </p>
+                                    <lightning:recordForm
+        								recordId="{!v.recordId}"
+        								objectApiName="Opportunity"
+                                        fields="{!v.StageComment}"
+        								mode="view" />
+                                    <lightning:layout horizontalAlign="space">
+                                        <lightning:layoutItem>
+                                            <p style="color:red;"><b> After an Opportunity is moved to stage Closed, you will not be able to move this Opportunity back to a previous stage. Please check the box to proceed.
+                                                </b>
+                                            </p>
+                                        </lightning:layoutItem>
+                                        <br/>
+                                        <lightning:layoutItem padding="around-medium">
+                                            <ui:inputCheckbox aura:id="checkbox" label="" change="{!c.onCheck}"/>
+                                            
+                                            
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
+                                </div>
+                            </aura:if>
+                            <aura:if isTrue="{!v.selectedStage == 'Delivery'}">
+                                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                    <!--  <lightning:recordForm recordId="{!v.recordId}" 
+                                                          objectApiName="Opportunity"
+                                                          mode="view"
+                                                          fields="{!v.statusreason}" /> 
+                                    <div class="slds-modal__content slds-p-around_medium" style="overflow: visible" id="modal-content-id-1">
+                                        <lightning:combobox name="progress" label="Status Reason" value="None" placeholder="None" options="{! v.StatusReasonWin }" onchange="{! c.handleChange1 }" required='true'/>
+                                        
+                                    </div> 
+                                    <lightning:select name="select" label="Select an Option" required="true" onchange="{! c.handleChange1 }">
+                                        <aura:iteration items="{!v.StatusReasonWin}" var="color">
+                                            <option text="{!color}">{!v.color}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    -->
+                                    <lightning:select aura:id="select1" name="select" label="Stage Reason" required="true" onchange="{! c.handleChange1 }">
+                                        <aura:iteration items="{!v.dependantPicklist}" var="color" indexVar="key">
+                                            <option text="{!color}" value ="{!color}" selected="{!color.selected}">{!v.color}</option>
+                                        	
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    
+                                     <br/>
+                                    <p><b> Before moving this opportunity to the Delivery stage, ensure that the customer 
+                                        has indicated readiness to cut over/go live (i.e. has provided written approval/sign off). 
+                                        
+                                        <br/>
+                                        <br/>
+                                        </b>
+                                    </p>
+                                    <lightning:recordForm
+        								recordId="{!v.recordId}"
+        								objectApiName="Opportunity"
+                                        fields="{!v.StageComment}"
+        								mode="view" />
+                                    <lightning:layout horizontalAlign="space">
+                                        <lightning:layoutItem>
+                                            <p style="color:red;"><b> After an Opportunity is moved to stage Closed, you will not be able to move this Opportunity back to a previous stage. Please check the box to proceed.
+                                                </b>
+                                            </p>
+                                        </lightning:layoutItem>
+                                        <br/>
+                                        <lightning:layoutItem padding="around-medium">
+                                            <ui:inputCheckbox aura:id="checkbox" label="" change="{!c.onCheck}"/>
+                                            
+                                            
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
+                                </div>
+                            </aura:if>
+                            
+                        </aura:if>
+                        <footer class="slds-modal__footer">
+                            <lightning:button variant="neutral"
+                                              label="Cancel"
+                                              title="Cancel"
+                                              onclick="{! c.closeModel }"/>
+                            <lightning:button variant="brand"
+                                              aura:id="disablebuttonid"
+                                              label="Proceed to next stage"
+                                              title="Proceed to next stage"
+                                              disabled="{!v.isCheckboxTrue}"
+                                              onclick="{!c.submitDetails}"/>
+                        </footer>
+                    </div>
+                    
+                </section>
+            </div>
+        </aura:if>
+        
+    </div>
+    
+    <!--popup-->    
+    
+    
+</aura:component>

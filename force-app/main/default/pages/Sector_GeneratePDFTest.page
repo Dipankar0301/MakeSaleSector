@@ -1,0 +1,64 @@
+<apex:page standardController="Account_Plan__c">
+    
+    
+    
+    
+    <Script src = "https://cdn.jsdelivr.net/npm/pptxgenjs@3.11.0/dist/pptxgen.bundle.js"></Script>
+    
+    <script>
+    
+    window.onload = function ()
+    {
+        // 1. Create a new Presentation
+        let pres = new PptxGenJS();
+        
+      
+
+        // 2. Add a Slide
+        let slide2 = pres.addSlide();
+        
+        slide2.addText("Account Plan: {!Account_Plan__c.Name} \n Customer Name: {!Account_Plan__c.Customer_Name__r.Name}", {
+            x: 0,
+            y: 1,
+            w: "100%",
+            h: 2,
+            align: "center",
+            color: "0088CC",
+            fill: "F1F1F1",
+            fontSize: 24,
+        });
+        
+          // 2. Add a Slide
+        let slide = pres.addSlide();
+        
+        slide.addText("Financial Information \n\n\n Annual Revenue (USD): {!Account_Plan__c.Annual_Revenue_USD__c} \n Customer Potential Power Demand (MWh): {!Account_Plan__c.Customer_s_Potential_Power_Demand__c} \n Potential Enterprise Value (USD): {!Account_Plan__c.Potential_Enterprise_Value_USD__c} \n Potential Value for RES-Revenue (USD): {!Account_Plan__c.Potential_Value_for_RES_Revenue_USD__c}", {
+            x: 0,
+            y: 1,
+            w: "100%",
+            h: 3,
+            align: "center",
+            color: "0088CC",
+            fill: "F1F1F1",
+            fontSize: 24,
+        });
+        
+        
+
+        
+        
+        
+        
+        
+        // 4. Save the Presentation
+        pres.writeFile({ fileName: 'AccountPlan.pptx' });
+        
+        alert('Please close the window once downloaded.');
+        
+    }     
+    
+  
+    
+    </script>
+    
+    
+</apex:page>

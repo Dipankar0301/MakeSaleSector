@@ -1,0 +1,377 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="CallPlanDetails" type="Event"/>
+    <aura:attribute name="CallPlanType" type="String"/>
+    <aura:attribute name="EventId" type="String"/>
+    <aura:attribute name="UITheme" type="Boolean"/>
+    <aura:attribute name="ScheduledCompleted" type="Boolean" default="false" />
+    <aura:attribute name="PlanCompleted" type="Boolean" default="false" />
+    <aura:attribute name="ScheduledClick" type="Boolean" default="true" />
+    <aura:attribute name="Cancelled" type="Boolean" default="false" />
+    <aura:attribute name="EnableSaveCancel" type="Boolean" default="false" />
+    <aura:attribute name="EnableSaveCancelPlanned" type="Boolean" default="false" />
+    <aura:attribute name="IsLoading" type="Boolean" default="false" />
+    <aura:attribute name="EnableSaveCancelMinutes" type="Boolean" default="false" />
+    <aura:attribute name="ShowOutputTextPlanned" type="Boolean" default="false" />
+    <aura:attribute name="ShowOutputTextMinutes" type="Boolean" default="false" />
+    <aura:attribute name="ErrorOccured" type="Boolean" default="false" />
+    <aura:attribute name="EditClicked" type="Boolean" default="false" />
+    <aura:attribute name="EditClickedPlanned" type="Boolean" default="false" />
+    <aura:attribute name="EditClickedMinutes" type="Boolean" default="false" />
+    <aura:attribute name="ShowOutputText" type="Boolean" default="false" />
+    <aura:attribute name="PlannedClick" type="Boolean" />
+    <aura:attribute name="MinutesClicked" type="Boolean" />
+    <aura:attribute name="CancelClicked" type="Boolean" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    
+    <div class="slds-page-header" style="cursor: pointer;background-color: white;" onclick="{!c.panelOne}">
+        
+        <section class="slds-clearfix">
+            <div class="slds-float--left ">
+                <lightning:icon class="slds-show" aura:id="panelOne" iconName="utility:chevrondown" size="x-small"  alternativeText="Indicates add"/>
+                <lightning:icon class="slds-hide" aura:id="panelOne" iconName="utility:chevronright" size="x-small"  alternativeText="Indicates dash"/>
+            </div>
+            <div class="slds-m-left--large">
+                <div class="slds-path">
+                    <div class="slds-grid slds-path__track">
+                        <div class="slds-grid slds-path__scroller-container">
+                            <div class="slds-path__scroller" role="application">
+                                <div class="slds-path__scroller_inner">
+                                    <ul class="slds-path__nav" role="listbox" aria-orientation="horizontal">
+                                        <li class="slds-path__item slds-is-current slds-is-active" aura:id="ScheduledId" onclick="{!c.ClickScheduled}" role="presentation">
+                                            <a aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-1" role="option" tabindex="0">
+                                                <span class="slds-path__stage">
+                                                    <lightning:icon iconName="utility:check" class="white" size="X-Small" alternativeText="Indicates approval"/>
+                                                    <span class="slds-assistive-text">Stage Complete</span>
+                                                </span>
+                                                <span class="slds-path__title">Scheduled</span>
+                                            </a>
+                                        </li>
+                                        <li class="slds-path__item slds-is-incomplete"  aura:id="PlannedId" onclick="{!c.ClickPlanned}" role="presentation">
+                                            <a aria-selected="false" class="slds-path__link" href="javascript:void(0);" id="path-2" role="option" tabindex="-1">
+                                                <span class="slds-path__stage">
+                                                    <lightning:icon iconName="utility:check" class="white" size="X-Small" alternativeText="Indicates approval"/>
+                                                    <span class="slds-assistive-text">Stage Complete</span>
+                                                </span>
+                                                <span class="slds-path__title">Planned</span>
+                                            </a>
+                                        </li>
+                                        <li class="slds-path__item slds-is-incomplete" aura:id="MinutesRecordedId" onclick="{!c.ClickMinutes}"  role="presentation">
+                                            <a aria-selected="false" class="slds-path__link" href="javascript:void(0);" id="path-3" role="option" tabindex="-1">
+                                                <span class="slds-path__stage">
+                                                    <span class="slds-assistive-text">Current Stage:</span>
+                                                </span>
+                                                <span class="slds-path__title">Minutes Recorded</span>
+                                            </a>
+                                        </li>
+                                        <li class="slds-path__item slds-is-incomplete"  aura:id="CancelledId" onclick="{!c.ClickCancel}" role="presentation">
+                                            <a aria-selected="false" class="slds-path__link" href="javascript:void(0);" id="path-3" role="option" tabindex="-1">
+                                                <span class="slds-path__stage">
+                                                    <span class="slds-assistive-text">Current Stage:</span>
+                                                </span>
+                                                <span class="slds-path__title">Cancelled</span>
+                                            </a>
+                                        </li>
+                                        
+                                    </ul>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <div class="slds-show slds-p-around--large" style="background-color:white;" aura:id="panelOne">
+        <aura:if isTrue="{!v.IsLoading}">
+            <lightning:spinner alternativeText="Loading" size="small" />
+        </aura:if>
+        <aura:if isTrue="{!v.ScheduledClick}">
+            <div class="slds-grid slds-gutters slds-wrap">
+                <div class="slds-col slds-size--4-of-7">
+                    <aura:if isTrue="{!v.CallPlanType!='Call Plan Challenger'}">
+                        <span>Purpose:</span>
+                        
+                        <aura:if isTrue="{!v.EditClicked}">
+                            <lightning:inputRichText  aura:id="Purpose" value="{!v.CallPlanDetails.Call_Plan__r.Purpose__c}">
+                                <lightning:insertImageButton/>
+                            </lightning:inputRichText>
+                            
+                        </aura:if>
+                        <aura:if isTrue="{!v.ShowOutputText}">
+                            <!--<ui:outputRichText aura:id="outputPurpose" value="{!v.CallPlanDetails.Call_Plan__r.Purpose__c}" />-->
+                            <p class="slds-text-longform tile__title red-txt">
+                                <aura:unescapedHtml value="{!v.CallPlanDetails.Call_Plan__r.Purpose__c}"/>
+                            </p>
+                        </aura:if>
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size--5-of-7">
+                                <hr style="margin: 1rem 0;"/>
+                            </div>
+                            <div class="slds-col slds-size--2-of-7">
+                                <lightning:icon iconName="utility:edit" size="xx-small" onclick="{!c.EditClicked}"/>
+                            </div>
+                        </div>
+                    </aura:if> 
+                    <span>Objective:</span>
+                    
+                    <aura:if isTrue="{!v.EditClicked}">
+                        <lightning:inputRichText  aura:id="Objective" value="{!v.CallPlanDetails.Call_Plan__r.Objective__c}" >
+                            <lightning:insertImageButton/>
+                        </lightning:inputRichText>
+                        
+                    </aura:if>
+                    <aura:if isTrue="{!v.ShowOutputText}">
+                        <p class="slds-text-longform tile__title red-txt">
+                            <aura:unescapedHtml value="{!v.CallPlanDetails.Call_Plan__r.Objective__c}"/>
+                        </p>
+                        <!--<ui:outputRichText aura:id="outputObjective" value="{!v.CallPlanDetails.Call_Plan__r.Objective__c}" />-->
+                    </aura:if>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size--5-of-7">
+                            <hr style="margin: 1rem 0;"/>
+                        </div>
+                        <div class="slds-col slds-size--2-of-7">
+                            
+                            <lightning:icon iconName="utility:edit" size="xx-small" onclick="{!c.EditClicked}"/>
+                        </div>
+                    </div>
+                    <span>Premise:</span>
+                    
+                    <aura:if isTrue="{!v.EditClicked}">
+                        <lightning:inputRichText aura:id="Premise" value="{!v.CallPlanDetails.Call_Plan__r.Premise__c}">
+                            <lightning:insertImageButton/>
+                        </lightning:inputRichText>
+                        
+                    </aura:if>
+                    <aura:if isTrue="{!v.ShowOutputText}">
+                        <p class="slds-text-longform tile__title red-txt">
+                            <aura:unescapedHtml value="{!v.CallPlanDetails.Call_Plan__r.Premise__c}"/>
+                        </p>
+                        <!--<ui:outputRichText aura:id="outputPremise" value="{!v.CallPlanDetails.Call_Plan__r.Premise__c}" />-->
+                    </aura:if>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size--5-of-7" >
+                            <hr style="margin: 1rem 0;"/>
+                        </div>
+                        <div class="slds-col slds-size--2-of-7">
+                            <lightning:icon iconName="utility:edit" size="xx-small" onclick="{!c.EditClicked}"/>
+                        </div>
+                    </div>
+                    <span>Strategy:</span>
+                    
+                    <aura:if isTrue="{!v.EditClicked}">
+                        <lightning:inputRichText  aura:id="Strategy" value="{!v.CallPlanDetails.Call_Plan__r.Strategy__c}">
+                            <lightning:insertImageButton/>
+                        </lightning:inputRichText>
+                        
+                    </aura:if>
+                    <aura:if isTrue="{!v.ShowOutputText}">
+                        <p class="slds-text-longform tile__title red-txt">
+                            <aura:unescapedHtml value="{!v.CallPlanDetails.Call_Plan__r.Strategy__c}"/>
+                        </p>
+                        <!--<ui:outputRichText aura:id="outputStrategy" value="{!v.CallPlanDetails.Call_Plan__r.Strategy__c}" />-->
+                    </aura:if>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size--5-of-7">
+                            <hr style="margin: 1rem 0;"/>
+                        </div>
+                        <div class="slds-col slds-size--2-of-7">
+                            <lightning:icon iconName="utility:edit" size="xx-small" onclick="{!c.EditClicked}"/>
+                        </div>
+                    </div>
+                    <span>Anticipate:</span>
+                    
+                    <aura:if isTrue="{!v.EditClicked}">
+                        <lightning:inputRichText  aura:id="Anticipate" value="{!v.CallPlanDetails.Call_Plan__r.Anticipate__c}">
+                            <lightning:insertImageButton/>
+                        </lightning:inputRichText>
+                        
+                    </aura:if>
+                    <aura:if isTrue="{!v.ShowOutputText}">
+                        <p class="slds-text-longform tile__title red-txt">
+                            <aura:unescapedHtml value="{!v.CallPlanDetails.Call_Plan__r.Anticipate__c}"/>
+                        </p>
+                        <!--<ui:outputRichText aura:id="outputAnticipate" value="{!v.CallPlanDetails.Call_Plan__r.Anticipate__c}" />-->
+                    </aura:if>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size--5-of-7">
+                            <hr style="margin: 1rem 0;"/>
+                        </div>
+                        <div class="slds- slds-size--2-of-7">
+                            <lightning:icon iconName="utility:edit" size="xx-small" onclick="{!c.EditClicked}"/>
+                        </div>
+                    </div>
+                    <div align="center">
+                        <aura:if isTrue="{!v.ErrorOccured}">
+                            <div style="padding-left: 2rem; padding-top: 5rem; position: relative;">
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__icon slds-align-middle">
+                                        <button class="slds-button slds-button_icon slds-button slds-button_icon" aria-describedby="help" title="Help">
+                                            <lightning:icon iconName="utility:warning" size="xx-small" variant="error"/><span class="slds-assistive-text">Help</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" style="position:absolute;top:0px;left:193px;background:darkred;" role="tooltip" id="help">
+                                    <div class="slds-popover__body">Review the following errors<br/>
+                                        POPSA information must be complete for status planned</div>
+                                </div>
+                            </div>
+                        </aura:if>
+                        <aura:if isTrue="{!v.EnableSaveCancel}">
+                            <button class="slds-button slds-button_brand" onclick="{!c.ScheduledSave}">Save</button>
+                            <button class="slds-button slds-button_destructive" onclick="{!c.ScheduledCancel}">Cancel</button>
+                            
+                        </aura:if>
+                    </div>
+                </div>
+                <div class="slds-col slds-size--3-of-7">
+                    <span style="font-size: 15px;color: slategrey;">GUIDANCE FOR SUCCESS</span><hr style="margin: 1rem 0;"/>
+                    <span><b><ul class="slds-list--dotted">
+                        <aura:if isTrue="{!v.CallPlanType!='Call Plan Challenger'}">
+                            <li>Purpose - Why am I making this visit?</li>
+                            <li>Objective - What result do I expect from this visit?</li>
+                            <li>Premise - What do I already know about the customer?</li>
+                            <li>Strategy - How will I achieve my objective? What will I do during this visit?</li>
+                            <li>Anticipate - What questions/concerns may the customer raise during this meeting?</li>
+                        </aura:if> 
+                        <aura:if isTrue="{!v.CallPlanType=='Call Plan Challenger'}">
+                            <li>Objective - Link to overall Opportunity / Commercial Teaching</li>
+                            <li>Premise - Who are you meeting with / what do they care about</li>
+                            <li>Strategy - Use of constructive tension / Powerful requests</li>
+                            <li>Anticipate - Status Quo, Objections, Questions and Your Response</li>
+                        </aura:if> 
+                        </ul></b></span>
+                </div>
+                
+            </div>
+            
+        </aura:if>
+        <aura:if isTrue="{!v.PlannedClick}">
+            <div class="slds-grid slds-gutters slds-wrap">
+                <div class="slds-col slds-size--4-of-7" >
+                    <span>Agenda:</span>
+                    
+                    <aura:if isTrue="{!v.EditClickedPlanned}">
+                        <lightning:inputRichText aura:id="Agenda" value="{!v.CallPlanDetails.Call_Plan__r.Agenda__c}" >
+                            <lightning:insertImageButton/>
+                        </lightning:inputRichText>
+                        
+                    </aura:if>
+                    <aura:if isTrue="{!v.ShowOutputTextPlanned}">
+                        <p class="slds-text-longform tile__title red-txt">
+                            <aura:unescapedHtml value="{!v.CallPlanDetails.Call_Plan__r.Agenda__c}"/>
+                        </p>
+                        <!--<ui:outputRichText aura:id="outputAnticipate" value="{!v.CallPlanDetails.Call_Plan__r.Agenda__c}" />-->
+                    </aura:if>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size--5-of-7" >
+                            <hr style="margin: 1rem 0;"/>
+                        </div>
+                        <div class="slds-col slds-size--2-of-7">
+                            <lightning:icon iconName="utility:edit" size="xx-small" onclick="{!c.EditClickedPlanned}"/>
+                        </div>
+                    </div>
+                    <span>Minutes And Action:</span>
+                    <br/>
+                    <aura:if isTrue="{!v.EditClickedPlanned}">
+                        <lightning:inputRichText aura:id="MinutesAction" value="{!v.CallPlanDetails.Call_Plan__r.Minutes_Action__c}">
+                            <lightning:insertImageButton/>
+                        </lightning:inputRichText>
+                        
+                    </aura:if>
+                    <aura:if isTrue="{!v.ShowOutputTextPlanned}">
+                        <p class="slds-text-longform tile__title red-txt">
+                            <aura:unescapedHtml value="{!v.CallPlanDetails.Call_Plan__r.Minutes_Action__c}"/>
+                        </p>
+                        <!--<ui:outputRichText aura:id="outputAnticipate" value="{!v.CallPlanDetails.Description}" />-->
+                    </aura:if>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size--5-of-7" >
+                            <hr style="margin: 1rem 0;"/>
+                        </div>
+                        <div class="slds-col slds-size--2-of-7">
+                            <lightning:icon iconName="utility:edit" size="xx-small" onclick="{!c.EditClickedPlanned}"/>
+                        </div>
+                    </div>
+                    <div align="center">
+                        <aura:if isTrue="{!v.EnableSaveCancelPlanned}">
+                            <button class="slds-button slds-button_brand" onclick="{!c.PlannedSave}">Save</button>
+                            <button class="slds-button slds-button_destructive" onclick="{!c.PlannedCancel}">Cancel</button>
+                            
+                        </aura:if>
+                    </div>
+                </div>
+                <div class="slds-col slds-size--3-of-7">
+                    <span style="font-size: 15px;color: slategrey;">GUIDANCE FOR SUCCESS</span><hr style="margin: 1rem 0;"/>
+                    <span><b><ul class="slds-list--dotted">
+                        <li>Set the agenda for the visit.</li>
+                        <li>Record the minutes and actions, post visit</li>
+                        </ul></b></span>
+                </div>
+                
+            </div>
+            
+        </aura:if>
+        <aura:if isTrue="{!v.MinutesClicked}">
+            <div class="slds-grid slds-gutters slds-wrap">
+                <div class="slds-col slds-size--4-of-7" >
+                    <span>Minutes And Action:</span>
+                    <br/>
+                    <aura:if isTrue="{!v.EditClickedMinutes}">
+                        <lightning:inputRichText aura:id="MinutesAction2" value="{!v.CallPlanDetails.Call_Plan__r.Minutes_Action__c}">
+                            <lightning:insertImageButton/>
+                        </lightning:inputRichText>
+                        
+                    </aura:if>
+                    <aura:if isTrue="{!v.ShowOutputTextMinutes}">
+                        <p class="slds-text-longform tile__title red-txt">
+                            <aura:unescapedHtml value="{!v.CallPlanDetails.Call_Plan__r.Minutes_Action__c}"/>
+                        </p>
+                        <!--<ui:outputRichText aura:id="outputMinutes" value="{!v.CallPlanDetails.Description}" />-->
+                    </aura:if>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size--5-of-7" >
+                            <hr style="margin: 1rem 0;"/>
+                        </div>
+                        <div class="slds-col slds-size--2-of-7">
+                            <lightning:icon iconName="utility:edit" size="xx-small" onclick="{!c.EditClickedMinutes}"/>
+                        </div>
+                    </div>
+                    <div align="center">
+                        <aura:if isTrue="{!v.EnableSaveCancelMinutes}">
+                            <button class="slds-button slds-button_brand" onclick="{!c.MinutesSaved}">Save</button>
+                            <button class="slds-button slds-button_destructive" onclick="{!c.MinutesCancel}">Cancel</button>
+                            
+                        </aura:if>
+                    </div>
+                </div>
+                <div class="slds-col slds-size--3-of-7">
+                    <span style="font-size: 15px;color: slategrey;">GUIDANCE FOR SUCCESS</span><hr style="margin: 1rem 0;"/>
+                    <span><b>Call report is complete.</b></span>
+                </div>
+                
+            </div>
+        </aura:if>
+        <aura:if isTrue="{!v.CancelClicked}">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col">
+                    <span style="font-size: 15px;color: slategrey;">GUIDANCE FOR SUCCESS</span><hr style="margin: 1rem 0;"/>
+                    <span><b>Call plan has been cancelled.</b></span>
+                </div>
+            </div>
+        </aura:if>
+       
+       
+    </div>
+    
+     <aura:if isTrue="{!v.UITheme}">
+            <div class="slds-docked-form-footer">
+                <button type="button" class="slds-button slds-button_destructive" onclick="{!c.CloseWindow}">Close Window</button>
+            </div>
+        </aura:if>
+    
+</aura:component>

@@ -1,0 +1,17 @@
+<template>
+    <lightning-card >
+       <!-- <lightning-button label="Download Annual Forecasting" onclick={downloadaanualforecasting}  slot="actions"></lightning-button>  -->
+        <div  style = "height:300px;">
+            <!-- sldsValidatorIgnoreNextLine -->
+            <c-sectorcustompicklist
+                data-id = "opplistdownload"
+                key-field="Id"
+                data={oppproductdata}
+                columns={columns}
+                onyearselected = {handleyearselection}
+                onrowselection={getSelectedName}
+                >
+        </c-sectorcustompicklist>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,115 @@
+<aura:component controller = "Sector_AddProduct">
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    <aura:attribute name="showcomponent" type="boolean" />
+    <aura:attribute name="EditProductsnew" type="boolean" default="false"/>
+    <aura:attribute name="ShowAddProductspopUp" type="boolean" default="true"/>
+    <aura:attribute name="recordId" type="String"  />
+    
+    <aura:attribute name="Productaddedinfotext" type="String" default="Show Selected (0)"  />
+    
+    <aura:attribute name="ProductNameSearch" type="String"  />
+    <aura:attribute name="ProductFamilySearch" type="String"  />
+    
+    <aura:attribute name="AddProductcolumn" type="Object[]"/>
+    <aura:attribute name="AddedProductcolumn" type="Object[]"/>
+    <aura:attribute name="ProductsList" type="Object[]"/>
+    <aura:attribute name="AddedProductsList" type="Object[]"/>
+    
+    
+    <aura:attribute name="ShowAddProduct" type="boolean" default="true"/>
+    <aura:attribute name="ShowSpinner" type="boolean" default="false"/>
+    
+    <aura:html tag="style">
+        .slds-spinner_container {
+        top: 16% !important;
+        bottom: 16% !important;
+        }
+    </aura:html>   
+    
+    
+    <lightning:card >
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container" >
+                <!-- Spinner code -->
+                <aura:if isTrue="{!v.ShowSpinner}">
+                    <div class="demo-only demo-only_viewport demo--inverse" style="height:6rem;background-color:#16325c;position:relative">
+                        <div class="slds-spinner_container slds-is-fixed">
+                            <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                                <span class="slds-assistive-text">Loading</span>
+                                <div class="slds-spinner__dot-a"></div>
+                                <div class="slds-spinner__dot-b"></div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                
+                <header class="slds-modal__header">
+                    
+                    <h2 id="modal-heading-01" class="slds-test-heading_medium slds-hyphenate">Add Products</h2> 
+                    
+                </header>
+                    <aura:if isTrue="{!v.ShowAddProduct}">
+                    <div style = "height:420px;" class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <div style = "height:70px;">
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col">
+                                    <span><lightning:input name="input2" label="Product Family" value="{!v.ProductFamilySearch }"/></span>
+                                </div>
+                                <div class="slds-col">
+                                    <span><lightning:input name="input2" label="Product Name" value="{!v.ProductNameSearch }"/></span>
+                                </div>
+                                <div style = "margin-top: 23px;" class="slds-col slds-size_1-of-4 slds-float_right slds-align_absolute-center">
+                                    <span><lightning:button variant="brand" label="Search" onclick="{! c.SearchProducts }" /></span>
+                                </div>
+                            </div>
+                            <div style = "height:20px;" />
+                        </div>
+                        <div style = "height:300px;">
+                            <lightning:datatable data="{!v.ProductsList }" 
+                                                 columns="{!v.AddProductcolumn }" 
+                                                 keyField="id"
+                                                 hideCheckboxColumn="true" 
+                                                 onrowaction="{! c.AddProductRowAction }"/>
+                        </div>
+                        
+                        <!-- body -->
+                    </div>  
+                </aura:if>
+                
+                <aura:if isTrue="{!!v.ShowAddProduct}">
+                    <div style = "height:420px;" class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <lightning:datatable data="{!v.AddedProductsList }" 
+                                             columns="{!v.AddedProductcolumn }" 
+                                             keyField="id"
+                                             hideCheckboxColumn="true"
+                                             onrowaction="{! c.AddedProductRowAction }"/>
+                        
+                        <!-- body -->
+                    </div>  
+                </aura:if>
+                
+                <footer class="slds-modal__footer">
+                    <aura:if isTrue="{!!v.ShowAddProduct}">
+                        <lightning:button variant="base" label="Back to Results" onclick="{! c.ShowAddedProduct }"/>
+                    </aura:if>
+                    <aura:if isTrue="{!v.ShowAddProduct}">
+                        <lightning:button variant="base" label="{!v.Productaddedinfotext}" onclick="{! c.ShowAddedProduct }"/>
+                    </aura:if>
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      onclick="{! c.closeModel }"/>
+                    <lightning:button variant="brand"
+                                      label="Next"
+                                      onclick="{! c.onRecordSubmit }"/>
+                </footer>
+            </div>
+        </section>
+    </lightning:card>
+    
+    <aura:if isTrue="{!v.EditProductsnew}">
+        <c:Sector_EditProducts recordId = "{!v.recordId}" LoadProduct = "false" EditProductsList = "{!v.AddedProductsList}" showcomponent = "{!v.showcomponent}" />
+    </aura:if>
+    
+
+    
+</aura:component>

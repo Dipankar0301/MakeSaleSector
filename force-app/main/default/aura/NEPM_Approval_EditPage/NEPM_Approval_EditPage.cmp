@@ -1,0 +1,77 @@
+<aura:component implements="flexipage:availableForAllPageTypes,lightning:actionOverride,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+    <aura:attribute name="disabled" type="Boolean" default="false" />
+    <aura:attribute name="saved" type="Boolean" default="false" />
+    <aura:attribute name="showSpinner" type="Boolean" default="true" />
+    <aura:attribute name="ShowDialog" type="Boolean" default="false"/>
+    <aura:if isTrue="{!!v.saved}">
+        <Lightning:card title="Approvals">
+            <lightning:recordEditForm
+                                      recordId="{!v.recordId}"
+                                      objectApiName="NEPM_Deliverable__c"
+                                      onsuccess="{!c.handleSuccess}">
+                <!-- the messages component is for error messages -->
+                <lightning:messages />
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning:outputField fieldName="Deliverable_Name__c" />
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning:outputField fieldName="Project__c"/>
+                    </div>
+                    
+                </div>                                    
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning:outputField fieldName="NEPM_Deliverable_Type__c" />
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning:inputField fieldName="Navigate_To_URL__c"/>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning:inputField fieldName="NEPM_Approved__c" onchange="{!c.openDialog}"/>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning:inputField fieldName="Approval_date__c"/>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning:outputField fieldName="Calc_Approved_By__c"/>
+                    </div>
+                    
+                </div>
+           
+                <div class="slds-m-top_medium slds-align_absolute-center">
+                    <lightning:button class="StylingButton" disabled="{!v.disabled}" variant="brand" type="submit" name="save" label="Save" />
+                    <lightning:button class="StylingButton" disabled="{!v.disabled}" variant="brand" type="submit" name="cancel" label="Cancel" onclick="{!c.returntodetail}" />
+                </div>
+            </lightning:recordEditForm>
+        </Lightning:card>
+        <aura:set attribute="else">
+            <p>Saved!</p>
+        </aura:set>
+    </aura:if>
+    <aura:if isTrue="{!v.ShowDialog}">
+        <div class="demo-only" style="height: 640px;">
+            <section role="dialog" tabindex="-1" aria-label="Meaningful description of the modal content" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <!--<h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Do you want to Approve?</h2>-->
+                    </header>
+                    <div class="slds-modal__content slds-p-around_small" id="modal-content-id-1">
+                        Please check if the Project stage field is updated
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <div class="slds-align_absolute-center">
+                            <lightning:button variant="brand" label="Ok"  onclick="{!c.ok}" />
+                        </div>
+                        
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,12 @@
+<template>
+    <c-sept-pt-child-comp4 mydata='krishna'></c-sept-pt-child-comp4>
+    <div style="background-color:wheat">
+        <lightning-button label="Call Parent Js method" onclick={fromParentToChild}></lightning-button>
+    </div>
+    <hr/>
+    <div style="background-color: darkturquoise">
+        <c-sept-pt-child-comp4 ongenerated_event_in_child={parantMethodCall}></c-sept-pt-child-comp4>
+        ding :  {di}<br/>
+        ching : {ch}
+    </div>
+</template>

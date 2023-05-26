@@ -1,0 +1,8 @@
+<apex:page standardController="Report">
+    <apex:sectionHeader title="Manage Stuff"/> 
+    <apex:form > 
+        <apex:outputPanel id="MissingAttRpt" >
+            <apex:iframe src="/00O3G000000dNhBUAU?isdtp=lt" scrolling="true"  height="1588px"  width="100%"/>   
+        </apex:outputPanel>
+    </apex:form>   
+</apex:page>

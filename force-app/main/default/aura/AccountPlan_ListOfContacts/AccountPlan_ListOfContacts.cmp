@@ -1,0 +1,97 @@
+<aura:component controller="AccountPlan_ListOfContacts" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="ContactList" type="Contact[]" />
+    <aura:handler name="init" value="{!this}" action="{!c.myAction}" />
+    <aura:attribute name="contactField" type="String[]" default="['Relationship_insights__c']" />
+    
+    <lightning:card iconName="standard:work_capacity_usage" title="Contact Matrix">   
+        <aura:set attribute="actions">
+            <lightning:button label="New Contact" title="Neutral action" class="slds-float_right" onclick="{! c.createRecord }"/>
+        </aura:set>
+        
+        <aura:if isTrue="{!not(empty(v.ContactList))}">
+            <div class="slds-scrollable" >
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Name">Name</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Title">Title</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Department">Department</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Shell Counterpart">Shell Counterpart</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Management Style">Management Style</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Buyer Profile">Buyer Profile</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Vendor Preference">Vendor Preference</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Buying group">Buying group</div>
+                            </th>
+                            <th class="slds-text-title_caps" scope="col">
+                                <div class="slds-truncate" title="Individual Relationship Insights">Individual Relationship Insights</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <aura:iteration  items="{!v.ContactList}" var="con">
+                            <tr class="slds-hint-parent">
+                                <td data-label="File Name">
+                                    <a href="{!'/'+con.Id}"> <div class="slds-truncate" title="File Name">{!con.Name}</div>  </a>
+                                    
+                                </td>
+                                <td data-label="File Name">
+                                    <div class="slds-truncate" title="File Name">{!con.Title}</div>  
+                                </td>
+                                <td data-label="File Name">
+                                    <div class="slds-truncate" title="File Name">{!con.Department__c}</div>  
+                                </td>
+                                <td data-label="File Name">
+                                    <div class="slds-truncate" title="File Name">{!con.Shell_Counterpart__c}</div>  
+                                </td>
+                                <td data-label="File Name">
+                                    <div class="slds-truncate" title="File Name">{!con.Management_Style__c}</div>  
+                                </td>
+                                <td data-label="File Name">
+                                    <div class="slds-truncate" title="File Name">{!con.Buyer_Profile__c}</div>  
+                                </td>
+                                <td data-label="File Name">
+                                    <div class="slds-truncate" title="File Name">{!con.Vendor_Preference__c}</div>  
+                                </td>
+                                <td data-label="File Name">
+                                    <div class="slds-truncate" title="File Name">{!con.Buying_group__c}</div>  
+                                </td>
+                                <td data-label="File Name">
+                                    <div class="slds-truncate" title="File Name">{!con.Individual_Relationship_Insights__c}</div>  
+                                </td>
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+                </table>
+                <aura:set attribute="else">
+                    <div Style="text-align : center"> " There are no related contacts "</div>
+                </aura:set>
+            </div>
+        </aura:if>
+        <br/>
+        <br/>
+        <br/>
+        <div>
+            <lightning:recordForm recordId="{!v.recordId}" 
+                                  objectApiName="Account_Plan__c"
+                                  mode="view"
+                                  fields="{!v.contactField}" />
+        </div>               	
+        
+    </lightning:card>
+</aura:component>

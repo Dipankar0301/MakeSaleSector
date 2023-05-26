@@ -1,0 +1,314 @@
+<aura:component implements="force:appHostable" controller = "Sector_OpportunitiesUploadController">
+    
+    <aura:attribute name="fileUploaded" type="String"/> 
+    <aura:attribute name="csvHeader" type="String"/> 
+    <aura:attribute name="fileName" type="String" default=""/> 
+    <aura:attribute name="GenerateFile" type="Boolean" default="true" />
+    <aura:attribute name="ShowFileUpload" type="Boolean" default="false" />
+    
+    <aura:attribute name="ShowValidationScreen" type="Boolean" default="false" />
+    <aura:attribute name="ShowFinishScreen" type="Boolean" default="false" />
+    <aura:attribute name="DisableProceedtoValidationButton" type="Boolean" default="true" />
+    <aura:attribute name="DisableUpdateOpportunitiesButton" type="Boolean" default="false" />
+    <aura:attribute name="OpportunityValidationCSV" type="String" default=""/> 
+    <aura:attribute name="OpportunityResultCSV" type="String" default=""/> 
+    <aura:attribute name="ValidateCSVMessage" type="String" default=""/> 
+    <aura:attribute name="UpdateCSVMessage" type="String" default=""/> 
+    <aura:attribute name="ShowSpinner" type="boolean" default="false"/>
+    
+    
+    <aura:attribute name="validationforecastoverridemessage" type="String" default=""/> 
+    
+    <aura:attribute name="disablegeneratefile" type="Boolean" default="true" />
+    <aura:attribute name="diableProceedtoUploadFile" type="Boolean" default="true" />
+   
+    <aura:attribute name="loadeddatadownloadopp" type="boolean" default="false"/>
+    
+    <aura:attribute name="showoppwithforecasting" type="Boolean" default="false" />
+    
+    
+    <aura:attribute name="activeSections" type="List" default="[]" />
+    
+    
+    
+  
+    
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    <aura:attribute name="data" type="Object" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="sortDirection" type="String" default="asc" />
+    <aura:attribute name="defaultSortDirection" type="String" default="asc" />
+    <aura:attribute name="sortedBy" type="String" />
+    <aura:attribute name="selectedRows" type="List" />
+    
+    <aura:attribute name="selectedOpportunities" type="List" />
+    
+    
+    
+    
+    <!--  Attributes for Forecasting update table -->
+    <aura:attribute name="forecastingdata" type="Object" />
+    <aura:attribute name="forecastingcolumns" type="List" />
+    <!-- Attributes for Forecasting update table -->
+    
+    <aura:html tag="style">
+        .spins::after {
+        position: absolute;
+        content: 'Please wait do not refresh/close window';
+        width: 100%;
+        text-align: center;
+        top: calc(50% + 3em);
+        font-weight: bold;
+        }
+    </aura:html>   
+    
+    
+    
+  
+
+
+<aura:attribute name="options" type="List" default="[
+                                                        {'label': 'Annual Forecasting', 'value': 'OpportunityProductForecasting'}
+                                                        ]"/>
+    <aura:attribute name="selectedobjectvalue" type="String" default="OpportunityProductForecasting"/>
+    
+
+<!--   uncomment & delete below to show opportunity & opportunity porduct is approved
+<aura:attribute name="options" type="List" default="[
+                                                        {'label': 'Opportunity', 'value': 'Opportunity'},
+                                                        {'label': 'Opportunity Product', 'value': 'OpportunityProduct'},
+                                                        {'label': 'Annual Forecasting', 'value': 'OpportunityProductForecasting'}
+                                                        ]"/> 
+
+ <aura:attribute name="selectedobjectvalue" type="String" default="Opportunity"/>
+
+-->    
+        
+    
+    
+   
+    
+    <lightning:card  title="Bulk Update Opportunities">
+        
+        <!--  Button in cards Start -->
+        <aura:set attribute="actions">
+            <aura:if isTrue="{! OR(v.ShowFileUpload,v.GenerateFile)}">
+                <!-- uncomment  to show  opportunity & opportunity porduct is approved  
+                <lightning:button label="Download Opportunity Template" onclick="{! c.DownloadOpportunitytemplate }"/>
+                <lightning:button label="Download Opportunity Product Template" onclick="{! c.DownloadOpportunityProducttemplate }"/>
+               -->
+                <lightning:button label="Annual Forecasting Template" onclick="{! c.DownloadOpportunityForecastingtemplate }"/>
+            </aura:if>
+            <lightning:button label="Restart" onclick="{! c.Reload }"/>
+            <lightning:button label="Go back to Opportunity List view" onclick="{! c.GoBackToOppList }"/>
+        </aura:set>            
+        <!--  Button Start in cards END -->
+
+        <!--  Spinner Start -->
+        <aura:if isTrue="{!v.ShowSpinner}">
+            <lightning:spinner class="spins" size="medium" variant="brand" alternativeText="Loading" />
+        </aura:if>        
+        <!--  Spinner END -->
+        
+        
+        <br/>
+        <br/>
+        <br/>
+         <!--  Bulk update Path Start -->
+        <div class="slds-align_absolute-center" >
+            <div class="slds-region_medium" style="width:700px">
+                <div class="slds-path">
+                    <div class="slds-grid slds-path__track">
+                        <div class="slds-grid slds-path__scroller-container">
+                            <div class="slds-path__scroller">
+                                <div class="slds-path__scroller_inner">
+                                    <ul class="slds-path__nav" role="listbox" aria-orientation="horizontal">
+                                        
+                                        <li class="slds-path__item slds-is-current slds-is-active" role="presentation" aura:id = "generatefilestage">
+                                            <a aria-selected="false" class="slds-path__link" id="path-50" role="option" tabindex="-1">
+                                                <span class="slds-path__title">Generate File</span>
+                                            </a>
+                                        </li>
+                                        
+                                        <li class="slds-path__item slds-is-incomplete" role="presentation" aura:id = "uploadstage">
+                                            <a aria-selected="false" class="slds-path__link" id="path-50" role="option" tabindex="-1">
+                                                <span class="slds-path__title">Upload File</span>
+                                            </a>
+                                        </li>
+                                        <li class="slds-path__item slds-is-incomplete" role="presentation" aura:id = "validatestage">
+                                            <a aria-selected="false" class="slds-path__link" id="path-51" role="option" tabindex="-1">
+                                                <span class="slds-path__title">Validation Result</span>
+                                            </a>
+                                        </li>
+                                        <li class="slds-path__item slds-is-incomplete" role="presentation" aura:id = "updateresultstage">
+                                            <a aria-selected="false" class="slds-path__link"  id="path-53" role="option" tabindex="-1">
+                                                <span class="slds-path__title">Updation Result</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--  Bulk update Path END -->
+        
+        <br/>
+        <br/>
+        <br/>
+        
+        
+        <!--  Generate file screen Start -->
+        
+        
+    
+        
+        <aura:if isTrue="{!v.GenerateFile}">
+            <div class="slds-align_absolute-center" >
+                <lightning:input type="toggle" label="Show Opportunities with Forecasting" onchange="{! c.handletogglechangeforecast }" checked="{!v.showoppwithforecasting}" />
+            </div>
+            
+            <!-- old code using aura component -->
+            
+            <!--
+            <lightning:card>
+                <aura:set attribute="actions">
+                    <lightning:button label="Download Annual Forecasting" onclick="{! c.downloadforecastingwithdata }"/>
+                </aura:set>
+                <div  style = "height:300px;">
+                    <lightning:datatable keyField="Id"
+                                         columns="{!v.columns }"
+                                         data="{!v.data}"
+                                         hideCheckBoxColumn="true"
+                                         defaultSortDirection="{!v.defaultSortDirection}"
+                                         sortedDirection="{!v.sortDirection}"
+                                         sortedBy="{!v.sortedBy}"
+                                         selectedRows="{! v.selectedRows }"
+                                         onrowselection = "{!c.handleSelect}"
+                                         onsort="{!c.handleSort}">
+                    </lightning:datatable>
+                </div>
+            </lightning:card>
+            
+            -->
+             <!-- old code using aura component -->
+          
+            
+            <aura:if isTrue="{!v.loadeddatadownloadopp}">
+                <c:sectorDownloadOpportunities aura:id="forecastdownloadcsv" oppproductdata = "{!v.data}" 
+                                               columns = "{!v.columns}"
+                                               onrowselectionchange="{!c.rowselectiononLWC}"
+                                               />
+            </aura:if>
+            
+            
+            <lightning:accordion allowMultipleSectionsOpen="true"
+                                 activeSectionName="{! v.activeSections }"  >
+                
+                <lightning:accordionSection name="A" label="Opportunity Forecasting History">
+                    
+                    
+                    <div  style = "height:300px;">
+                        <lightning:datatable keyField="Id"
+                                             columns="{!v.forecastingcolumns }"
+                                             data="{!v.forecastingdata}" hideCheckboxColumn="true"
+                                              >
+                        </lightning:datatable>
+                    </div>
+                    
+                    
+                </lightning:accordionSection>
+            </lightning:accordion>
+            
+            <br/>
+            <br/>
+            <br/>
+            <div class="slds-align_absolute-center" >
+                <lightning:button label="Generate File with Selected Products" disabled ="{!v.disablegeneratefile}"  onclick="{! c.downloadcsvfromlwc }"/> 
+                <lightning:button label="Proceed to Upload File" disabled ="{!v.diableProceedtoUploadFile}" onclick="{! c.nextsteptoupload }"/> 
+            </div>
+        </aura:if>
+         <!--  Generate file screen END -->
+        
+        
+        
+        
+        <!--  File upload screen Start -->
+        <aura:if isTrue="{!v.ShowFileUpload}">
+            <div class="slds-align_absolute-center" >
+                <lightning:input type="file"  multiple="false" 
+                                 accept=".csv" onchange="{! c.handleUploadFinished }"/>
+            </div>
+            <aura:if isTrue="{!v.fileName}">
+                <br/>
+                <div class="slds-align_absolute-center" >
+                    <p> <b>Uploaded File Name:</b> {! ' '+v.fileName} </p>
+                </div>
+            </aura:if>
+            <br/>
+            <br/>
+            <div class="slds-align_absolute-center" >
+                <lightning:radioGroup name="radioGroup"
+                                      label="Select object"
+                                      options="{! v.options }"
+                                      value="{! v.selectedobjectvalue }"
+                                      type="radio"
+                                      disabled="{!!v.DisableProceedtoValidationButton}"/>
+            </div>
+            
+            
+            <br/>
+            <br/>
+            <br/>
+            <div class="slds-align_absolute-center" >
+                <lightning:button label="Validate File" disabled = "{!v.DisableProceedtoValidationButton}" onclick="{! c.ProceedtoValidateFile }"/> 
+            </div>
+        </aura:if>
+         <!--  File upload screen END -->
+        
+        <!--  File upload validation screen Start -->
+        <aura:if isTrue="{!v.ShowValidationScreen}">
+            <div class="slds-align_absolute-center" >
+                {!v.ValidateCSVMessage}
+            </div>
+            <br/>
+            <div class="slds-align_absolute-center" >
+                <aura:if isTrue="{!v.validationforecastoverridemessage != ''}">
+                    <div style="color:red">{!v.validationforecastoverridemessage}</div>
+                </aura:if>
+            </div>
+            <br/>
+            <br/>
+            <div class="slds-align_absolute-center" >
+                <aura:if isTrue="{! or(v.OpportunityValidationCSV == '',v.OpportunityValidationCSV == null) }">
+                    <lightning:button label="Start Update" disabled = "{!v.DisableUpdateOpportunitiesButton}" onclick="{! c.ProceedtoUpdateOpportunities }"/> 
+                </aura:if>
+                    <aura:if isTrue="{!v.OpportunityValidationCSV != ''}">
+                    <lightning:button label="Download Validation Result"  onclick="{! c.DownloadValidationOpportunities }"/>
+                </aura:if>
+            </div>
+        </aura:if>
+        <!--  File upload validation screen END -->
+        
+        <!--  File upload finish screen Start -->
+        <aura:if isTrue="{!v.ShowFinishScreen}">
+            <div class="slds-align_absolute-center" >
+                {!v.UpdateCSVMessage}
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            <div class="slds-align_absolute-center" >
+                <aura:if isTrue="{!v.OpportunityResultCSV != ''}">
+                    <lightning:button label="Download Result" onclick="{! c.DownloadOpportunitiesResult }"/>
+                </aura:if>
+            </div>
+        </aura:if>
+        <!--  File upload finish screen END -->
+        
+        
+        
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,22 @@
+<apex:page standardController="Account" extensions="Sector_changeOwner" recordSetVar="accounts">
+<apex:form >
+<apex:pageBlock mode="inlineEdit">
+ <apex:pageBlockButtons >
+  <apex:commandButton action="{!save}" value="SAVE"/>
+ </apex:pageBlockButtons>
+ <apex:pageBlockSection >
+    <apex:pageBlockTable value="{!acc}" var="a" border="1">
+        <apex:column value="{!a.name}" style="padding:20px"/>
+        <apex:column headerValue="Contact Names" >
+        <apex:pageBlockTable value="{!a.contacts}" var="con"  >        
+         <apex:column value="{!con.Name}" rendered="{!if(con.name!='null',true,false)}" />
+        </apex:pageBlockTable>
+        </apex:column>
+        <apex:column headerValue="Owner Name">
+          <apex:inputField value="{!a.ownerid}" />
+        </apex:column>  
+    </apex:pageBlockTable>
+   </apex:pageBlockSection>
+</apex:pageBlock>
+</apex:form>
+</apex:page>

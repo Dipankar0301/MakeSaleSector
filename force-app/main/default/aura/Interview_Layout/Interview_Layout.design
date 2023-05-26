@@ -1,0 +1,7 @@
+<design:component label="Interview_Layout">
+    <flexipage:template>
+        <flexipage:region name="ProjectDetails" defaultWidth="small"/>
+        <flexipage:region name="Questions" defaultWidth="small"/>
+        <flexipage:region name="Actions" defaultWidth="small"/>
+    </flexipage:template>
+</design:component>

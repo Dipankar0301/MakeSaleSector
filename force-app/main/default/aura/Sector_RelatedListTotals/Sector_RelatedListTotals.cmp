@@ -1,0 +1,43 @@
+<aura:component Implements="flexipage:availableForRecordHome,force:hasRecordId" controller = "OpportunityProductList">
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    <aura:handler event="force:refreshView" action="{!c.init}" />
+    <aura:attribute name="data" type="Object"/>
+    <aura:attribute name="columns" type="List"/>  
+    
+    <aura:attribute name="deleterecordId" type="String"/>  
+    <aura:attribute name="showmodaldelete" type="Boolean" default = "false"/> 
+    
+    <lightning:spinner variant="brand" aura:id="mySpinner" class="slds-hide"/>
+    
+   <lightning:datatable keyField="Id" data="{! v.data }" columns="{! v.columns }" 
+                        hideCheckboxColumn="true"
+                        onrowaction="{!c.deleterow}"
+                        />
+    
+    
+    
+    <aura:if isTrue="{!v.showmodaldelete}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    
+                    <h2 id="modal-heading-01" class="slds-test-heading_medium slds-hyphenate">Delete Product</h2> 
+                    
+                </header>
+                <div style = "height:60px;" class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    Are you sure you want to delete this Product?
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      onclick="{! c.closeModel }"/>
+                    <lightning:button variant="brand"
+                                      label="Delete"
+                                      onclick="{! c.submitdeleterow }"/>
+                </footer>
+                <!-- </lightning:recordEditForm>  -->
+            </div>
+        </section>
+    </aura:if>  
+    
+</aura:component>

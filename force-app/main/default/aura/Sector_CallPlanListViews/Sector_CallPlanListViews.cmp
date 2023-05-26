@@ -1,0 +1,237 @@
+<aura:component controller="Sector_CallPlanListView" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	    
+    <!--UI Attributes-->
+    <aura:attribute name="isSpinner" type="boolean" default="false" />
+    <aura:attribute name="hideTable" type="boolean" default="false" />
+    <aura:attribute name="isCancel" type="boolean" default="false" />
+    <aura:attribute name="displayEmpty" type="boolean" default="false" />
+    <aura:attribute name="isLoading" type="boolean" default="false" />
+    <aura:attribute name="NoRecordsText" type="string" default="There are no records to display" />
+    
+    <aura:attribute name="isMobile" type="boolean" default="false" />
+    
+    <!--DataTable Attributes--> 
+    <aura:attribute name="CallPlanList" type="Sector_CallPlanListView.evtClPlnWrapper[]" description="store call plan records list"/>
+    <aura:attribute name="currentList" type="Sector_CallPlanListView.evtClPlnWrapper[]" description="store call plan records list by page"/>
+    <aura:attribute name="currentTeamList" type="Sector_CallPlanListView.evtClPlnWrapper[]" description="store call plan records list by page"/>
+    <aura:attribute name="oldData" type="Sector_CallPlanListView.evtClPlnWrapper[]" description="store call plan records list by page"/>
+    <aura:attribute name="sortedDirection" type="Boolean" default="true" />
+    <aura:attribute name="sortField" type="String" />
+    <aura:attribute name="sortAsc" type="Boolean" />
+    <aura:attribute name="sortedBy" type="String" />
+    <aura:attribute name="allColumns" type="List" />
+    <aura:attribute name="errors" type="Object" default="[]" />
+    <aura:attribute name="draftValues" type="Object" default="[]" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="statusOpts" type="List" default="['All Statuses','Cancelled','Minutes Recorded','Scheduled','Planned']"/>
+    <aura:attribute name="clPlnOpts" type="List" default="['All Call Plan Types','Call Plan POPSA','Call Plan Lite']"/>
+    <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" />
+    <aura:attribute name="rowsToLoad" type="Integer" default="12" />
+    <aura:attribute name="loadMoreOffset" type="Integer" default="12" />
+    <aura:attribute name="totalNumberOfRows" type="Integer" default="300" />
+    <aura:attribute name="loadMoreStatus" type="String" default="Loading More..." />
+    <aura:attribute name="loadMoreStatusPhone" type="String" default="Scroll to load More..." />
+    <aura:attribute name="teamUserSet" type="List" />
+    <aura:attribute name="teamUserMap" type="Map" default="{}" />
+    <aura:attribute name="teamUserIdSet" type="List" />
+    <aura:attribute name="teamUserId" type="String" />
+    <!--Search Attributes-->
+    <aura:attribute name="searchAccount" type="string" />
+    <aura:attribute name="searchOpp" type="string" />
+    <aura:attribute name="searchAccPln" type="string" />
+    <aura:attribute name="searchClplnByType" type="string" default="All Call Plan Types"/>
+    <aura:attribute name="searchStatus" type="string" default="All Statuses"/>
+    <aura:attribute name="searchTeam" type="string" default="All Users"/>
+    <aura:attribute name="searchEvent" type="string" />
+    <aura:attribute name="searchOwner" type="string" />
+    <aura:attribute name="searchStartDate" type="string" default="Start Date" />
+    <aura:attribute name="searchEndDate" type="string" default="End Date" />
+    <aura:attribute name="selectedAttendees" type="List" default="[]" />
+    <!--ListViews Attributes-->
+    <aura:attribute name="listViews" type="String" />
+    <aura:attribute name="listViewsRec" type="String" />
+    <aura:attribute name="listColumn" type="String" />
+    <aura:attribute name="currentListView" type="string" />
+    <!--Other Attributes-->
+    <aura:attribute name="previouslySet" type="Boolean" default="false" />
+    <aura:attribute name="custMessage" type="string" />
+    <aura:attribute name="RecordTypeId" type="string" />
+    <aura:attribute name="singleRec" type="Sector_CallPlanListView.evtClPlnWrapper" description="store record"/>
+    <!-- Team View Attributes -->
+    <aura:attribute name="teamcolumns" type="List" />
+    
+  
+    <aura:attribute name="selectedRowsCount" type="Integer" default="0"/>
+    <aura:attribute name="maxRowSelection" type="Integer" default="100"/>
+
+    
+    
+    <!--Handlers-->
+    <aura:handler name="init" value="{!this}" action="{!c.initRecords}" /> 
+    <aura:handler event="c:Sector_CallPlanLstViewEvent" action="{!c.handleEventAction}" />
+    
+    <!--Filtering Handlers-->
+    <aura:handler name="change" value="{!v.searchStartDate}" action="{!c.filterBySearchTerms}"/>
+    <aura:handler name="change" value="{!v.searchEndDate}" action="{!c.filterBySearchTerms}"/>
+    
+    <lightning:overlayLibrary aura:id="overlayLib" />
+    <aura:if isTrue="{!v.isLoading}">
+        <div class="spinnerHolder">
+            <lightning:spinner alternativeText="Loading" size="medium" variant="brand" />
+        </div>
+    </aura:if>
+    
+    <aura:if isTrue="{!!v.hideTable}">
+        <section id="pageForm" style="padding-bottom:0.7rem">
+            <div class="slds-page-header slds-page-header_record-home">
+                <c:Sector_CallPlanLstViewHeader  searchAccount="{!v.searchAccount}"/>
+                <div class="slds-page-header__row">
+                    <aura:if isTrue="{!v.custMessage !=''}">
+                        <div class="slds-text-color_error">
+                            {!v.custMessage}
+                        </div>
+                    </aura:if>
+                </div>
+                <div class="slds-page-header__detail-row" >
+                    <div class="slds-grid slds-wrap" >
+                        <div class="slds-col slds-large-size_1-of-12 slds-size_1-of-1 slds-m-around_x-small">
+                            <ui:inputtext aura:id="inputId" class="slds-select inputFieldWidth" label="" placeholder="All Accounts"
+                                          keyup="{!c.filterByEnterKey}" value="{!v.searchAccount}" updateOn="keyup"/>
+                        </div>
+                        <div class="slds-col slds-large-size_1-of-12 slds-size_1-of-1 slds-m-around_x-small">
+                            <ui:inputtext aura:id="inputId" class="slds-select inputFieldWidth" label="" placeholder="All opportunities"
+                                          keyup="{!c.filterByEnterKey}" value="{!v.searchOpp}" updateOn="keyup"/>
+                        </div>
+                        <div class="slds-col slds-large-size_1-of-12 slds-size_1-of-1 slds-m-around_x-small">
+                            <ui:inputtext aura:id="inputId" class="slds-select inputFieldWidth" label="" placeholder="All Account Plans"
+                                          keyup="{!c.filterByEnterKey}" value="{!v.searchAccPln}" updateOn="keyup"/>
+                        </div>
+                        <aura:if isTrue = "{!(v.isMobile)||($Browser.isTablet)}">
+                            <div class="slds-col slds-large-size_1-of-12 slds-size_1-of-1 slds-m-around_x-small">
+                                <ui:inputDate label="Start Date" value="{!v.searchStartDate}" aura:id="startDate"  displayDatePicker="true" />
+                            </div>
+                        	<aura:set attribute = "else">
+                                <div class="slds-col slds-large-size_1-of-12 slds-size_1-of-1 slds-m-around_x-small">
+                                    <ui:inputDate label="" value="{!v.searchStartDate}" aura:id="startDate"  displayDatePicker="true" />
+                                </div>
+                            </aura:set>
+                        </aura:if>
+                        
+                        <aura:if isTrue = "{!v.isMobile||($Browser.isTablet)}">
+                            <div class="slds-col slds-large-size_1-of-12 slds-size_1-of-1 slds-m-around_x-small">
+                                <ui:inputDate label="End Date" value="{!v.searchEndDate}" aura:id="endDate" displayDatePicker="true" />
+                            </div>
+                            <aura:set attribute = "else">
+                                <div class="slds-col slds-large-size_1-of-12 slds-size_1-of-1 slds-m-around_x-small">
+                                    <ui:inputDate label="" value="{!v.searchEndDate}" aura:id="endDate" displayDatePicker="true" />
+                                </div>
+                            </aura:set>
+                        </aura:if>
+                        
+                        <div class="slds-col slds-large-size_1-of-12 slds-size_1-of-1 slds-m-around_x-small">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <div class="slds-select__container">
+                                        <select id="selectClType" class="slds-select" style="height:2.3rem" name="select" value="{!v.searchClplnByType}" onchange="{!c.filterBySearchTerms}">
+                                            <aura:iteration items="{!v.clPlnOpts}" var="pick">
+                                                <option>{!pick}</option>
+                                            </aura:iteration>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-large-size_1-of-12 slds-size_1-of-1 slds-m-around_x-small">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <div class="slds-select__container">
+                                        <select id="selectpick" class="slds-select" style="height:2.3rem" name="select" value="{!v.searchStatus}" onchange="{!c.filterBySearchTerms}">
+                                            <aura:iteration items="{!v.statusOpts}" var="pick" indexVar="i">
+                                                <option >{!pick}</option>
+                                            </aura:iteration>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-large-size_1-of-12 slds-size_1-of-1 slds-m-around_x-small">
+                            <ui:inputtext aura:id="inputId" class="slds-select inputFieldWidth" label="" placeholder="All Events" value="{!v.searchEvent}" updateOn="keyup" keyup="{!c.filterByEnterKey}" />
+                        </div>
+                        <div class="slds-col slds-large-size_1-of-12 slds-size_1-of-1 slds-m-around_x-small">
+                            <ui:inputtext aura:id="inputId" class="slds-select inputFieldWidth" label="" placeholder="All Owners" value="{!v.searchOwner}" updateOn="keyup" keyup="{!c.filterByEnterKey}" />
+                        </div>
+                        <div class="slds-col slds-large-size_1-of-12 slds-size_1-of-1 slds-m-around_x-small">
+                            <lightning:button variant="brand" label="Search" title="Search" type="Search" value="Search" onclick="{!c.filterBySearchTerms}" />
+                            <lightning:button variant="base" label="Reset" title="Reset" type="reset" value="reset" onclick="{! c.clearFilters }" />
+                        </div>
+                    </div>
+                </div>
+                <aura:if isTrue="{!v.selectedRowsCount == 1}">
+                    <div style="margin-top: 30px;">
+                        {!v.selectedRowsCount} item selected
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.selectedRowsCount > 1}">
+                    <div style="margin-top: 30px;">
+                        {!v.selectedRowsCount} items selected
+                    </div>
+                </aura:if>
+                
+            </div>
+        </section>
+        
+        <aura:if isTrue="{!v.isCancel}">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                     aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                                title="Close" onclick="{!c.hidePopup}">
+                            <lightning:icon iconName="action:close" alternativeText="close" />
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Cancel Event</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_small" id="modal-content-id-1">
+                        <lightning:flow aura:id="flowData" />
+                    </div>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+        <aura:if isTrue="{!v.displayEmpty}">
+            <div class="displayEmpty" style="background-color:white;padding-left:30%">
+                <img src="/img/chatter/OpenRoad.svg" class="slds-illustration__svg" alt=""/>
+                <p class="slds-text-heading_small" style="padding-left:15%">{!v.NoRecordsText}</p>
+            </div>
+            <!--If the Table is shown-->
+            <aura:set attribute="else">
+                <aura:if isTrue="{!v.isMobile}">
+                    <lightning:dataTable class="slds-max-medium-table_stacked" hideCheckboxColumn="{!v.isMobile}" showRowNumberColumn="true" onrowaction="{! c.handleRowAction }"
+                                         keyField="EventId" aura:id="eventsDataTable" data="{!v.currentList}"
+                                         columns="{!v.columns}" sortedBy="{!v.sortedBy}" sortedDirection="{!v.sortedDirection}"
+                                         onsort="{!c.updateColumnSorting}" errors="{! v.errors }"
+                                         draftValues="{! v.draftValues }" onsave="{! c.handleSaveRows }"
+                                         enableInfiniteLoading="{!v.enableInfiniteLoading}" loadMoreOffset="{! v.loadMoreOffset }"
+                                         onloadmore="{! c.loadMoreData }" 
+                                         maxRowSelection="{! v.maxRowSelection }"
+                                         onrowselection="{! c.updateSelectedText }"/> {! v.loadMoreStatusPhone }
+                    <aura:set attribute="else">
+                        <lightning:dataTable class="slds-max-medium-table_stacked" hideCheckboxColumn="{!v.isMobile}" showRowNumberColumn="true" onrowaction="{! c.handleRowAction }"
+                                             keyField="EventId" aura:id="eventsDataTable" data="{!v.currentList}"
+                                             columns="{!v.columns}" sortedBy="{!v.sortedBy}" sortedDirection="{!v.sortedDirection}"
+                                             onsort="{!c.updateColumnSorting}" errors="{! v.errors }"
+                                             draftValues="{! v.draftValues }" 
+                                             enableInfiniteLoading="{!v.enableInfiniteLoading}" loadMoreOffset="{! v.loadMoreOffset }"
+                                             onloadmore="{! c.loadMoreData }" 
+                                             maxRowSelection="{! v.maxRowSelection }"
+                                             onrowselection="{! c.updateSelectedText }"/> {! v.loadMoreStatus }
+                    </aura:set>
+                </aura:if>
+                
+                
+            </aura:set>
+        </aura:if>
+    </aura:if>
+    <br/>
+</aura:component>

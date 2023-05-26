@@ -1,0 +1,267 @@
+<apex:page sidebar="false" showHeader="false" showQuickActionVfHeader="false" standardController="Site__c">
+     <head>
+        <apex:slds /> 
+        <style type="text/css"> 
+          html { height: 100%;}
+          body { height: 100%; margin: 0; padding: 0 }
+          #map-canvas { width:100%;height:500px; }
+         
+         .markerdetail{
+            width: 26rem;
+            } 
+            
+            .gm-ui-hover-effect{
+                height: 35px !important;
+                width: 40px !important;
+            }
+            .modal-container{
+            width : 90% !important;
+            }
+            
+            .gm-ui-hover-effect img{
+            width: 25px !important;
+            height: 25px !important;
+            margin: 14px 20px 0 0 !important;
+            }
+            
+         .markerdetailButtons{
+            margin-top: 15px;
+            }
+            
+         .inptClass{
+            position: absolute;
+            top: 3.3rem;
+            z-index: 10;
+            left: 15rem;
+            width: 25rem;
+            height: 40px;
+            border-radius: 5px;
+            outline: none;
+            border: none;
+            padding: 0 0 0 10px;
+            font-size: 15px; 
+            }
+            
+          .alert {
+            display : none;
+            padding: 20px;
+            background-color: #f44336;
+            color: white; 
+            z-index: 10;
+            position: absolute;
+            top: 30%;
+            left: 12rem;
+            font-weight: 700;
+            font-size: medium;
+            border-radius: 10px;
+            }
+            
+          .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            }
+            
+          .closebtn:hover {
+            color: black;
+            }   
+            
+          .lableClass{ 
+            position: absolute;
+            left: 1rem;
+            font-size: medium;
+            margin-top: 5px;
+            }
+            
+            .selectCityClass{
+            position: relative;
+            left: 10rem;
+            width: 42%;
+            border-radius: 5px;
+            height: 35px; 
+            }  
+        </style> 
+        <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3wQ2rUfcTIrSJ_CVwz0Jf16Car4CS0Tw&libraries=places"></script>   
+    </head>
+    <body>                
+        
+        <!-- SPINNER -->
+                <div id="spinner" class="slds-spinner_container slds-is-relative slds-hide" style="z-index:10;position:fixed;">
+                    <div role="status" class="slds-spinner slds-spinner--large slds-spinner--brand">
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+        <!-- / SPINNER -->
+        
+        
+        <input type="text" class="inptClass" id="search_input" placeholder="Enter Landmark..." />
+        <div id="map" style="height: 443px; width: 100%; margin-top: 7px;"></div>   
+            
+            <script>
+            var searchInputcopy = 'search_input';
+            var searchedAddLatcopy;
+            var searchedAddLngcopy;
+            var customerCurrentLatcopy;
+            var customerCurrentLngcopy;
+            var customerAddresscopy;
+            var isSearchedAddresscopy = false;
+            var isCustomerCapturedLoccopy = false;
+            var centeredLatcopy = 20.593684;   //india's coordinates    delhi=> 28.644800, 77.216721.
+            var centeredLngcopy = 78.96288;
+            var locationscopy = [];   //[['Bondi Beach', -33.890542, 151.274856, 4],['Bondi Beach2', -33.890341, 151.174856, 4]];
+            </script> 
+        <apex:outputPanel id="mapoutputpanel">
+        <apex:pageMessages id="errorId" />
+        <script> 
+            var searchInput = 'search_input';
+            var searchedAddLat;
+            var searchedAddLng;
+            var customerCurrentLat;
+            var customerCurrentLng;
+            var customerAddress;
+            var isSearchedAddress = false;
+            var isCustomerCapturedLoc = false;
+            var centeredLat = 20.593684;   //india's coordinates    delhi=> 28.644800, 77.216721.
+            var centeredLng = 78.96288;
+            var locations = [];   //[['Bondi Beach', -33.890542, 151.274856, 4],['Bondi Beach2', -33.890341, 151.174856, 4]];     
+        $(document).ready(function () { 
+            //console.log($('.modal-container'));
+            
+            
+            //if(!billingAddress){ 
+                showMap(); //when no city is selected; //default map
+            //}
+            var autocomplete;
+            autocomplete = new google.maps.places.SearchBox((document.getElementById(searchInput)), {
+                types: ['geocode'],
+            });
+            
+            var adrsSearchCounter = 0;
+            console.log('====1 ', locations);
+            autocomplete.addListener('places_changed', function () {
+                var near_places = autocomplete.getPlaces();
+                console.log(JSON.parse(JSON.stringify(near_places)));
+                near_places.forEach((near_place)=>{
+                searchedAddLat = near_place.geometry.location.lat();
+                searchedAddLng = near_place.geometry.location.lng();
+                console.log('====searchedAddLat==== ',searchedAddLat);
+                console.log('====searchedAddLng==== ',searchedAddLng);
+                centeredLat = searchedAddLat;
+                centeredLng = searchedAddLng;
+                console.log('====2 ', locations);
+                if(searchedAddLat && searchedAddLng){ 
+                    var searchedAddress = document.getElementById(searchInput).value;
+                    var locationName = '<div class="markerdetail">'+
+                    '<h style="font-size: 20px;">'+searchedAddress+'</h></div>';  
+                    //document.getElementById(searchInput).value;
+                    
+                    var location = [locationName,searchedAddLat,searchedAddLng,4];   //No need to show marker of landmark
+                    if(adrsSearchCounter > 0){
+                    locations.pop();
+                        adrsSearchCounter--;
+                    }
+                    adrsSearchCounter++;
+                    locations.push(location);
+                    isSearchedAddress = true;
+                    console.log('====3 ', locations);
+                    //showMap();
+                }
+                    })
+                showMap();
+                
+            }); 
+                         
+        });
+        
+        function getAddressCoordinates(addressList, customerLat, customerLng) {
+            var addresses =  addressList;     // ["Abul Fazal Enclave Part1,Jamia Nagar Okhla,Delhi,110025,India","Netaji Subhash Marg, Lal Qila, Chandni Chowk,New Delhi,Delhi,110006,India"]
+            
+            //console.log('===addresses=== '+addresses, addresses.length);
+            
+            const geocoder = new google.maps.Geocoder();
+            var index = 0;
+            //var markerDesign = '';
+            //var addressToGeoCode='';
+            for (let i = 0; i < addresses.length; i++) {  
+                console.log(addresses[i].addressToGeocode,"console");
+                //  console.log('HELLO',addresses[i]);
+                  geocoder.geocode({ address: addresses[i]['addressToGeocode']}, (results, status) => {
+                      index++;
+                      if (status === "OK") {
+                      let locationNameCityWise = '<div class="markerdetail">'+
+                      '<h style="font-size: 20px;">'+addresses[index-1]['recordName']+'</h>'+'<br/><h1 style="font-size: 15px;">'+addresses[index-1]['addressToGeocode']+'</h1>'+
+                      '<div class="markerdetailButtons"><button type="button" onClick="sendDealerLocation('+results[0].geometry.location.lat()+','+results[0].geometry.location.lng()+')" class="senddealerloc slds-button slds-button_brand">Send Dealer Location</button>'+
+                      '<button type="button" onClick="assinedDealer(\''+addresses[index-1]['dealerRecId']+'\');" class="assigndealer slds-button slds-button_brand">Assign Dealer</button>'+
+                      '</div></div>';   
+                      
+                      locations.push([locationNameCityWise, results[0].geometry.location.lat(),results[0].geometry.location.lng(),4]);
+                      
+                } else {
+                    alert("Geocode was not successful for the following reason: " + status);
+                }
+                    if(index == addresses.length){
+                    searchedAddLat = locations[0][1];
+                    searchedAddLng = locations[0][2]; 
+                    centeredLat = searchedAddLat;
+                    centeredLng = searchedAddLng;
+                    if(locations.length>1){
+                      centeredLat = locations[1][1];
+                      centeredLng = locations[1][2];
+                    }
+                    if(customerLat && customerLng){
+                      centeredLat = customerLat;
+                      centeredLng = customerLng;
+                    }
+                    showMap();
+                }
+                });
+                 
+            }
+        }  
+                    
+        function showMap(){
+                    
+                console.log('===locations===  ', locations);   
+                //locations = [['Bondi Beach', -33.890542, 151.274856, 4],['Bondi Beach2', -33.890341, 151.174856, 4]];
+                
+                var bound = new google.maps.LatLngBounds(); 
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: (isSearchedAddress || isCustomerCapturedLoc) ? 15 : 10,
+                    center: {lat: centeredLat, lng: centeredLng}
+                    //mapTypeId: google.maps.MapTypeId.ROADMAP
+                    // mapTypeId: 'satellite'
+                });
+                //center: new google.maps.LatLng( -34.397, 150.644 );
+                var infowindow = new google.maps.InfoWindow();
+                
+                var marker, i;
+                if(locations){
+                    for (i = 0; i < locations.length; i++) { 
+                        bound.extend( new google.maps.LatLng(locations[i][2], locations[i][3]) );
+                        marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                            map: map
+                        });
+                        //marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png'),
+                        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                            return function() {
+                                infowindow.setContent(locations[i][0]);
+                                infowindow.open(map, marker);
+                            }
+                        })(marker, i));
+                    }
+                }
+            }
+        
+        
+        </script>  
+        </apex:outputPanel>
+    </body>
+</apex:page>

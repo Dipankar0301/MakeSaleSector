@@ -1,0 +1,114 @@
+<aura:component controller= "Event_Callplan" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <!--Picklist Field Attribute-->
+    <aura:attribute name="picklistField" type="object"/>
+    <aura:attribute name="eventRecord" type="Object"/>
+    <aura:attribute name="showFields" type="String"/>
+    <aura:attribute name="onclickStatus" type="String"/>
+    <aura:attribute name="onclickFirstTime" type="Boolean" default="True"/>
+    <aura:attribute name="callPlanID" type="String"/>
+    <aura:attribute name="showCard" type="Boolean" default="false"/>
+    <aura:attribute name="myVal" type="String"/>
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    <aura:attribute name="StatusEditMode" type="boolean" default="false" />
+    <aura:attribute name="fieldsScheduled" type="String[]" default="['Purpose__c','Objective__c','Premise__c','Strategy__c','Anticipate__c']" />
+    <aura:attribute name="fieldsPlanned" type="String[]" default="['Agenda__c','Minutes_and_Action__c']" />
+    <aura:attribute name="fieldsMinutesRecorded" type="String[]" default="['Minutes_and_Action__c']" />
+    <aura:attribute name="fieldsCancelled" type="String[]" default="['']" />
+    <aura:handler event="force:refreshView" action="{!c.cancelInit}" />
+    
+    
+    <!--Force Record Data to update picklist value-->
+    <force:recordData aura:id="record"
+                      layoutType="FULL"
+                      recordId="{!v.recordId}"
+                      targetFields="{!v.picklistField}"
+                      mode="EDIT"/>
+    
+    
+    
+    <div dir="ltr" >
+        <div onclick="{!c.onclick1}">
+        <!--Lightning Picklist Path For Applicatin Status-->
+        <lightning:picklistPath recordId="{!v.recordId}"
+                                variant="linear"
+                                picklistFieldApiName="Status_Event__c"
+                                onselect="{!c.handleSelect}"
+                                 />
+        </div>
+        <aura:if isTrue ="{!v.showCard}">
+            <lightning:card>
+                <div class="slds-grid slds-gutters slds-wrap" >
+                    <aura:if isTrue="{!v.showFields == 'Scheduled'}"> 
+                        <div class="slds-col slds-size--1-of-2">
+                            <lightning:recordForm recordId="{!v.callPlanID}" 
+                                                  objectApiName="Call_Plan__c"
+                                                  mode="view"
+                                                  fields="{!v.fieldsScheduled}" 
+                                                  onload="{!c.Onload}"
+                                                  onsuccess ="{!c.onSuccess}"/>
+                        </div>
+                        
+                        <div class="slds-col slds-size--1-of-2">
+                            <span style="font-size: 15px;color: slategrey;">GUIDANCE FOR SUCCESS</span><hr style="margin: 1rem 0;"/>
+                            <span><b><ul class="slds-list--dotted">
+                                <li>Purpose - Why am I making this visit?</li>
+                                <li>Objective - What result do I expect from this visit?</li>
+                                <li>Premise - What do I already know about the customer?</li>
+                                <li>Strategy - How will I achieve my objective? What will I do during this visit?</li>
+                                <li>Anticipate - What questions/concerns may the customer raise during this meeting?</li>
+                                
+                                </ul></b></span>
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!v.showFields == 'Planned'}">
+                        <div class="slds-col slds-size--1-of-2">
+                            <lightning:recordForm recordId="{!v.callPlanID}" 
+                                                  objectApiName="Call_Plan__c"
+                                                  mode="view"
+                                                  fields="{!v.fieldsPlanned}" 
+                                                  onload="{!c.Onload}"
+                                                  onsuccess ="{!c.onSuccess}"/>
+                        </div>
+                        <div class="slds-col slds-size--1-of-2">
+                            <span style="font-size: 15px;color: slategrey;">GUIDANCE FOR SUCCESS</span><hr style="margin: 1rem 0;"/>
+                            <span><b><ul class="slds-list--dotted">
+                                <aura:if isTrue="{!v.CallPlanType!='Call Plan Challenger'}">
+                                    <li>Set the agenda for the visit.</li>
+                                    <li>Record the minutes and actions, post visit</li>
+                                </aura:if> 
+                                </ul></b></span>
+                        </div>
+                        
+                    </aura:if>
+                    <aura:if isTrue="{!v.showFields == 'Minutes Recorded'}"> 
+                        <div class="slds-col slds-size--1-of-2">
+                            <lightning:recordForm recordId="{!v.callPlanID}" 
+                                                  objectApiName="Call_Plan__c"
+                                                  mode="view"
+                                                  fields="{!v.fieldsMinutesRecorded}" 
+                                                  onload="{!c.Onload}"
+                                                  onsuccess ="{!c.onSuccess}"/>
+                        </div>
+                        <div class="slds-col slds-size--1-of-2">
+                            <span style="font-size: 15px;color: slategrey;">GUIDANCE FOR SUCCESS</span><hr style="margin: 1rem 0;"/>
+                            <span><b>Call report is complete.</b></span>
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!v.showFields == 'Cancelled'}">
+                        <lightning:recordForm recordId="{!v.callPlanID}" 
+                                                  objectApiName="Call_Plan__c"
+                                                  mode="view"
+                                                  fields="{!v.fieldsCancelled}" 
+                                                  onload="{!c.Onload}"/>
+                        <div class="slds-col slds-size--1-of-2">
+                            <span style="font-size: 15px;color: slategrey;">GUIDANCE FOR SUCCESS</span><hr style="margin: 1rem 0;"/>
+                            <span><b>Call report is complete.</b></span>
+                        </div>
+                    </aura:if>
+                    
+                </div>
+            </lightning:card>  
+        </aura:if>
+    </div>
+</aura:component>

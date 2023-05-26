@@ -1,0 +1,76 @@
+<aura:component controller = "MakeSaled_RelatedOppsInCampaign" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+	<aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="OpportunityList" type="Account[]" />
+    <aura:handler name="init" value="{!this}" action="{!c.myAction}" />
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="data1" type="List"/>
+    
+    
+    <aura:attribute name="sortDirection" type="String" default="asc" />
+    <aura:attribute name="defaultSortDirection" type="String" default="asc" />
+    <aura:attribute name="sortedBy" type="String" />
+    
+    <lightning:card iconName="standard:work_capacity_usage" title="Opportunities for Related Campaigns">
+        <aura:if isTrue="{!not(empty(v.OpportunityList))}">
+            
+            
+            <lightning:datatable data="{! v.OpportunityList }"
+                                 columns="{! v.columns }"
+                                 keyField="id"
+                                 hideCheckboxColumn="true"
+                                 
+                                 defaultSortDirection="{!v.defaultSortDirection}"
+                                 sortedDirection="{!v.sortDirection}"
+                                 sortedBy="{!v.sortedBy}"
+                                 onsort="{!c.handleSort}"     
+                                 
+                                 />
+          <!--  <div class="slds-scrollable" > -->
+           <!-- <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="slds-text-title_caps" scope="col">
+                            <div class="slds-truncate" title="Name">Account</div>
+                        </th>
+                        <th class="slds-text-title_caps" scope="col">
+                            <div class="slds-truncate" title="Title">Opportunity</div>
+                        </th>
+                        <th class="slds-text-title_caps" scope="col">
+                            <div class="slds-truncate" title="Title">Stage</div>
+                        </th>
+                        <th class="slds-text-title_caps" scope="col">
+                            <div class="slds-truncate" title="Title">Revenue (USD)</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration  items="{!v.OpportunityList}" var="con">
+                        <tr class="slds-hint-parent">
+                            <td data-label="File Name">
+                                <a href="{!'/'+con.AccountId}"> <div class="slds-truncate" title="File Name">{!con.Account.Name}</div> </a> 
+                            </td>
+                            <td data-label="File Name">
+                                <a href="{!'/'+con.Id}"> <div class="slds-truncate" title="File Name">{!con.Name}</div>  </a> 
+                            </td>
+                            <td data-label="File Name">
+                                <div class="slds-truncate" title="File Name">{!con.StageName}</div>  
+                            </td>
+                            <td data-label="File Name">
+                               <div class="slds-truncate" title="File Name">{!con.Value_Amount__c}</div>
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+			-->
+            <aura:set attribute="else">
+                <div Style="text-align : center"> " There are no related Opportunities"</div>
+            </aura:set>
+          <!--  </div> -->
+        </aura:if>
+        <br/>
+        <br/>
+        <br/>               	
+                            
+    </lightning:card>
+</aura:component>

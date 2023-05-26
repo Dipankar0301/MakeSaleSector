@@ -1,0 +1,11 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId"   >
+    <aura:attribute name="fields"
+                    type="String[]"
+                    default="['MakeSaleSector_Accept_Annual_values__c']"/>
+    <lightning:card >
+        <lightning:recordForm objectApiName="Opportunity"
+                              fields="{!v.fields}" recordId = "{!v.recordId}"
+                              onsuccess="{!c.handleSuccess}"  columns="2"/>
+    </lightning:card>
+    
+</aura:component>

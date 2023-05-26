@@ -1,0 +1,16 @@
+<apex:page standardController="contact" extensions="Contactextention" sidebar="false" showHeader="false">
+
+   <apex:outputPanel rendered="{!checkboxs}">
+
+ <script>
+  function toAction() {
+  
+        window.open('/apex/et4ae5__ContactActions?id={!contact.Id}', '_blank'); 
+    }
+</script>
+
+<input type="button" value="Contactaction" class="btn" onclick="toAction()" />
+
+    </apex:outputPanel>
+
+</apex:page>

@@ -1,0 +1,85 @@
+<aura:component controller="Sector_CallPlanListView" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	<!--Handler -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="appEvent" type="c:Sector_CallPlanLstViewEvent"/>
+    <aura:handler event="force:showToast" action="{!c.doInit}" />
+    <aura:handler event="c:Sector_CallPlanLstViewEvent" action="{!c.handleEventAction}" />
+    
+    <!--Atrributes -->	
+    <aura:attribute name="statusOpts" type="List" default="['All Statuses','Cancelled','Minutes Recorded','Scheduled','Planned']"/>
+    <aura:attribute name="clPlnOpts" type="List" default="['All Call Plan Types','Call Plan POPSA','Call Plan Lite','Call Plan Challenger']"/>
+    <aura:attribute name="listViews" type="String" />
+    <aura:attribute name="listViewsRec" type="String" />
+    <aura:attribute name="listColumn" type="String" />
+    <aura:attribute name="currentListView" type="string" default = "Default"/> 
+    <aura:attribute name="searchAccount" type="string" />
+    <aura:attribute name="searchOpp" type="string" />
+    <aura:attribute name="searchAccPln" type="string" />
+    <aura:attribute name="searchClplnByType" type="string" />
+    <aura:attribute name="searchStatus" type="string" />
+    <aura:attribute name="searchEvent" type="string" />
+    <aura:attribute name="searchStartDate" type="string" default="Start Date"/>
+    <aura:attribute name="searchEndDate" type="string" default="End Date"/>
+    <aura:attribute name="RecordTypeId" type="string" />
+    <aura:attribute name="isPinned" type="boolean" default="false" />
+    <aura:attribute name="isShared" type="boolean" default="false" />
+    <aura:attribute name="disableEdit" type="boolean" default="false" />
+    <aura:attribute name="device" type="string"/>
+    <lightning:overlayLibrary aura:id="overlayLib" />
+    <lightning:navigation aura:id="navService"/>  
+    
+    <aura:if isTrue="{!(v.device == 'DESKTOP')}">
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title">
+                <div class="slds-media">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container" title="Call Plan">
+                            <lightning:icon iconName="custom:custom82" alternativeText="Call Plan" />
+                        </span>
+                    </div>
+                    
+                    <div class="slds-media__body">
+                        <div class="slds-page-header__name">
+                            <div class="slds-page-header__name-title">
+                                <h1>
+                                    Call Plan List View
+                                </h1>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-page-header__col-actions">
+                <div class="slds-page-header__controls">
+                    
+                    <div class="slds-page-header__control">
+                        <ul class="slds-button-group-list">
+                            
+                            <li>
+                                <lightning:button label="New Call Plan" onclick="{!c.createRecord}"/>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    <!--<div class="slds-page-header__control">
+                        <ul class="slds-button-group-list">
+                            <li>
+                                <lightning:button label="Add Columns" iconName="utility:add" onclick="{!c.addColumns}"/>
+                            </li>
+                        </ul>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="slds-page-header__row">
+            <aura:if isTrue="{!v.custMessage !=''}">
+                <div class="slds-text-color_error">
+                    {!v.custMessage}
+                </div>         
+            </aura:if>
+            
+        </div>
+    </aura:if>
+    
+</aura:component>

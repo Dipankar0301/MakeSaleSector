@@ -1,0 +1,8 @@
+<apex:component controller="MakeSaleSector_NewenergiesAppcheckCon">
+    <script> 
+    if("{!Appdevname}" != "{!$Label.MakeSaleSector_NewEnergiseAppDevName}")
+    {
+        alert("{!$Label.MakeSaleSector_NotSectorApp}");
+    }
+    </script>
+</apex:component>

@@ -1,0 +1,21 @@
+<apex:page standardController="AccountTeamMember"  tabStyle="AccountTeamMember">
+<apex:form >
+
+<apex:pageBlock title="Pay Increase" mode="edit">
+
+<apex:pageBlockButtons >
+ <apex:commandButton value="Save" action="{!save}" rerender="error"/>            
+</apex:pageBlockButtons>
+
+ 
+
+<apex:pageBlockSection >
+
+<apex:inputField value="{!AccountTeamMember.AccountAccessLevel}" required="true"/>
+<apex:inputField value="{!AccountTeamMember.UserId}"/>
+
+</apex:pageBlockSection>
+   
+</apex:pageBlock>   
+</apex:form>
+</apex:page>

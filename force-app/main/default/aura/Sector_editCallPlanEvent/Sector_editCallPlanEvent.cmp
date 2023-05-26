@@ -1,0 +1,257 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" controller="Sector_CallPlanListView">
+    <!--Event-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="appEvent" type="c:Sector_CallPlanLstViewEvent"/>
+    <aura:handler event="c:Sector_CallPlanLstViewEvent" action="{!c.handleEventAction}" />
+    <aura:handler name="change"	value="{!v.row.StartDateTime}"	action="{!c.updateDate}" />
+    <aura:handler name="onSaveSuccess" event="force:recordSaveSuccess" action="{!c.handleSaveSuccess}"/>
+    
+    <!--Atrributes-->
+    <aura:attribute name="eventId" type="String"   />
+    <aura:attribute name="recordType" type="String"   />
+    <aura:attribute name="SelectedObject" type="String" default="Account"  />
+	<!--Added to get Label for Account Plan in Related To -->    
+    <aura:attribute name="SelectedObjectLabel" type="String" default="Account"  />
+    <aura:attribute name="SelectedIcon" type="String" default="standard:account"  />
+    <aura:attribute name="row" type="Sector_CallPlanListView.evtClPlnWrapper"   />
+    <aura:attribute name="disableSave" type="boolean" default="false"/>
+    <aura:attribute name="saveerrors" type="String"  />
+    <aura:attribute name="isLoading" type="boolean" default="false" />
+    <aura:attribute name="assignedTo" type="Object"/>
+    <aura:attribute name="selectedRecord" type="Object"/>
+    <aura:attribute name="selectedContact" type="Object"/>
+    <aura:attribute name="selectedRecords" type="List" description="List of Records having data" />
+    <aura:attribute name="selectedResources" type="List" description="List of Records having data" />
+    <aura:attribute name="deleteRecords" type="List" description="List of Records having data" />
+    <aura:attribute name="custMessage" type="String"   />
+     <aura:attribute name="subjError" type="String"   />
+    <aura:attribute name="typeError" type="String"   />
+    <aura:attribute name="startError" type="String"   />
+    <aura:attribute name="endError" type="String"   />
+    <aura:attribute name="HnFError" type="String"   />
+    <aura:attribute name="whatIdError" type="String"   />
+    <aura:attribute name="startDate" type="dateTime" />
+    <aura:attribute name="endDate" type="dateTime" />
+    <aura:attribute name="titleError" type="String" default=""/>
+    <aura:attribute name="callCatError" type="String" default=""/>
+    <aura:attribute name="stageError" type="String" default=""/>
+    <aura:attribute name="mktInfoError" type="String" default=""/>
+    <aura:attribute name="CpRelatedError" type="String" default=""/>
+    <aura:attribute name="getPickListMap" type="map"/>
+    <aura:attribute name="dependentField" type="String[]" default="[]"/>
+    <aura:attribute name="disabledStage" type="boolean" default="false"/>
+    <aura:attribute name="isJapanSales" type="boolean" default="false" />
+    <aura:attribute name="isJapanRT" type="boolean" default="false" />
+    <aura:attribute name="subThemeError" type="String" default=""/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <aura:if isTrue="{!v.isLoading}">
+        <div class="spinnerHolder">
+            <lightning:spinner alternativeText="Loading" size="medium" variant="brand" />
+        </div>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.custMessage !=''}">
+        <div class="slds-text-color_error">
+            {!v.custMessage}
+        </div>
+    </aura:if>
+    <lightning:tabset variant="scoped">
+         <aura:if isTrue="{!(v.row.CallPlanType=='Call Plan POPSA')}">
+            <lightning:tab label="{!v.recordType}" id="one">
+                <lightning:layout multipleRows="true" class="around-small">
+                    <aura:if isTrue="{!v.row.CallPlanType =='Call Plan POPSA'}">
+                        <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6">        
+                            <label style="font-weight:bold">Purpose/Objective</label>
+                            <br></br>
+                            <lightning:inputRichText value="{!v.row.Purpose}" placeholder="Type something interesting" />
+                        </lightning:layoutitem>
+                    </aura:if>
+                    <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6">        
+                        <label style="font-weight:bold">Premise/Stakeholder</label>
+                        <br></br>
+                        <lightning:inputRichText value="{!v.row.Premise}" placeholder="Type something interesting" />
+                    </lightning:layoutitem>
+                    <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6">        
+                        
+                        <label style="font-weight:bold">Strategy/Approach</label>
+                        <br></br>
+                        <lightning:inputRichText value="{!v.row.Strategy}" placeholder="Type something interesting" />
+                    </lightning:layoutitem>
+                    <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6">                                 
+                        <label style="font-weight:bold">Anticipate</label>
+                        <br></br>
+                        <lightning:inputRichText value="{!v.row.Anticipate}" placeholder="Type something interesting" />
+                    </lightning:layoutitem>
+                </lightning:layout>
+                <br/><br/><br/><br/>
+            </lightning:tab>
+       </aura:if>
+        <lightning:tab label="Agenda and Minutes" id="two">
+            <lightning:layout multipleRows="true" class="around-small"> 
+                <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6">                                 
+                    <label style="font-weight:bold">Agenda</label>
+                    <br></br>
+                    <lightning:inputRichText value="{!v.row.Agenda}" placeholder="Type something interesting" />
+                </lightning:layoutitem>
+                
+                <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6">                                 
+                    <label style="font-weight:bold">Minutes and Action</label>
+                    <br></br>
+                    <lightning:inputRichText value="{!v.row.Minutes}" placeholder="Type something interesting" />
+                </lightning:layoutitem>
+            </lightning:layout>
+            <br/><br/>
+        </lightning:tab>
+        
+        
+        
+        
+        <lightning:tab label="Call Plan Details" id="three">
+            
+            <lightning:layout multipleRows="true" class="around-small">                                     
+                
+                <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6">   
+                    <lightning:input type="text" required="true" label="Subject" value="{!v.row.Subject}"></lightning:input>
+                <div class="error">{!v.subjError}</div>
+                </lightning:layoutitem>
+                
+                <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6">
+                    <lightning:input type="text"  label="Location" value="{!v.row.Location}"></lightning:input>
+                </lightning:layoutitem>
+                
+                <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6">        
+                    <ui:inputDateTime aura:id="startdate"  label="Start Date Time" class="" value="{!v.row.StartDateTime}" displayDatePicker="true" />   
+                <div class="slds-text-color_error">{!v.startError}</div>
+                </lightning:layoutitem>
+                
+                <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6">        
+                    <ui:inputDateTime aura:id="enddate"  label="End Date Time" class="field" value="{!v.row.EndDateTime}" displayDatePicker="true" />   
+                <div class="error">{!v.endError}</div>
+   
+                </lightning:layoutitem>
+                
+                <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6">
+                    <label class="slds-form-element__label">Attendees</label>
+                    
+                    <lightning:tabset>
+                        <lightning:tab label="People">
+							<c:makesalessectorcalenderattendeeslwc recordId ="{!v.row.EventId}" />
+                        </lightning:tab>
+                    </lightning:tabset>
+                </lightning:layoutitem>
+                
+                <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6">
+                </lightning:layoutitem>
+                
+                
+                <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6" >
+                    <!--aura:if isTrue="{!v.row.CallPlanType=='Call Plan Challenger'}"--> 
+                     <lightning:input type="text"  label="Related To" value="{!v.row.RelatedToName}" read-only='true' disabled='true'></lightning:input>
+                        <!--<c:LE_CustomLookup  objectName="Opportunity"  
+                                           isRequired="true" 
+                                           value="{!v.row.RelatedTo}" 
+                                           fieldName="Name" 
+                                           label="Related to Opportunity" 
+                                           iconName="standard:opportunity" 
+                                           placeholder="Enter Value" /> -->
+                        
+                        <!--aura:set attribute="else"--> 
+                            <div class="hideIcons" style="margin-top: -11px;}">
+                                <lightning:layout multipleRows="true" class="around-small">
+                                    <lightning:layoutitem padding="around-small" size="2" >
+                                        <div style="margin-top:4px">
+                                         <!--   <c:LE_IconDropDown SelectedObject="{!v.SelectedObject}" SelectedIcon="{!v.SelectedIcon}"/>
+                                       --> </div>
+                                    </lightning:layoutitem> 
+                                    <lightning:layoutitem padding="around-small" size="10" >
+                                        
+                                     <!--   <c:LE_CustomLookup ShowIcon="false" 
+                                                           isRequired="true" 
+                                                           objectName="{!v.SelectedObject}" 
+                                                           value="{!v.row.RelatedTo}"
+                                                           selectedRecord="{!v.selectedRecord}"
+                                                           fieldName="Name" 
+                                                           label="{!'Related To '+v.SelectedObjectLabel}" 
+                                                           iconName="{!v.SelectedIcon}" 
+                                                           placeholder="Enter Value" /> -->
+                                        
+                                    </lightning:layoutitem> 
+                                </lightning:layout>
+                            </div>
+                        <!--/aura:set-->
+                    <!--/aura:if-->
+                    <div class="error">{!v.whatIdError}</div>
+                </lightning:layoutitem>
+                
+                
+                <!--lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6">                    
+                    <label class="slds-form-element__label">Status</label>
+                    <ui:inputSelect aura:id="Status" class="slds-select inputFieldWidth"  value="{!v.row.Status}">
+                        <aura:iteration items="{!v.row.StatusOpts}" var="pick">                                                
+                            <ui:inputSelectOption text="{!pick}"/>                                                
+                        </aura:iteration>
+                    </ui:inputSelect>                        
+                </lightning:layoutitem -->
+                
+                <lightning:layoutitem padding="around-small" size="6" >
+                  <!--  <c:LE_CustomLookup ShowIcon="false" 
+                                       objectName="Contact" 
+                                       isRequired="false" 
+                                       value="{!v.row.Name}" 
+                                       selectedRecord="{!v.selectedContact}"
+                                       fieldName="Name" 
+                                       label="Name" 
+                                       iconName="standard:contact" 
+                                       placeholder="Enter Value" /> -->
+                    
+                </lightning:layoutitem>
+                
+                <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6">
+                    <lightning:input label="Call Plan Type" value="{!v.row.CallPlanType}" disabled="true" />           
+                </lightning:layoutitem>
+                
+                <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6">                    
+                    <label class="slds-form-element__label">Reason for Call</label>
+                    <ui:inputSelect aura:id="accsRating" class="slds-select inputFieldWidth"  value="{!v.row.ReasonforCall}">
+                        <aura:iteration items="{!v.row.ReasonforCallOpts}" var="pick">                                                
+                            <ui:inputSelectOption text="{!pick}"/>                                                
+                        </aura:iteration>
+                    </ui:inputSelect>                        
+                </lightning:layoutitem>
+                
+                <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6">
+                    <label class="slds-form-element__label">Type</label>
+                    <ui:inputSelect aura:id="Type" class="slds-select inputFieldWidth"  value="{!v.row.Type}">
+                        <ui:inputSelectOption text="--- None ---"/>
+                        <ui:inputSelectOption text="Face to Face"/>
+                        <ui:inputSelectOption text="Virtual"/>
+                    </ui:inputSelect>
+                    <div class="slds-text-color_error">{!v.typeError}</div>
+                </lightning:layoutitem>
+                
+                
+                <lightning:layoutitem padding="around-small" size="6" >
+                    <label class="slds-form-element__label">Show Time as </label>
+                    <ui:inputSelect aura:id="showTime" class="slds-select inputFieldWidth"  value="{!v.row.ShowTimeAs}">
+                        
+                        <ui:inputSelectOption text="Busy"/>
+                        <ui:inputSelectOption text="OutofOffice" label ="Out of Office"/>
+                        <ui:inputSelectOption text="Free"/>
+                    </ui:inputSelect>
+                </lightning:layoutitem>
+                
+                <lightning:layoutitem padding="around-small" size="12" smallDeviceSize="12" mediumDeviceSize="6" largeDeviceSize="6" >
+                 <!--   <c:LE_CustomLookup objectName="User" fieldName="Name" label="Assigned To" iconName="standard:user" placeholder="Enter Value" value="{!v.row.AssignedTo}"/>
+               --> </lightning:layoutitem>
+                
+            </lightning:layout>
+        </lightning:tab>
+        
+    </lightning:tabset>
+    
+    <div class="slds-align_absolute-center" >
+        <button class="slds-button slds-button_neutral" onclick="{!c.hidePopup}">Cancel</button>
+        <lightning:button variant="brand" label="Save" onclick="{!c.saveRow}"/>
+        
+    </div>
+</aura:component>

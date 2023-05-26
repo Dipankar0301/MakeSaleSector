@@ -1,0 +1,7 @@
+<design:component label="Single Column Custom Home Page Template">
+    <flexipage:template >
+<flexipage:region name="centerElement" defaultWidth="LARGE">
+            <flexipage:formfactor type="LARGE" width="LARGE" />
+        </flexipage:region>
+    </flexipage:template>
+</design:component>

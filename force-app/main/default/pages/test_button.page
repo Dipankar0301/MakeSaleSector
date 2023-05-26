@@ -1,0 +1,14 @@
+<apex:page id="pg" lightningStylesheets="true">
+<apex:form >
+
+    <apex:pageBlock id="pb">
+
+        
+            <apex:commandButton value="Give Feedback" onclick="window.open('https://forms.office.com/Pages/ResponsePage.aspx?id=qJYe29qjKkSTCyNcrCTNXJT8NoQHwMtDvm6Dmy2qTpNUODZNT0ozMk8yRElFVkNJR0xKTDhNSFE5Ny4u'); return false;"/>
+            <apex:commandButton value="Account Plan Help" onclick="window.open('https://eu001-sp.shell.com/:p:/r/sites/AAFAA7499/Public%20Information%20and%20Resources/R%26ES%20Account%20Planning%20Onboarding%20.pptx?d=w4163e254741d4a2fb548dc90e1d23cc4&csf=1&web=1&e=U7qomy
+'); return false;"/>   
+        
+    </apex:pageBlock>
+
+</apex:form>
+</apex:page>

@@ -1,0 +1,14 @@
+<apex:page standardController="AccountTeamMember">
+<apex:form >
+<apex:pageBlock title="My Content" mode="edit">
+<apex:pageBlockButtons >
+<apex:commandButton action="{!save}" value="Save"/>
+</apex:pageBlockButtons>
+<apex:pageBlockSection title="Content Section" columns="2">
+<apex:inputField value="{!AccountTeamMember.UserId}"/>
+<apex:inputField value="{!AccountTeamMember.TeamMemberRole}"/>
+<apex:inputField value="{!AccountTeamMember.AccountAccessLevel}"/>
+</apex:pageBlockSection>
+</apex:pageBlock>
+</apex:form>
+</apex:page>

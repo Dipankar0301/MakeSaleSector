@@ -1,0 +1,29 @@
+@isTest
+global class MockHTTPResponseEFL implements HttpCalloutMock {
+    // Implement this interface method
+    /*global HTTPResponse respond(HTTPRequest req) {
+        // Optionally, only send a mock response for a specific endpoint
+        // and method.
+        //System.assertEquals('https://example.com/example/test', req.getEndpoint());
+        //System.assertEquals('GET', req.getMethod());
+        
+        // Create a fake response
+        HttpResponse res = new HttpResponse();
+        //res.setHeader('Content-Type', 'application/json');
+        res.setBody('{"well_to_tank": {"value": 0.06119768,"uom": "tonne of CO₂ equivalent","sources": [ { "id": 6,"name": "DEFRA 2021","description": "A set of emission conversion factors for use by UK and international organisations to report greenhouse gas emissions.","publication_date": "2021-06-02T00:00:00Z","source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2021","publisher": {"id": 5,"name": "UK Department for Environment, Food and Rural Affairs", "short_name": "DEFRA","description": "The UK Government Department for Environment, Food and Rural Affairs is responsible for environmental protection, food production and standards, agriculture, fisheries and rural communities." },"parts": [], "show_disclaimer_info": false}]}, "tank_to_wheel": { "value": 0.25024876, "uom": "tonne of CO₂ equivalent", "sources": [{"id": 6,"name": "DEFRA 2021","description": "A set of emission conversion factors for use by UK and international organisations to report greenhouse gas emissions.","publication_date": "2021-06-02T00:00:00Z","source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2021","publisher": {"id": 5, "name": "UK Department for Environment, Food and Rural Affairs","short_name": "DEFRA","description": "The UK Government Department for Environment, Food and Rural Affairs is responsible for environmental protection, food production and standards, agriculture, fisheries and rural communities."},"parts": [],"show_disclaimer_info": false}]} "well_to_wheel": {"value": 0.31144644,"uom": "tonne of CO₂ equivalent","sources": [{"id": 6,"name": "DEFRA 2021","description": "A set of emission conversion factors for use by UK and international organisations to report greenhouse gas emissions.,""publication_date": "2021-06-02T00:00:00Z","source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2021","publisher": {"id": 5, "name": "UK Department for Environment, Food and Rural Affairs","short_name": "DEFRA", "description": "The UK Government Department for Environment, Food and Rural Affairs is responsible for environmental protection, food production and standards, agriculture, fisheries and rural communities."},"parts": [],"show_disclaimer_info": false}] }}');
+        res.setStatusCode(200);
+        return res;
+    } 
+*/
+    
+    public HttpResponse respond(HttpRequest rqst) {
+        HttpResponse response = new HttpResponse();
+            response.setStatusCode(200);
+            //response.setBody('{"access_token":"q2fqa7h3q89atzxapy8yq2em","expires_in":3600,"token_type":"Bearer"}');
+       		//response.setBody('{"well_to_tank": {"value": 0.06119768,"uom": "tonne of CO₂ equivalent","sources": [ { "id": 6,"name": "DEFRA 2021","description": "A set of emission conversion factors for use by UK and international organisations to report greenhouse gas emissions.","publication_date": "2021-06-02T00:00:00Z","source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2021","publisher": {"id": 5,"name": "UK Department for Environment, Food and Rural Affairs", "short_name": "DEFRA","description": "The UK Government Department for Environment, Food and Rural Affairs is responsible for environmental protection, food production and standards, agriculture, fisheries and rural communities." },"parts": [], "show_disclaimer_info": false}]}, "tank_to_wheel": { "value": 0.25024876, "uom": "tonne of CO₂ equivalent", "sources": [{"id": 6,"name": "DEFRA 2021","description": "A set of emission conversion factors for use by UK and international organisations to report greenhouse gas emissions.","publication_date": "2021-06-02T00:00:00Z","source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2021","publisher": {"id": 5, "name": "UK Department for Environment, Food and Rural Affairs","short_name": "DEFRA","description": "The UK Government Department for Environment, Food and Rural Affairs is responsible for environmental protection, food production and standards, agriculture, fisheries and rural communities."},"parts": [],"show_disclaimer_info": false}]} "well_to_wheel": {"value": 0.31144644,"uom": "tonne of CO₂ equivalent","sources": [{"id": 6,"name": "DEFRA 2021","description": "A set of emission conversion factors for use by UK and international organisations to report greenhouse gas emissions.,""publication_date": "2021-06-02T00:00:00Z","source_url": "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2021","publisher": {"id": 5, "name": "UK Department for Environment, Food and Rural Affairs","short_name": "DEFRA", "description": "The UK Government Department for Environment, Food and Rural Affairs is responsible for environmental protection, food production and standards, agriculture, fisheries and rural communities."},"parts": [],"show_disclaimer_info": false}] }}');
+        response.setBody('{"well_to_tank":{"value":0.00373548,"uom":"tonne of CO₂ equivalent"},"tank_to_wheel":{"value":0.0120827326,"uom":"tonne of CO₂ equivalent"},"well_to_wheel":{"value":0.0158182126,"uom":"tonne of CO₂ equivalent"}}');
+                               return response;
+    }
+    
+    
+}

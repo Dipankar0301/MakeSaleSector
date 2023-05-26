@@ -1,0 +1,84 @@
+<!--sfdcmonkey.com-->
+<!--Parent Lightning Compomemt-->
+<aura:component controller="addDeleteController" Implements="flexipage:availableForRecordHome,force:hasRecordId">
+    <!--Init handler which is call doInit js function on component Load-->  
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <!--Event handler for Add and Delete Row Event which is fire from Child Component-->    
+    <aura:handler name="DeleteRowEvt" event="c:DeleteRowEvt" action="{!c.removeDeletedRow}"/>
+    <aura:handler name="AddRowEvt" event="c:AddNewRowEvt" action="{!c.addNewRow}"/>
+    <aura:attribute name="validateSave" type="Boolean" Default="false"/>
+    <aura:attribute name="RecordtypeDeveloperName" type="String"/>
+    <!--Aura Attribute for store Contact Object List as Array-->    
+    <aura:attribute name="contactList" type="Financial__c[]"/> 
+    
+    <!--Header Part-->        
+    <div class="slds-page-header">
+        <h1 class="slds-page-header__title">Financial</h1>
+        <!--<p class="slds-text-body_small slds-line-height_reset">By sfdcmonkey.com</p>-->
+    </div>
+    
+    <!--Table Part-->           
+    <table class="slds-table slds-table--bordered slds-table--cell-buffer" style="width:100%;"> 
+        <thead>
+            <tr class="slds-text-title_caps">
+                <th scope="col" >
+                    <div class="slds-truncate">S.No</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Year">Year</div>
+                </th>
+                <aura:if isTrue="{!v.RecordtypeDeveloperName == 'Nature_Based_Solutions'}">
+                    <th scope="col">
+                        <div class="slds-truncate" title="Total net credits(mtpa)">Total net credits(mtpa)
+                        <!--Helptext and tooltip component-->
+                            <span>
+                               <lightning:helptext iconName="utility:info" content="Shell Share credits net of buffer and leakage on issuance date (not production)"/>
+                            </span>
+                        </div>
+                    </th>
+                </aura:if>
+                <aura:if isTrue="{!v.RecordtypeDeveloperName == 'Nature_Based_Solutions'}">
+                    <th scope="col">
+                        <div class="slds-truncate" title="OPEX($M)">OPEX($M)</div>
+                    </th>
+                </aura:if>
+                <th scope="col">
+                    <div class="slds-truncate" title="NE CAPEX($M)">NE CAPEX($M)
+                    <!--Helptext and tooltip component-->
+                        <span>
+            				<lightning:helptext iconName="utility:info" content="Please enter the annual Capex (for JVA’s, please only include the S/S cash injected from a Shell perspective)." />
+                        </span>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Non-NE CAPEX($M)">Non-NE CAPEX($M)
+            <!--Helptext and tooltip component-->
+                        <span>
+            <lightning:helptext iconName="utility:info" content="For informational purposes only, Capex outside of NE budget, e.g. government subsidies or paid by other business – DS, IG, SE" />
+                    </span>
+                        </div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="FEASEX($M)">FEASEX($M)
+                    <span>
+            <lightning:helptext iconName="utility:info" content="Business Development costs prior to completion" />
+                    </span>
+                    </div>
+                </th>
+            </tr>
+        </thead>   
+        <tbody>
+            <!--Iterate the child Component for display Table rows 
+               with pass the List Item Index for track the Every child Component 
+               and pass each List Contact Instance -->         
+            <aura:iteration items="{!v.contactList}" var="item" indexVar="index">
+                <c:dynamicRowItem ContactInstance="{!item}" rowIndex="{!index}" validateSave="{!v.validateSave}" RecordtypeDeveloperName="{!v.RecordtypeDeveloperName}"/>
+                <!--<c:dynamicRowItem ContactInstance="{!item}" rowIndex="{!index}" RecordtypeName="{!v.RecordtypeName}" />-->
+            </aura:iteration>
+        </tbody>
+    </table>
+    <br/>
+    <!--Save Button which is call Save js function on click --> 
+    <button class="slds-button slds-button_brand" onclick="{!c.Save}">Save</button>
+</aura:component>

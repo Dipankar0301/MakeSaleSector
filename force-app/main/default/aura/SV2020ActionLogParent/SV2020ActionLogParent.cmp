@@ -1,0 +1,81 @@
+<!-- Author - Sahil Khosla
+ 	 Date Last Modified - 23/4/2020
+-->
+<aura:component controller="SV2020dynamicRowsController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+    <!-- attribues -->
+    <aura:attribute name="records" type="Object[]"/>
+    <aura:attribute name="rows" type="Integer"/>
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="visible" type="Boolean" default="false"/>
+    
+    <!--handler-->
+    <aura:handler name="init" value="{!this}" action="{!c.doinit}"/>
+    <div class="slds-grid slds-wrap">
+        <!--title-->
+        <div class="slds-col slds-size_12-of-12 bg_section slds-text-heading_small slds-p-around_xx-small">
+            <p class=".slds-float_left"><lightning:icon iconName="utility:chevrondown" size="x-small" alternativeText="Cdown" title="Action Log" />   Action Log</p>
+        </div>
+    </div>
+    <lightning:card title="">        
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-m-top_small">
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <lightning:layout>
+                        <lightning:layoutItem  flexibility="auto, no-grow">
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Sno">S.No</div>
+                            </th>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="4" >
+                            <th class="" scope="col">
+                                <div class="slds-truncate">Date</div>
+                            </th>
+                        </lightning:layoutItem> 
+                        <lightning:layoutItem size="4" >
+                            <th class="" scope="col">
+                                <div class="slds-truncate">Comment</div>
+                            </th>
+                        </lightning:layoutItem> 
+                        <lightning:layoutItem size="4" >
+                            <th class="" scope="col">
+                                <div class="slds-truncate">Action</div>
+                            </th>
+                        </lightning:layoutItem> 
+                    </lightning:layout>
+                </tr>
+            </thead>
+        </table>
+        
+        <div class="slds-scrollable--y" style="height: 200px;">
+            <aura:iteration items="{!v.records}" var="rec" indexVar="index">
+                
+                <lightning:layout>
+                    <lightning:layoutItem  padding="around-small" flexibility="auto, no-grow">
+                        <div class="slds-text-heading_small slds-text-align_center">{!index + 1}.</div>
+                    </lightning:layoutItem>
+                    <c:SV2020ActionLog record="{!rec}"/>
+                    <lightning:layoutItem size="4" padding="around-small">
+                        <a name="{!index}" onclick="{!c.remove}">
+                            <lightning:icon iconName="utility:delete" alternativeText="delete"/>
+                        </a>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </aura:iteration>
+        </div>
+        <div class="slds-grid slds-grid_reverse">
+            <div class="slds-col slds-size_4-of-12 ">
+                <aura:if isTrue="{!v.visible}">
+                    <div class="slds-p-top_small">
+                        Saved {!v.rows} records...
+                    </div>
+                </aura:if>
+            </div>
+            
+        </div>
+        <div class="slds-col">
+            <lightning:button label="Add Row" onclick="{!c.add}" variant="brand"/>         
+            <lightning:button label="Save" onclick="{!c.save}" variant="brand"/>
+        </div>
+        
+    </lightning:card>
+</aura:component>

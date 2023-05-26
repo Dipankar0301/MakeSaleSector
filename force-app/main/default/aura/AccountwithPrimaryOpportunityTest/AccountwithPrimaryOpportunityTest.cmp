@@ -1,0 +1,66 @@
+<aura:component implements="flexipage:availableForRecordHome" >
+    
+    <lightning:card >
+        <div class="slds-page-header slds-page-header_related-list">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media">
+                        <div class="slds-media__body">
+                            <div class="slds-page-header__name">
+                                <div class="slds-page-header__name-title">
+                                    <h1>
+                                        <span class="slds-page-header__title slds-truncate" title="Primary Opportunities">Primary Opportunities</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped" aria-label="Example table of Opportunities with striped rows">
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Opportunity Name">Opportunity Name</div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Account Name">Account Name</div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Close Date">Close Date</div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Stage">Stage</div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Opportunity Lifetime Revenue (USD$)">Amount</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="slds-hint-parent">
+                    <th data-label="Opportunity Name" scope="row">
+                        <div class="slds-truncate" title="Circuit Design">
+                            <a href="/lightning/r/Opportunity/0063G000002qPKEQA2/view" tabindex="-1">Circuit Design - 2021</a>
+                        </div>
+                    </th>
+                    <td data-label="Account Name">
+                        <div class="slds-truncate" title="Circuit Design">Circuit Design</div>
+                    </td>
+                    <td data-label="Close Date">
+                        <div class="slds-truncate" title="27/12/2021">27/12/2021</div>
+                    </td>
+                    <td data-label="Suspect/Lead">
+                        <div class="slds-truncate" title="Suspect/Lead">Suspect/Lead</div>
+                    </td>
+                    <td data-label="Opportunity Lifetime Revenue (USD$)">
+                        <div class="slds-truncate" title="10,000.00">10,000.00</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </lightning:card>
+</aura:component>

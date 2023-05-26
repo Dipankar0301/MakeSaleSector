@@ -1,0 +1,25 @@
+<aura:component
+    implements="flexipage:availableForRecordHome,force:hasRecordId">
+    <aura:attribute name="fields" type="List" 
+                    default="['Biogenic_Emission_Tonnes_yr__c', 'Total_CO2_Emissions_Tonnes_yr__c',
+                             'Non_Biogenic_Emission_Tonnes_yr__c', 'CO2_captured_tonnes_a__c',
+                             'Hydrogen_production_on_site_ktpa__c', 'Natural_Gas_consumption_MWh_a__c',
+                             'Hydrogen_feedstock_consumption_ktpa__c','Power_consumption_GWh_a__c',
+                             'Hydrogen_as_fuel_consumption_ktpa__c','NH3_consumptions_ktpa__c']"/>
+    
+    
+    <div class="slds-section slds-is-open">
+        <h3 class="slds-section__title slds-theme_shade">
+            <span class="slds-truncate slds-p-horizontal_small" title="Site Attributes">Site Attributes</span>
+        </h3>
+        <div aria-hidden="false" class="slds-section__content">
+            
+            <lightning:recordForm
+                                  recordId="{!v.recordId}"
+                                  objectApiName="Site__c"
+                                  columns="2"
+                                  fields="{!v.fields}" />
+            
+        </div>
+    </div>
+</aura:component>

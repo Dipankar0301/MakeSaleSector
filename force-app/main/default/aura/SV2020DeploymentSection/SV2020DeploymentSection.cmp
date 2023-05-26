@@ -1,0 +1,34 @@
+<!-- Author - Sahil Khosla
+ 	 Date Last Modified - 23/4/2020
+-->
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:appHostable,force:lightningQuickAction" access="global" controller='SV2020FreeCashFlow'>
+    <!-- attributes -->
+    <aura:attribute name="FCFList" type="Object[]"/>
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="data" type="Object"/>
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="errors" type="Object" default="[]"/>
+    <aura:attribute name="draftValues" type="Object" default="[]"/>
+    
+    <!--handler-->
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    
+    <div class="slds-grid slds-wrap">
+        <!--title-->
+        <div class="slds-col slds-size_12-of-12 bg-section slds-text-heading_small slds-p-around_xx-small">
+            <p class=".slds-float_left"><lightning:icon iconName="utility:chevrondown" size="x-small" alternativeText="Cdown" title="Deployment Value" />   Deployment Value</p>
+        </div>
+        <!--table-->
+        <div class="slds-m-top_small slds-size_8-of-8">
+            <lightning:datatable
+                                 columns="{! v.columns }"
+                                 data="{! v.data }"
+                                 keyField="Id"
+                                 errors="{! v.errors }"
+                                 draftValues="{! v.draftValues }"
+                                 hideCheckboxColumn="true"
+                                 onsave="{! c.saveData }"
+                                 />
+        </div>
+    </div>
+</aura:component>

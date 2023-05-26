@@ -1,0 +1,189 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+                access="global" controller = "Sector_AddASiteZInOpportunity">    
+    
+    <aura:attribute name="showcomponent" type="boolean" />
+    <aura:attribute name="options4" type="List" default="" />
+    <aura:attribute name="options4id" type="List" default="" />
+    <aura:attribute name="values4" type="List"   default=" " description="Selected value in Multi Select" />
+    <aura:attribute name="values4id" type="List"   default=" " description="Selected value's id in Multi Select" />
+    
+    <aura:attribute name="recordId" type="String"   default="" description="RecordId of the record" />
+    <aura:attribute name="recordTypeId" type="String"   default="" description="RecordtypeId of the record" />
+    <aura:attribute name="parentAccountId" type="String"   default="" description="Parent account record Id" />
+    <aura:attribute name="label" type="string" default="" description="Label will be displayed above input Box" />
+    <aura:attribute name="minChar" type="Integer" default="1" description="Minimum character to type for search" />
+    <aura:attribute name="disabled" type="Boolean" default="true" description="Disable the combobox" />
+    <aura:attribute name="disabled1" type="Boolean" default="false" description="Disable the combobox" />
+    <aura:attribute name="multiSelect" type="Boolean" default="true" description="Switch between single and multiSelect" />
+    
+    <!-- Internal Use Attributes -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+    <aura:attribute name="searchString4"   type="string" default="" description="String to search"/>
+    <aura:attribute name="message"   type="String" default="" />
+    
+    <aura:attribute name="ShowSpinner" type="boolean" default="false"/>
+    
+    <!--<aura:html tag="style">
+        .slds-spinner_container {
+        top: 16% !important;
+        bottom: 16% !important;
+        }
+    </aura:html>    -->
+    
+    <aura:if isTrue="{!v.showcomponent}">
+        <lightning:card >
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container" >
+                    <!-- Spinner code -->
+                    <aura:if isTrue="{!v.ShowSpinner}">
+                        <div class="demo-only demo-only_viewport demo--inverse" style="height:6rem;background-color:#16325c;position:relative">
+                            <div class="slds-spinner_container slds-is-fixed">
+                                <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                                    <span class="slds-assistive-text">Loading</span>
+                                    <div class="slds-spinner__dot-a"></div>
+                                    <div class="slds-spinner__dot-b"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </aura:if>
+                    
+                    
+                    <div class="slds-section slds-is-open" aura:id="additionalsectiondiv" >
+                        
+                        <lightning:card variant="Narrow" aura:id="fruitsSection1">
+                            <header class="slds-modal__header">
+                                
+                                <h2 id="modal-heading-01" class="slds-test-heading_medium slds-hyphenate">Add Sites</h2> 
+                                
+                            </header>
+                            <div class="slds-section__content" id="fruitsList">
+                                <div class="slds-p-horizontal_small">
+                                    <div class="slds-combobox_container" >
+                                        Sites
+                                        <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open" aura:id="resultsDiv4" aria-expanded="true" aria-haspopup="listbox" role="combobox">
+                                            <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                                                <lightning:input aura:id="inputLookup4" class="inputBox" placeholder="Select an Option" onblur="{!c.handleBlur}" onclick="{!c.showOptions}" onkeyup="{!c.filterOptions}" value="{!v.searchString4}" autoComplete="off" variant="label-hidden" id="combobox-id-1" />
+                                                <lightning:icon class="slds-input__icon" iconName="utility:down" size="x-small" alternativeText="search"/>
+                                            </div>
+                                            <div id="listbox-id-1" aura:id="selectLookup4" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid" style="{! 'max-height:' + (8 + (v.recordCount * 40)) + 'px' }">
+                                                <ul class="slds-listbox slds-listbox_vertical recordListBox" role="presentation">
+                                                    <aura:if isTrue="{!empty(v.message)}" >
+                                                        
+                                                        <aura:iteration items="{!v.options4}" var="option" >
+                                                            
+                                                                <!--<li class="{!'slds-listbox__item disabledItem' + if(option.isVisible,'','slds-hide')}">
+                                                                    <span class="slds-media slds-listbox__option_entity verticalAlign slds-truncate">{!option.label}</span>
+                                                                </li> -->
+                                                                    <li id="{!option.value}" class="{!'slds-listbox__item eachItem' + if(option.isVisible,'',' slds-hide')}" onmousedown="{!c.selectItem4}">
+                                                                        <div class="slds-grid">
+                                                                            <lightning:icon class="{!if(option.selected,'','slds-hide')}" iconName="utility:check" size="x-small" alternativeText="icon" />
+                                                                            <span class="slds-media slds-listbox__option_entity verticalAlign slds-truncate">{!option.label}</span>
+                                                                        </div>  
+                                                                    </li>
+                                                                    
+                                                        </aura:iteration>
+                                                        <aura:if isTrue="{!empty(v.values4)}">
+                                                            <li class="slds-listbox__item">
+                                                                <span class="slds-media slds-listbox__option_entity verticalAlign slds-truncate">{!v.message}</span>
+                                                            </li>
+                                                        </aura:if>
+                                                    </aura:if>
+                                                </ul>   
+                                            </div>
+                                        </div> 
+                                    </div>
+                                    <br/>
+                                    <aura:iteration items="{!v.options4}" var="option">
+                                        
+                                        <aura:if isTrue="{!option.selected}">
+                                            <lightning:pill class="slds-m-around_xx-small" aura:id="site" name="{!option.value}" label="{!option.label}" onremove="{!c.closePill4}"/>
+                                            
+                                        </aura:if>
+                                    </aura:iteration>
+                                    
+                                    <aura:if isTrue="{!AND(v.options4.length == 0)}" >
+                                        <lightning:formattedRichText value="{!$Label.c.Sector_Site_MultiPicklist_NoSiteFound}"/>
+                                    </aura:if> 
+                                    
+                                </div>
+                                <br/> 
+                                
+                                <footer class="slds-modal__footer">
+                                    <lightning:button variant="neutral"
+                                                      label="Cancel"
+                                                      onclick="{! c.closeModel }"/>
+
+                                        <lightning:button variant="brand"
+                                                          label="Save"
+                                                          onclick="{! c.handleSaveRecord }"/>
+                                   
+                                    
+                                        <lightning:button variant="brand"
+                                                          label="Create a Site"
+                                                          onclick="{! c.addNewSite }"/> 
+                                    <!--<lightning:button variant="brand"
+                                                          label="Add new Site"
+                                                          onclick="{! c.addNewSite1 }"/> -->
+                                    
+                                </footer>
+                            </div> 
+                        </lightning:card>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </section>
+        </lightning:card>
+        
+        <!--Ab -->
+    </aura:if>
+    <aura:if isTrue="{!v.disabled1}">
+        <div>
+  		<section role="dialog" tabindex="-1" aria-label="Meaningful description of the modal content" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+	    	<div class="slds-modal__container">
+	      	<header class="slds-modal__header">
+	        	<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.noBtn}">
+	          	<lightning:icon iconName="utility:close" size="small" variant="neutral"/>
+	          	<span class="slds-assistive-text">Close</span>
+	        	</button>
+	      	</header>
+
+	        <div class="slds-modal__content slds-p-around_medium alignLeft" id="modal-content-id-1">
+	        	<lightning:recordForm 
+                          objectApiName="Site__c"
+                          layoutType="Full"
+                          columns="2"
+                          recordTypeId="{!v.recordTypeId}" 
+                          oncancel="{!c.onCancel}"
+                          onload="{!c.handleLoad}"/>
+                
+               <!-- <lightning:recordEditForm aura:id="form"
+                                  objectApiName="Site__c"     
+                                  onload="{!c.handleOnload}"
+                                  onsubmit="{!c.handleOnSubmit}"
+                                  onsuccess="{!c.handleOnSuccess}"
+                                  onerror="{!c.handleOnError}"
+                                          class="slds-card__body_inner">
+                    <lightning:inputField fieldName="Name"/>
+                    </lightning:recordEditForm> -->
+        
+	      	</div>
+	      	<footer class="slds-modal__footer">
+	        	<!--<lightning:button label="Yes"
+	                    variant="brand" class=""
+	                    onclick="{!c.yesBtn}"/> -->
+	          	<lightning:button label="Cancel"
+	                    variant="brand" class=""
+	                    onclick="{!c.noBtn}"/>
+	      	</footer> 
+	    	</div>
+  		</section>
+  	<div class="slds-backdrop slds-backdrop_open"></div>
+	</div>
+        
+        
+    </aura:if>    
+</aura:component>

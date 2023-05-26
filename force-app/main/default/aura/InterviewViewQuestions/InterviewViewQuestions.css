@@ -1,0 +1,44 @@
+.THIS
+.accordion{
+    background-color:white;
+}
+.THIS.header{
+    background-color:rgb(176, 196, 223);
+    font-weight:bold;
+}
+.THIS
+.slds-wrap{
+    white-space: pre-wrap;
+}
+.THIS.Table
+{
+    display: table;
+}
+.THIS.Title
+{
+    display: table-caption;
+    text-align: center;
+    font-weight: bold;
+    font-size: larger;
+}
+.THIS.Heading
+{
+    display: table-row;
+    font-weight: bold;
+    text-align: center;
+}
+.THIS.Row
+{
+    display: table-row;
+}
+.THIS.Cell
+{
+    display: table-cell;
+    border: solid;
+    border-width: thin;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.THIS.flexipageHeader{
+    
+}

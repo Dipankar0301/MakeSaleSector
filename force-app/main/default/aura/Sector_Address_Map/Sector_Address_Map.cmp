@@ -1,0 +1,26 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+                controller = "Sector_Opportunity_AddMap">
+    <!-- attributes -->
+    <aura:attribute name="mapMarkers" type="Object"/>
+    <aura:attribute name="zoomLevel" type="Integer" />
+    <aura:attribute name="Opportunityfields" type="String[]" 
+                    default="['Billing_Street__c','Billing_City__c','Billing_State_Province__c','Billing_Zip_Postal_Code__c',
+                             'Billing_Country__c']" />
+    <aura:attribute name="showFooter" type="Boolean" default="true" />
+    
+    <!-- handlers-->
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    
+    <lightning:card title="Opportunity Address">
+        
+        <lightning:recordForm recordId="{!v.recordId}" 
+                              objectApiName="Opportunity"
+                              mode="view"
+                              fields="{!v.Opportunityfields}" 
+                              onsuccess ="{!c.onSuccess}"/>
+        
+        <!-- the map component -->
+        
+        <lightning:map  mapMarkers="{! v.mapMarkers }" center="{! v.mapMarkers }" showFooter="{ !v.showFooter }"  /> 
+    </lightning:card>
+</aura:component>

@@ -1,0 +1,21 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="OpportunityList" type="Contact[]" />
+    
+    <aura:attribute name="Field" type="String[]" default="['New_Customer_Value__c','New_Key_Resources__c','New_Revenue_Model__c','New_Key_Processes__c']" />
+    
+    <div class="c-container">
+        <lightning:layout>
+            <lightning:layoutItem size="12" padding="around-small">
+                <div class="custom-box">
+                <lightning:recordForm recordId="{!v.recordId}" 
+                                                  objectApiName="Opportunity"
+                                                  mode="view"
+                                      			  columns="2"
+                                      density="auto"
+                                                  fields="{!v.Field}" />
+                </div>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+</aura:component>

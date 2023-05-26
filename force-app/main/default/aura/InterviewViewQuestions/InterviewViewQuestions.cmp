@@ -1,0 +1,248 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:appHostable,force:lightningQuickAction" access="global" controller='DataFirstInterviewViewQuestionsCtr'>
+    <aura:attribute name="questionList" type="Object[]"/>
+    <aura:attribute name="sectionList" type="List"/>
+    <aura:attribute name="recordId" type="String"/>
+    <!--<aura:attribute name="sectionValues" type="Object[]"/>-->    
+    
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <div class="slds-grid slds-wrap">
+        <div class="slds-col slds-size--1-of-1">
+            <lightning:card title="Assessment" >
+                <aura:set attribute="actions">
+                    <lightning:button name="Save" label="Save" onclick="{!c.saveData}"/>
+                    <lightning:button name="Save" label="Print" onclick="{!c.print}"/>
+                </aura:set>
+            </lightning:card>
+            <lightning:accordion class="accordion" allowMultipleSectionsOpen="true" activeSectionName="Goals">
+                <aura:iteration items="{!v.sectionList}" var="secVal" indexVar="index_section">
+                    <lightning:accordionSection label="{!secVal.Name}" aura:id="Section" class="accordionSection">
+                        
+                        <div class="slds-grid slds-wrap header">
+                            <div class="slds-col slds-p-left_large slds-size--12-of-12"><b>Note For Assessor: If N/A is selected for Maturity Score, N/A must be selected for Urgency For Improvement, and vice-versa.</b></div>
+                            <div></div>
+                            <div class="slds-col slds-p-left_large slds-size--6-of-12"><b>Maturity Level</b></div>
+                            <div></div>
+                        </div>
+                        <div class="slds-grid slds-wrap header">
+                            
+                            <div class="slds-col slds-p-left_large slds-size--12-of-12">
+                                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                                    <thead>
+                                        <tr class="slds-line-height_reset">
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate">Score</div>
+                                            </th>
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate">Description</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="slds-hint-parent">
+                                            <td>
+                                                <div class="slds-truncate">NA</div>
+                                            </td>
+                                            <td>
+                                                <div class="slds-truncate">Not Applicable</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="slds-hint-parent">
+                                            <td>
+                                                <div class="slds-truncate">1</div>
+                                            </td>
+                                            <td>
+                                                <div class="slds-truncate">Not yet started – Some good ideas expressed, but no tangible initiative identifiable.</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="slds-hint-parent">
+                                            <td>
+                                                <div class="slds-truncate">2</div>
+                                            </td>
+                                            <td>
+                                                <div class="slds-truncate">Minor Progress - Some indications of positive development in specific areas, often reactively driven.</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="slds-hint-parent">
+                                            <td>
+                                                <div class="slds-truncate">3</div>
+                                            </td>
+                                            <td>
+                                                <div class="slds-truncate">Standard progress - Proof of successful implementation in a number of areas.</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="slds-hint-parent">
+                                            <td>
+                                                <div class="slds-truncate">4</div>
+                                            </td>
+                                            <td>
+                                                <div class="slds-truncate">Significant progress – Clear proof of successful implementation in most areas, becoming proactively driven.</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="slds-hint-parent">
+                                            <td>
+                                                <div class="slds-truncate">5</div>
+                                            </td>
+                                            <td>
+                                                <div class="slds-truncate">Fully completed – Excellent and comprehensive results in all areas with outstanding solution (no significant improvement possible).</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="slds-grid header">
+                                <br></br>
+                                <div class="slds-col slds-p-left_large slds-size--12-of-12"><b>Urgency for Improvements</b></div>
+                                <br></br>
+                            </div>
+                            <div class="slds-col slds-p-left_large slds-size--12-of-12">
+                                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                                    <thead>
+                                        <tr class="slds-line-height_reset">
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate">Score</div>
+                                            </th>
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate">Description</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="slds-hint-parent">
+                                            <td>
+                                                <div class="slds-truncate">NA</div>
+                                            </td>
+                                            <td>
+                                                <div class="slds-truncate">Not Applicable</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="slds-hint-parent">
+                                            <td>
+                                                <div class="slds-truncate">1</div>
+                                            </td>
+                                            <td>
+                                                <div class="slds-truncate">No activities Required – The current state corresponds to the needs. No dependencies.</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="slds-hint-parent">
+                                            <td>
+                                                <div class="slds-truncate">2</div>
+                                            </td>
+                                            <td>
+                                                <div class="slds-truncate">Minor activities – Some additional activities are required, but can begin next year (not urgent). Low level of dependency.</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="slds-hint-parent">
+                                            <td>
+                                                <div class="slds-truncate">3</div>
+                                            </td>
+                                            <td>
+                                                <div class="slds-truncate">Activities to Maintain the Status Quo – No additional activities required, proceed with current activity plan. Moderate level of dependency.</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="slds-hint-parent">
+                                            <td>
+                                                <div class="slds-truncate">4</div>
+                                            </td>
+                                            <td>
+                                                <div class="slds-truncate">Additional Improvement Activity Required - Additional activities required this year. High level of dependency.</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="slds-hint-parent">
+                                            <td>
+                                                <div class="slds-truncate">5</div>
+                                            </td>
+                                            <td>
+                                                <div class="slds-truncate">High urgency for improvements – Additional activities are required immediately. Very high level of dependency.</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <br></br>
+                        <div class="slds-grid slds-wrap header">
+                            <div class="slds-col slds-p-left_large slds-size--4-of-12"><b>Questions</b></div>
+                            <div class="slds-col slds-p-left_large slds-size--2-of-12"><b>Maturity Level</b> </div>
+                            <div class="slds-col slds-p-left_large slds-size--2-of-12"><b>Urgency for Improvements</b></div>
+                            <div class="slds-col slds-p-left_large slds-size--4-of-12"><b>Comments</b></div>
+                        </div>
+                        
+                        <aura:iteration items="{!v.questionList}" var="qstnVal" indexVar="index_quest">
+                            
+                            <aura:if isTrue="{!qstnVal.Theme__r.Name == secVal.Name}">
+                                <lightning:card title="">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-p-left_medium slds-size--4-of-12">
+                                            <div class="slds-truncate slds-wrap" style="">{!qstnVal.Question__c}</div>
+                                        </div>
+                                        <div class="slds-col slds-p-left_medium slds-size--2-of-12">
+                                            <div class="slds-truncate slds-wrap">
+                                                <lightning:Select value="{!qstnVal.Maturity_Level__c}" aura:id="maturity_level">
+                                                    <option value="NA">NA</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                </lightning:Select>
+                                            </div>
+                                        </div>
+                                        <div class="slds-col slds-p-left_medium slds-size--2-of-12">
+                                            <div class="slds-truncate slds-wrap" id="{!qstnVal.Id}">
+                                                <lightning:Select value="{!qstnVal.Urgency_for_Improvements__c}" aura:id="urgency_for_improvements">
+                                                    <option value="NA">NA</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                </lightning:Select>
+                                            </div>
+                                        </div>
+                                        <div class="slds-col slds-p-left_medium slds-p-right_medium slds-size--4-of-12">
+                                            <div class="slds-truncate ">
+                                                <lightning:textarea aura:id="comments" value="{!qstnVal.Comments__c}" rows="2"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </lightning:card>  
+                            </aura:if>
+                            
+                        </aura:iteration>
+                        <br></br>
+                        <div class="slds-grid slds-wrap header">
+                            <div class="slds-col slds-p-left_medium slds-size--3-of-12"><b>Key Strengths</b></div>
+                            <div class="slds-col slds-p-left_medium slds-size--3-of-12"><b>Key Areas of Improvements</b></div>
+                            <div class="slds-col slds-p-left_medium slds-size--3-of-12"><b>Additional Comments</b></div>
+                        </div>
+                        <div class="slds-grid slds-wrap">
+                            
+                            <div class="slds-col slds-p-left_medium slds-size--3-of-12">
+                                <div class="slds-truncate ">
+                                    <lightning:textarea aura:id="strengths" value="{!secVal.Key_Strengths__c}" rows="2"/>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-p-left_medium slds-size--3-of-12">
+                                <div class="slds-truncate ">
+                                    <lightning:textarea aura:id="improvements" value="{!secVal.Key_Areas_of_Improvement__c}" rows="2"/>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-p-left_medium slds-size--3-of-12">
+                                <div class="slds-truncate ">
+                                    <lightning:textarea aura:id="comments" value="{!secVal.Additional_Comments__c}" rows="2"/>
+                                </div>
+                            </div>
+                        </div>
+                    </lightning:accordionSection>
+                </aura:iteration>
+            </lightning:accordion>
+            <lightning:card title="" >
+                <aura:set attribute="actions">
+                    <lightning:button name="Save" label="Save" onclick="{!c.saveData}"/>
+                    <lightning:button name="Save" label="Print" onclick="{!c.print}"/>
+                </aura:set>
+            </lightning:card>
+        </div>
+    </div>
+</aura:component>

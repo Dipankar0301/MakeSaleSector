@@ -1,0 +1,40 @@
+<aura:component controller = "AccountPlan_RelatedAccountPlans" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+	<aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="AccountPlanList" type="Account[]" />
+    <aura:handler name="init" value="{!this}" action="{!c.myAction}" />
+    <lightning:card iconName="standard:work_capacity_usage" title="Related Account Plans">
+        <aura:if isTrue="{!not(empty(v.AccountPlanList))}">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="slds-text-title_caps" scope="col">
+                            <div class="slds-truncate" title="Name">Account</div>
+                        </th>
+                        <th class="slds-text-title_caps" scope="col">
+                            <div class="slds-truncate" title="Title">Account Plan</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration  items="{!v.AccountPlanList}" var="con">
+                        <tr class="slds-hint-parent">
+                            <td data-label="File Name">
+                                <a href="{!'/'+con.Customer_Name__c}"> <div class="slds-truncate" title="File Name">{!con.Customer_Name__r.Name}</div> </a> 
+                            </td>
+                            <td data-label="File Name">
+                                <a href="{!'/'+con.Id}"> <div class="slds-truncate" title="File Name">{!con.Name}</div>  </a> 
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+            <aura:set attribute="else">
+                <div Style="text-align : center"> " There are no related Account Plans "</div>
+            </aura:set>
+        </aura:if>
+        <br/>
+        <br/>
+        <br/>               	
+                            
+    </lightning:card>
+</aura:component>

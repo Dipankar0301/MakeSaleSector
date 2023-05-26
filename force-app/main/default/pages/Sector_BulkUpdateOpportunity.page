@@ -1,0 +1,5 @@
+<apex:page standardController="Opportunity"  recordSetVar="opportunities" lightningStylesheets="true" >
+    <script>
+        sforce.one.navigateToURL('{!$Label.Sector_BulkUpdate_RedirectURLinVFpage}');
+    </script>
+</apex:page>

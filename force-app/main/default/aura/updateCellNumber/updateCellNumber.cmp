@@ -1,0 +1,9 @@
+<aura:component controller="updateCellNumberApex" implements="force:appHostable,flexipage:availableForAllPageTypes" access="global" >
+	<lightning:card title="Hello">
+        <p class="slds-p-horizontal_small">
+           <lightning:input aura:id= "phone" type="tel" label="Cell Number" value="" name="phone" placeholder="343-343-3434" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"/>
+           <lightning:button variant="brand" label="Submit" title="Submit" onclick="{! c.handleClick }" />
+        </p>
+    </lightning:card>
+    
+</aura:component>

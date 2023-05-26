@@ -1,0 +1,386 @@
+<aura:component controller = "Sector_AddProduct" >
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    <aura:attribute name="showcomponent" type="boolean" />
+    
+    <aura:attribute name="LoadProduct" type="boolean" default="true" />
+    
+    <aura:attribute name="EditProductsList" type="Object[]"/>
+    <aura:attribute name="EditProductsListAPi" type="Object[]"/>
+    <aura:attribute name="EditProductsListAPiTemp" type="Object[]"/>
+    <aura:attribute name="recordId" type="String"  />
+    <aura:html tag="style">.toastMessage.forceActionsText{white-space : pre-line !important;}</aura:html>
+    <aura:attribute name="deletedproducts" type="String[]"  />
+    
+    <aura:attribute name="ShowSpinner" type="boolean" default="false"/>
+    <aura:attribute name="ShowAddProductspopUp" type="boolean" default="false"/>
+    <aura:attribute name="showAddnotEdit" type="boolean" default="true"/>
+    <aura:attribute name="AddProductcolumnEditFromPopUp" type="Object[]"/>
+    <aura:attribute name="AddedProductcolumnEditFromPopUp" type="Object[]"/>
+    <aura:attribute name="ProductNameSearch" type="String"  />
+    <aura:attribute name="ProductFamilySearch" type="String"  />
+    <aura:attribute name="ShowAddProduct" type="boolean" default="true"/>
+    <aura:attribute name="ProductsList" type="Object[]"/>
+    <aura:attribute name="AddProductcolumn" type="Object[]"/>
+    <aura:attribute name="maxRowSelection" type="Integer" default="1"/>
+    <aura:attribute name="EditRowId" type="String"  />
+    
+    <aura:attribute name="colors" type="String[]" default="Red,Green,Blue"/>
+    <aura:handler event="force:refreshView" action="{!c.refresh}" />
+    <aura:html tag="style">
+        .slds-spinner_container {
+        top: 16% !important;
+        bottom: 16% !important;
+        }
+    </aura:html>   
+    
+    <lightning:card >
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container" >
+                
+                <!-- Spinner code -->
+                <aura:if isTrue="{!v.ShowSpinner}">
+                    <div class="demo-only demo-only_viewport demo--inverse" style="height:6rem;background-color:#16325c;position:relative">
+                        <div class="slds-spinner_container slds-is-fixed">
+                            <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                                <span class="slds-assistive-text">Loading</span>
+                                <div class="slds-spinner__dot-a"></div>
+                                <div class="slds-spinner__dot-b"></div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+                <!--added for new edit button requirement -->
+                <aura:if isTrue="{!v.showAddnotEdit}">
+                    <div style = "width: 1142px;margin: -250px;" >
+                        <header  class="slds-modal__header">
+                            
+                            <h2 id="modal-heading-01" class="slds-test-heading_medium slds-hyphenate">Edit Products</h2> 
+                            
+                        </header>
+                        <div style = "height:420px;" class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            
+                            
+                            <aura:if isTrue="{!v.LoadProduct}">                        
+                                <table style="table-layout: fixed; width: 100%" class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+                                    <thead>
+                                        <tr class="slds-line-height_reset">
+                                            <th class="" style = "width:8%;" scope="col">
+                                                <div class="slds-truncate" title="Product Family">Product<br/> Family</div>
+                                            </th>
+                                            <th class="" style = "width:8%;" scope="col">
+                                                <div class="slds-truncate" title="Product Name">Product<br/> Name</div>
+                                            </th>
+                                            <th class="" style = "width:8%;" scope="col">
+                                                <div class="slds-truncate" title="Unit">Product<br/> Unit</div>
+                                            </th>
+                                            <th class="" style = "width:10%;"  scope="col">
+                                                <div class="slds-truncate" title="Total Volume">Total Volume</div>
+                                            </th>
+                                            <th class="" style = "width:10%;" scope="col">
+                                                <div class="slds-truncate" title="Total Revenue (USD$)">Total Revenue<br/> (USD$)</div>
+                                            </th>
+                                            <th class="" style = "width:13%;" scope="col">
+                                                <div class="slds-truncate" title="Total Gross Margin (USD$)">Total Gross Margin<br/> (USD$)</div>
+                                            </th>
+                                            <!-- added-->
+                                            <th class="" style = "width:13%;" scope="col">
+                                                <div class="slds-truncate" title="Total CO2e Emissions (Tonnes)">Total CO2e <br/>Emissions (Tonnes)</div>
+                                            </th> <!-- added-->
+                                            <th class="" style = "width:13%;" scope="col">
+                                                <div class="slds-truncate" title="Total CO2e Emissions Reduction (Tonnes)">Total CO2e Emissions<br/> Reduction (Tonnes)</div>
+                                            </th> 
+                                            <th class="" style = "width:12%;" scope="col">
+                                                <div class="slds-truncate" title="Description">Description</div>
+                                            </th>
+                                            <th class="" style = "width:5%;" scope="col">
+                                                <div class="slds-truncate" ></div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <aura:iteration items="{!v.EditProductsList}" var="productde" >
+                                            <tr class="slds-hint-parent">
+                                                <td data-label="Product Family"  scope="row">
+                                                    <div class="slds-truncate" title="{!productde.ProductFamily}">{!productde.ProductFamily}</div>
+                                                </td>
+                                                <td data-label="Product Name" scope="row">
+                                                    <div class="slds-truncate" title="{!productde.ProductName}">{!productde.ProductName}</div>
+                                                </td>
+                                                <td data-label="Product Unit"  scope="row">
+                                                    <div class="slds-truncate"  title="{!productde.ProductUnit}">{!productde.ProductUnit}</div>
+                                                </td>
+                                                <td data-label="Total Volume">
+                                                    <div class="slds-truncate"><lightning:input type="number" step="0.01" value="{!productde.Volume}" updateOn="keyup"/></div>
+                                                </td>
+                                                <td data-label="Total Revenue (USD$)">
+                                                    <div class="slds-truncate"><lightning:input type="number" step="0.01" value="{!productde.Revenue}" updateOn="keyup"/></div>
+                                                </td>
+                                                <td data-label="Total Gross Margin (USD$)">
+                                                    <div class="slds-truncate"><lightning:input type="number" step="0.01" value="{!productde.ProductProfit}" updateOn="keyup"/></div>
+                                                </td>
+                                                <!-- added-->
+                                                <td data-label="Total CO2 Emissions (Tonnes)">
+                                                    <div class="slds-truncate"><lightning:input type="number" step="0.01" value="{!productde.carbonEmission}" updateOn="keyup"/></div>
+                                                </td> <!-- added-->
+                                                <td data-label="Total CO2 Emissions Reduction (Tonnes)">
+                                                    <div class="slds-truncate"><lightning:input type="number" step="0.01" value="{!productde.co2Emission}" updateOn="keyup"/></div>
+                                                </td> 
+                                                <td data-label="Description">
+                                                    <div class="slds-truncate"><lightning:textarea value="{!productde.ProductDescription}" updateOn="keyup"/></div>
+                                                </td>
+                                                <td data-label="">
+                                                    <div class="slds-truncate">
+                                                        <a data-myvalue="{!productde.Indexnum}" onclick="{!c.removeRow}">
+                                                            <lightning:icon iconName="utility:delete" class="slds-icon slds-icon_small" size="small" alternativeText="icon"/>
+                                                            <span class="slds-assistive-text">Delete Icon</span>
+                                                        </a>    
+                                                    </div>
+                                                    <br/>
+                                                    <div class="slds-truncate">
+                                                        <a data-myvalue="{!productde.Product2Id}" onclick="{!c.editRecord}">
+                                                            <lightning:icon iconName="utility:edit" class="slds-icon slds-icon_small" size="small" alternativeText="icon"/>
+                                                            <span class="slds-assistive-text">Edit Product</span>
+                                                        </a>    
+                                                    </div> 
+                                                </td>  
+                                            </tr>
+                                        </aura:iteration>
+                                    </tbody>
+                                </table>
+                                <aura:if isTrue="{!v.ShowAddProductspopUp}">
+                                    <c:Sector_AddProducts recordId = "{!v.recordId}" showcomponent = "{!v.showcomponent}" />
+                                </aura:if>
+                            </aura:if>
+                            
+                            <!-- this aura condition works when you add new products and go to 'Next' -->
+                            <aura:if isTrue="{!!v.LoadProduct}">                        
+                                <table style="table-layout: fixed; width: 100%" class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+                                    <thead>
+                                        <tr class="slds-line-height_reset">
+                                            <th class="" style = "width:8%;" scope="col">
+                                                <div class="slds-truncate" title="Product Family">Product <br/>Family</div>
+                                            </th>
+                                            <th class="" style = "width:8%;" scope="col">
+                                                <div class="slds-truncate" title="Product Name">Product <br/>Name</div>
+                                            </th>
+                                            <th class="" style = "width:8%;" scope="col">
+                                                <div class="slds-truncate" title="Unit">Product <br/>Unit</div>
+                                            </th>
+                                            <th class="" style = "width:10%;"  scope="col">
+                                                <div class="slds-truncate" title="Total Volume">Total Volume</div>
+                                            </th>
+                                            <th class="" style = "width:10%;" scope="col">
+                                                <div class="slds-truncate" title="Total Revenue (USD$)">Total Revenue<br/> (USD$)</div>
+                                            </th>
+                                            <th class="" style = "width:10%;" scope="col">
+                                                <div class="slds-truncate" title="Total Gross Margin (USD$)">Total Gross <br/> Margin <br/>(USD$)</div>
+                                            </th>
+                                            <!-- added-->
+                                            <th class="" style = "width:10%;" scope="col">
+                                                <div class="slds-truncate" title="Total CO2 Emissions (Tonnes)">Total CO2e <br/>Emissions <br/>(Tonnes)</div>
+                                            </th> <!-- added-->
+                                            <th class="" style = "width:10%;" scope="col">
+                                                <div class="slds-truncate" title="Total CO2 Emissions Reduction (Tonnes)">Total CO2e <br/>Emissions<br/> Reduction <br/>(Tonnes)</div>
+                                            </th>
+                                            
+                                            <th class="" scope="col" style = "width:8%;">
+                                                <div class="slds-truncate" title="Start Year">Start Year</div>
+                                            </th>
+                                            <th class="" scope="col" style = "width:8%;">
+                                                <div class="slds-truncate" title="End Year">End Year</div>
+                                            </th> 
+                                            
+                                            
+                                            <th class="" style = "width:10%;" scope="col">
+                                                <div class="slds-truncate" title="Description">Description</div>
+                                            </th>
+                                            <th class="" style = "width:5%;" scope="col">
+                                                <div class="slds-truncate" ></div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <aura:iteration items="{!v.EditProductsList}" var="productde" >
+                                            <tr class="slds-hint-parent">
+                                                <td data-label="Product Family"  scope="row">
+                                                    <div class="slds-truncate" title="{!productde.ProductFamily}">{!productde.ProductFamily}</div>
+                                                </td>
+                                                <td data-label="Product Name" scope="row">
+                                                    <div class="slds-truncate" title="{!productde.ProductName}">{!productde.ProductName}</div>
+                                                </td>
+                                                <td data-label="Product Unit"  scope="row">
+                                                    <div class="slds-truncate"  title="{!productde.ProductUnit}">{!productde.ProductUnit}</div>
+                                                </td>
+                                                <td data-label="Total Volume">
+                                                    <div class="slds-truncate"><lightning:input type="number" step="0.01" value="{!productde.Volume}" updateOn="keyup"/></div>
+                                                </td>
+                                                <td data-label="Total Revenue (USD$)">
+                                                    <div class="slds-truncate"><lightning:input type="number" step="0.01" value="{!productde.Revenue}" updateOn="keyup"/></div>
+                                                </td>
+                                                <td data-label="Total Gross Margin (USD$)">
+                                                    <div class="slds-truncate"><lightning:input type="number" step="0.01" value="{!productde.ProductProfit}" updateOn="keyup"/></div>
+                                                </td>
+                                                <!-- added-->
+                                                <td data-label="Total CO2 Emissions (Tonnes)">
+                                                    <div class="slds-truncate"><lightning:input type="number" step="0.01" value="{!productde.carbonEmission}" updateOn="keyup"/></div>
+                                                </td> <!-- added-->
+                                                
+                                                <td data-label="Total CO2 Emissions Reduction (Tonnes)">
+                                                    <div class="slds-truncate"><lightning:input type="number" step="0.01" value="{!productde.co2Emission}" updateOn="keyup"/></div>
+                                                </td> 
+                                                
+                                                
+                                                <td data-label="Start Year">
+                                                    <div class="slds-truncate">
+                                                        <lightning:select name = "{!productde.Indexnum}" onchange="{! c.onhandleChange }" value = "{!productde.startyear}">
+                                                            <aura:iteration items="{!productde.optionsstartyear}" var="eachyear">
+                                                                <option value="{!eachyear.value}" >{!eachyear.label}</option>
+                                                            </aura:iteration>
+                                                        </lightning:select>
+                                                    </div>
+                                                </td>
+                                                
+                                                <td data-label="End Year">
+                                                    <div class="slds-truncate">
+                                                        <lightning:select value = "{!productde.endyear}">
+                                                            <aura:iteration items="{!productde.optionsendyear}" var="eachyear">
+                                                                <option value="{!eachyear.value}" >{!eachyear.label}</option>
+                                                            </aura:iteration>
+                                                        </lightning:select>
+                                                    </div>
+                                                </td>
+                                                
+                                                
+                                                <td data-label="Description">
+                                                    <div class="slds-truncate"><lightning:textarea value="{!productde.ProductDescription}" updateOn="keyup"/></div>
+                                                </td>
+                                                <td data-label="">
+                                                    <div class="slds-truncate">
+                                                        <a data-myvalue="{!productde.Indexnum}" onclick="{!c.removeRow}">
+                                                            <lightning:icon iconName="utility:delete" class="slds-icon slds-icon_small" size="small" alternativeText="icon"/>
+                                                            <span class="slds-assistive-text">Delete Icon</span>
+                                                        </a>    
+                                                    </div>
+                                                </td>  
+                                            </tr>
+                                        </aura:iteration>
+                                    </tbody>
+                                </table>
+                                
+                            </aura:if>
+                            
+                            
+                        </div>  
+                        <footer  class="slds-modal__footer" style="text-align: left">
+                            <div class="c-container">
+                            <lightning:layout >
+                                <lightning:layoutItem size ="8" padding= "around-small">
+                                    <p text-align="left">
+                                    EFL matches product volumes to relevant emission factors from available countries. In case of more than 1 country per opportunity EFL 
+                                        will use a Shell approved default. Details on emissions sources used for calculations are currently available in the Fuel Switch Calculator. Some products do not currently have emissions factors.
+                                    </p>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem size ="4" padding= "around-small">
+                                    <div class='div-block'>
+                                        <lightning:button variant="destructive"
+                                                          label="Calculate Emissions"
+                                                          onclick="{! c.calculateEmissions }"/>
+                                        <lightning:button variant="neutral"
+                                                          label="Cancel"
+                                                          onclick="{! c.closeModel }"/>
+                                        <lightning:button variant="brand"
+                                                          label="Save"
+                                                          onclick="{! c.onRecordSubmit }"/></div>
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                            </div>
+                        </footer>
+                    </div>
+                </aura:if>
+                <!-- added for new edit button in Aura Component -->
+                
+            </div>
+            <aura:if isTrue="{!v.ShowAddProductspopUp}">
+                <lightning:card >
+                    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container" >
+                            <!-- Spinner code -->
+                            <aura:if isTrue="{!v.ShowSpinner}">
+                                <div class="demo-only demo-only_viewport demo--inverse" style="height:6rem;background-color:#16325c;position:relative">
+                                    <div class="slds-spinner_container slds-is-fixed">
+                                        <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                                            <span class="slds-assistive-text">Loading</span>
+                                            <div class="slds-spinner__dot-a"></div>
+                                            <div class="slds-spinner__dot-b"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </aura:if>
+                            
+                            <header class="slds-modal__header">
+                                
+                                <h2 id="modal-heading-01" class="slds-test-heading_medium slds-hyphenate">Add Products</h2> 
+                                
+                            </header>
+                            <aura:if isTrue="{!v.ShowAddProduct}">
+                                <div style = "height:420px;" class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                    <div style = "height:70px;">
+                                        <div class="slds-grid slds-gutters">
+                                            <div class="slds-col">
+                                                <span><lightning:input name="input2" label="Product Family" value="{!v.ProductFamilySearch }"/></span>
+                                            </div>
+                                            <div class="slds-col">
+                                                <span><lightning:input name="input2" label="Product Name" value="{!v.ProductNameSearch }"/></span>
+                                            </div>
+                                            <div style = "margin-top: 23px;" class="slds-col slds-size_1-of-4 slds-float_right slds-align_absolute-center">
+                                                <span><lightning:button variant="brand" label="Search" onclick="{! c.SearchProducts }" /></span>
+                                            </div>
+                                        </div>
+                                        <div style = "height:20px;" />
+                                    </div>
+                                    <div style = "height:300px;">
+                                        
+                                        <lightning:datatable data="{!v.ProductsList }" 
+                                                             columns="{!v.AddProductcolumn }" 
+                                                             keyField="id"
+                                                             hideCheckboxColumn="true" 
+                                                             maxRowSelection="{! v.maxRowSelection }"
+                                                             onrowaction="{! c.AddProductRowAction }"/>
+                                    </div>
+                                    
+                                    <!-- body -->
+                                </div>  
+                            </aura:if>
+                            
+                            <aura:if isTrue="{!!v.ShowAddProduct}">
+                                <div style = "height:420px;" class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                    <lightning:datatable data="{!v.AddedProductsList }" 
+                                                         columns="{!v.AddedProductcolumn }" 
+                                                         keyField="id"
+                                                         hideCheckboxColumn="true"
+                                                         maxRowSelection="1"
+                                                         onrowaction="{! c.AddedProductRowAction }"/>
+                                    
+                                    <!-- body -->
+                                </div>  
+                            </aura:if>
+                            
+                            <footer class="slds-modal__footer">
+                                <lightning:button variant="neutral"
+                                                  label="Cancel"
+                                                  onclick="{! c.closeModel }"/>
+                                <!--lightning:button variant="brand"
+                                                  label="Next"
+                                                  onclick="{! c.onRecordSubmit }"/-->
+                            </footer>
+                        </div>
+                    </section>
+                </lightning:card>              
+                
+            </aura:if>
+        </section>
+    </lightning:card>
+    
+    
+    
+</aura:component>

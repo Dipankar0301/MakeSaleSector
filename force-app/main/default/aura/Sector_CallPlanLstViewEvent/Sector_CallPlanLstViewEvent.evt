@@ -1,0 +1,18 @@
+<aura:event type="APPLICATION" description="Event template" >
+<!-- Attributes -->
+    
+    <aura:attribute name="Record" type="Sector_CallPlanListView.evtClPlnWrapper" />
+    <aura:attribute name="action" type="String" />
+    <aura:attribute name="columns" type="list" />
+    <aura:attribute name="sNo" type="String" />
+    <aura:attribute name="pageNumber" type="Integer" />
+    <aura:attribute name="listViews" type="String" />
+    <aura:attribute name="currentListView" type="String" />
+    <aura:attribute name="currentListViewId" type="string" />
+    <aura:attribute name="selectedAttendee" type="object" />
+    <aura:attribute name="selectedResource" type="object" />
+    <aura:attribute name="removedAttendee" type="object" />
+    <aura:attribute name="attendeeList" type="list" />
+    <aura:attribute name="resourcesList" type="list" />
+    <aura:attribute name="deleteList" type="list" />
+</aura:event>

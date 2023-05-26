@@ -1,0 +1,7 @@
+<aura:component implements="flexipage:availableForAllPageTypes">
+    <lightning:card title="Create a Task">
+        <aura:set attribute="actions">
+            <lightning:button label="Create a Task" onclick="{! c.newtaskAction }" />
+        </aura:set>
+    </lightning:card>
+</aura:component>

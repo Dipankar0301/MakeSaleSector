@@ -1,0 +1,4 @@
+<apex:page standardController="Account" showheader="false" sidebar="false">
+  <apex:iframe src="https://app.powerbi.com/Redirect?action=OpenApp&appId=eb2edfa5-a912-423a-96c1-226e22cb432d&ctid=db1e96a8-a3da-442a-930b-235cac24cd5c" height="540px" width="100%" frameborder="0">
+  </apex:iframe>
+</apex:page>

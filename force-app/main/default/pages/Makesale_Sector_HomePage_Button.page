@@ -1,0 +1,49 @@
+<apex:page id="pg" lightningStylesheets="true">
+    <apex:form >
+        <div>
+            <apex:pageBlock id="pb">
+                
+                <div class="slds-border_bottom">
+                    <apex:commandButton value="Report a Bug" onclick="window.open('{!$Label.Sector_Report_a_Bug_URL}'); return false;"/>
+                    <apex:commandButton value="Account Plan Help" onclick="window.open('{!$Label.Sector_Account_Plan_Help_URL}'); return false;"/>
+                    <apex:commandButton value="ShOP" onclick="window.open('{!$Label.Sector_ShOP}'); return false;"/>
+                    <!--apex:commandButton value="SETH" onclick="window.open('{!$Label.Sector_SETH}'); return false;"/-->
+                     <apex:commandButton value="Power BI Funnel Report" onclick="window.open('{!$Label.Sector_Power_BI_Funnel_Report}'); return false;"/>
+                     <apex:commandButton value="QPA Dashboard" onclick="window.open('{!$Label.Sector_Tableau_CRM_QPA_Report}'); return false;"/>
+                    <apex:commandButton value="Data Privacy Guidance" onclick="window.open('{!$Label.Sector_Data_Privacy_Slide_URL}'); return false;"/>
+                    <apex:commandButton value="Fuel Switch Calculator" onclick="window.open('{!$Label.Sector_Fuel_Switch_Calculator_URL}'); return false;"/>
+                    <apex:commandButton value="Decarbonworks" onclick="window.open('{!$Label.Sector_Decarbonworks_URL}'); return false;"/>
+                </div>
+               <!-- <div style = "height:5px;" />
+                <div class="slds-border_bottom">
+                    <apex:commandButton value="ShOP" onclick="window.open('{!$Label.Sector_ShOP}'); return false;"/>
+                    <apex:commandButton value="SETH" onclick="window.open('{!$Label.Sector_SETH}'); return false;"/>
+                    
+                </div>
+                <div style = "height:5px;" />
+                <div class="slds-border_bottom">
+                    <apex:commandButton value="Power BI Funnel Report" onclick="window.open('{!$Label.Sector_Power_BI_Funnel_Report}'); return false;"/>
+                </div> 
+                <div style = "height:5px;" />
+                <div class="slds-border_bottom">
+                    <apex:commandButton value="Data Privacy Guidance" onclick="window.open('{!$Label.Sector_Data_Privacy_Slide_URL}'); return false;"/>
+                </div>
+                <div style = "height:5px;" />
+                <div class="slds-border_bottom">
+                    <apex:commandButton value="Fuel Switch Calculator" onclick="window.open('{!$Label.Sector_Fuel_Switch_Calculator_URL}'); return false;"/>
+                </div>
+                <div style = "height:5px;" />
+                <div class="slds-border_bottom">
+                    <apex:commandButton value="Decarbonworks" onclick="window.open('{!$Label.Sector_Decarbonworks_URL}'); return false;"/>
+                                   
+                </div>-->
+                <div style = "height:5px;" />
+                <div class="slds-border_bottom">
+                <apex:commandButton value="CRD" onclick="window.open('{!$Label.Sector_CRD}'); return false;"/>
+                    <apex:commandButton value="CCMI" onclick="window.open('{!$Label.Sector_CCMI_URL}'); return false;"/>
+                    <apex:commandButton value="X-CRM" onclick="window.open('{!$Label.Sector_XCRM_URL}'); return false;"/>
+                    </div>
+            </apex:pageBlock>
+        </div>
+    </apex:form>
+</apex:page>

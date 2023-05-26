@@ -1,0 +1,108 @@
+<aura:component controller ="makeSales_opportunity_annualisedRevenue" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" action="{!c.init}" value="{!this}" />
+    <aura:attribute name="today" type="Integer" />
+    <aura:attribute name="revenueList" type="String[]" />
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="current" type="String" />
+    <aura:attribute name="current1" type="String" />
+    <aura:attribute name="current2" type="String" />
+    <aura:attribute name="current3" type="String" />
+    <aura:attribute name="current4" type="String" />
+    <aura:attribute name="current5" type="String" />
+    <aura:attribute name="current6" type="String" />
+    <aura:attribute name="current7" type="String" />
+    <aura:attribute name="current8" type="String" />
+    <aura:attribute name="current9" type="String" />
+    
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+        <thead>
+            <tr class="slds-line-height_reset" >
+                <th class="slds-text-title_caps" scope="col">
+                    <div class ="slds-truncate" title="CurrentYear" >{!v.today}</div>
+                    <!-- <div class="slds-truncate" title="Name" >2021</div> -->
+                </th>
+                <th class="slds-text-title_caps" scope="col">
+                    <div class ="slds-truncate" title="CurrentYear_1" >{!v.today + 1}</div>
+                    <!--  <div class="slds-truncate" title="Title">2022</div>  -->
+                </th>
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="CurrentYear_2">{!v.today + 2}</div>
+                </th>
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="CurrentYear_3">{!v.today + 3}</div>
+                </th>
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="CurrentYear_4">{!v.today + 4}</div>
+                </th>
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="CurrentYear_5">{!v.today + 5}</div>
+                </th>
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="CurrentYear_6">{!v.today + 6}</div>
+                </th>
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="CurrentYear_7">{!v.today + 7}</div>
+                </th>
+                
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="CurrentYear_8">{!v.today + 8}</div>
+                </th>
+                
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="CurrentYear_9">{!v.today + 9}</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="slds-hint-parent">
+                <td data-label="File Name">
+                    <lightning:input type="number" name="input1" value= "{!v.current}"/>
+                    
+                </td>
+                <td data-label="File Name">
+                    <lightning:input type="number" name="input1" value= "{!v.current1}"/>
+                    
+                </td>
+                <td data-label="File Name">
+                    <lightning:input type="number" name="input1" value= "{!v.current2}"/>
+                    
+                </td>
+                <td data-label="File Name">
+                    <lightning:input type="number" name="input1" value= "{!v.current3}"/>
+                    
+                </td>
+                <td data-label="File Name">
+                    <lightning:input type="number" name="input1" value= "{!v.current4}"/>
+                    
+                </td>
+                <td data-label="File Name">
+                    <lightning:input type="number" name="input1" value= "{!v.current5}"/>
+                    
+                </td>
+                <td data-label="File Name">
+                    <lightning:input type="number" name="input1" value= "{!v.current6}"/>
+                    
+                </td>
+                <td data-label="File Name">
+                    <lightning:input type="number" name="input1" value= "{!v.current7}"/>
+                    
+                </td><td data-label="File Name">
+                <lightning:input type="number" name="input1" value= "{!v.current8}"/>
+                
+                </td><td data-label="File Name">
+                <lightning:input type="number" name="input1" value= "{!v.current9}"/>
+                
+                </td>
+                
+            </tr>
+        </tbody>
+    </table>
+    <footer class="slds-modal__footer">
+                        
+                        <lightning:button variant="brand"
+                                          label="Save"
+                                          title="Save"
+                                          onclick="{!c.submitDetails}"/>
+                    </footer>
+    
+</aura:component>

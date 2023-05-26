@@ -1,0 +1,136 @@
+<aura:component description="FileUploader" controller="MassUploaderController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction,lightning:actionOverride,forceCommunity:availableForAllPageTypes">
+    <aura:attribute name="fileToBeUploaded" type="Object[]"/>
+    <!-- Define SObject Name for which data load will happen -->
+    <aura:attribute name="SObject" type="String" default="Opportunity"/>
+
+    <aura:attribute name="disabled" type="Boolean" default="true" />
+    <aura:attribute name="displayPreviewBtn" type="Boolean" default="false" />
+    <aura:attribute name="displayTable" type="Boolean" default="false" />
+    <aura:attribute name="fileUploadMsg" type="String" />
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:attribute name="totalCount" type="Integer"/>
+    <aura:attribute name="fileUploaded" type="Boolean" default="false" />
+   
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    <aura:attribute name="disableUploadButton" type="boolean" default="false"/>
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+    <aura:attribute name="errorMessage" type="String" default="" />
+   
+    <aura:attribute name="TableContent" type="String"  description=" Show the Result class"/>
+    <aura:attribute name="TargetFileName" type="String"  description="Name of the file"/>
+    <aura:attribute name="tableheaders" type="Object[]" />
+    <aura:attribute name="fileContentData" type="String"/>
+    <aura:attribute name="filename" type="String"/>
+    <aura:attribute name="filecolumns" type="List[]"/>
+    
+    
+    <aura:attribute name="showMain" type="Boolean" default="true"/>
+    <lightning:notificationsLibrary aura:id="notificationsLibrary"/>
+    
+    <div class="slds-m-around_xx-large">
+        
+        
+        <!--Use aura:if tag to display Model Box, on the bese of conditions. [isOpen boolean attribute] -->
+        <aura:if isTrue="{!v.isOpen}">
+            
+            
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- ###### MODAL BOX HEADER Start ######-->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.closeModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Beezr File Upload Confirmation</h2>
+                    </header>
+                    
+              
+                    <!--###### MODAL BOX FOOTER Part Start ######-->
+                    <footer class="slds-modal__footer">
+                        <lightning:button variant="neutral"
+                                          label="No"
+                                          title="No"
+                                          onclick="{! c.closeModel }"/>
+                        <lightning:button variant="brand"
+                                          label="Yes"
+                                          title="Yes"
+                                          onclick="{! c.loadData }"/>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+            <!--###### MODAL BOX Part END Here ######-->
+            
+        </aura:if>
+    </div>
+    
+    <div class="slds-page-header__title slds-p-right_x-small slds-p-top--small">
+        <b> MASS UPLOAD</b>
+    </div>
+    
+    
+    
+    <div class="slds-form-element">
+        <!--loading spinner start... style=Brand Medium (blue dots)-->
+        <aura:if isTrue="{!v.Spinner}">
+            <div aura:id="spinnerId" class="slds-spinner_container">
+                <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </aura:if>
+        <!-- Loading spinner end-->
+        <span class="slds-form-element__label" id="file-selector-primary-label">Upload only in CSV Format</span>
+        
+        <!-- File Loader -->
+        <div class="slds-form-element__control">
+            <div class="slds-file-selector slds-file-selector_files">
+                <div class="slds-file-selector__dropzone">
+                    <lightning:input aura:id="file-input" type="file"
+                                     files="{!v.fileToBeUploaded}"
+                                     onchange="{!c.onFileUploaded}"
+                                     accept=".csv"                             
+                                     name="file" multiple="false"
+                                     disabled="{!v.disableUploadButton}"/>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Show file content preview in table format -->
+    <aura:if isTrue="{!v.showMain}">
+        <br></br>
+        <span><b>Total records to be uploaded: {!v.totalCount}</b></span>
+        
+
+        <ui:outputRichText class="uiOutputRichText slds-m-around--large" value="{!v.TargetFileName}"/> 
+        
+        <div class="container slds-p-top--medium"  label="table data" id="table_data">
+            <div class="slds-scrollable_y" style="height:250px;overflow: auto;">
+                <ui:outputRichText class="uiOutputRichText slds-m--around-large" value="{!v.TableContent}"/>
+                
+            </div>
+        </div>
+        
+        
+        <div class="slds-align_absolute-center">
+            <lightning:button  name="dataLoad" label="Confirm Data Load" onclick="{!c.openModel}" class="buttonClass"/>
+            <lightning:button name="dataLoad" label="Cancel" onclick="{!c.clearOldData}" class="buttonClass"/>
+            
+        </div>
+    </aura:if>        
+    
+    
+    
+    
+    
+    
+</aura:component>

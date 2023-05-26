@@ -1,0 +1,6 @@
+<apex:page standardController="Lead" lightningStylesheets="true">
+    <apex:pageBlock >
+        <apex:detail relatedList="false" title="false">
+        </apex:detail>
+    </apex:pageBlock>
+</apex:page>

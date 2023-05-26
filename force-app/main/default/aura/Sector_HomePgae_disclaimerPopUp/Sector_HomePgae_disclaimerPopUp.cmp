@@ -1,0 +1,87 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+                access="global" >
+    <!--Boolean attribute to indicate if modal is open or not 
+       default value is false as modal is closed when page is loaded 
+    -->
+    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
+     
+   
+    
+    
+        <lightning:card>
+            <div class="slds-p-left_small">
+                <b>
+        By continuing to use RES CRM, you acknowledge that you remain aware and compliant with the requirements with respect to Competitively Sensitive Information which can be reviewed
+                    <button class="slds-button" aura:id="buttonclick" onclick="{!c.openModel}">HERE</button>.
+                    <br/>
+		<button class="slds-button" aura:id="buttonclick" onclick="{!c.openLink}">Please alert the RES CRM team immediately</button> if a change in circumstances means that your access needs to be reviewed.
+                   </b>
+            </div>
+        </lightning:card>
+        <!--<lightning:button variant="brand"
+                          label="What is Modal/PopUp Box?"
+                          title="What is Modal/PopUp Box?"
+                          onclick="{! c.openModel }" /> -->
+        <!--Use aura:if tag to display/hide popup based on isModalOpen value-->  
+        <aura:if isTrue="{!v.isModalOpen}">
+             
+            <!-- Modal/Popup Box starts here-->
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container" style = "height:820px;width: 1500px">
+                    <!-- Modal/Popup Box Header Starts here-->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.closeModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Disclaimer</h2>
+                    </header>
+                    <!--Modal/Popup Box Body Starts here-->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <p>
+                            <b>General disclaimer:</b> Sharing of competitively sensitive information (CSI) between competitors without objective justification is prohibited under competition law. CSI is any information that could provide insight into the market conduct or strategy (present or future) of (potential) competitors. As a result, certain Shell users will not have access to the CRM database, unless you’ve obtained approval from the Shell Legal Antitrust Team (LAT).  
+
+ 
+                            <br/>
+                            <br/>
+Please confirm you do not fall within the following categories of Shell staff:
+<ul class="slds-list_dotted">
+    <li>NOV Staff;[A Non-Operated Venture ('NOV') staff represents a worker that is working in a Non-Operated Venture entity]
+</li>
+  <li>Shell secondees for NOVs or other third parties;[Employees of Shell who have been assigned to work in a NOV or a SOV (Shell Operated Venture)]
+    </li>
+  <li>NOV Board Member; </li>
+    <li>Board Member of other third parties;[Board Member of any entity which is not solely controlled by Shell]</li>
+    <li>Those exceptional situations in which a Shareholder Representative may be involved in commercial/strategic decision making relating to volumes produced by the NOV (i.e. in case of joint selling of such volumes by the shareholders in the NOV);[Shareholder Representative is sometimes also referred to as Asset Manager]</li>
+    <li>100% Shell staff involved in the actual marketing on behalf of a JV;[A Joint Venture (JV) is an association of two or more participants who engage in business together, sharing profits or production and costs and liabilities, and between them exercising control over the business through a JV business organisation or structure that is distinct from the business organisation of each of the participants]</li>
+    <li>Shareholder Representatives and/or any other Shell Staff that may be involved in JV pre-marketing or commercial decision-making in relation to NOV / SOV / JVs and have any queries or concerns with respect to access, please <button class='slds-button' aura:id="buttonclick3" onclick="{!c.OpenURLLegal}">contact the Shell Legal Team.</button></li>
+    </ul>
+                            <br/>
+    Shareholder Representatives please note the following:                        
+    <ul class="slds-list_dotted">                        
+    <li>Shareholder Representatives with access to CSI of a NOV (potentially) competing with Shell may have access to the CRM database, however any information or data obtained from the CRM database should not be shared with the relevant NOV or NOV Staff[Shareholder Representative is sometimes also referred to as Asset Manager]</li>
+    <li>Furthermore, Shareholder Representatives for JVs which are (potential) competitors to Shell cannot be involved in commercial/strategic decision making for a Shell business (potentially) competing with such JV as such double-hatting would infringe Shell’s antitrust rules on CSI sharing. <button class='slds-button' aura:id="buttonclick3" onclick="{!c.OpenURL}">(Managing Competitively Sensitive Information)</button>[Double-hatting is where individuals are directly involved in the day-to-day management or commercial direction of two potentially conflicting or competing entities, e.g., Staff managing a Shell business and being Director or Shell Shareholder Representative (SSR) of a competing JV; Staff being a Director or SSR of two or more competing JVs; Staff managing a Shell business and being Director of or commercial or strategic adviser to any of Shell's direct competitors]</li>
+        
+	</ul>
+                            
+                        </p>
+                    </div> 
+                    <!--Modal/Popup Box Footer Starts here-->
+                    <footer class="slds-modal__footer">
+                        <lightning:button variant="neutral"
+                                          label="Done"
+                                          title="Done"
+                                          onclick="{! c.closeModel }"/>
+                        <!--<lightning:button variant="brand"
+                                          label="OK"
+                                          title="OK"
+                                          onclick="{!c.submitDetails}"/> -->
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+    
+	
+</aura:component>

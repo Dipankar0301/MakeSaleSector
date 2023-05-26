@@ -1,0 +1,21 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <lightning:card iconName="custom:custom19" title="Marketing Details">
+        <div class="slds-p-left_large slds-p-right_medium">	
+            <lightning:recordForm  recordId="{!v.recordId}" objectApiName="Lead" fields="LeadSource" mode ='readonly' columns="2"/>
+            <lightning:recordForm  recordId="{!v.recordId}" objectApiName="Lead" fields="Status" mode ='readonly' columns="2"/>
+            <lightning:recordForm  recordId="{!v.recordId}" objectApiName="Lead" fields="RKA_Lead__c" mode ='readonly' columns="2"/>
+            <lightning:recordForm  recordId="{!v.recordId}" objectApiName="Lead" fields="MP2_Lead__c" mode ='readonly' columns="2"/>
+            <lightning:recordForm  recordId="{!v.recordId}" objectApiName="Lead" fields="SEAm_Lead__c" mode ='readonly' columns="2"/>
+            <lightning:recordForm  recordId="{!v.recordId}" objectApiName="Lead" fields="Sync_with_MC__c" columns="2"/>
+            <lightning:recordForm  recordId="{!v.recordId}" objectApiName="Lead" fields="Location__c" columns="2"/>
+            <lightning:recordForm  recordId="{!v.recordId}" objectApiName="Lead" fields="Market_Segmentation_Other__c" columns="2"/>
+            
+        </div>
+        
+    </lightning:card>
+    
+    
+
+
+</aura:component>

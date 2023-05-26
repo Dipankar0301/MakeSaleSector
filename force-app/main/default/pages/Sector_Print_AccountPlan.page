@@ -1,0 +1,145 @@
+<apex:page standardController="Account_Plan__c" readOnly="true" renderAs="PDF" applyBodyTag="false" contentType="iso-8859-9">
+    <head>
+        
+        <style>
+            body { font-family: 'Arial Unicode MS';
+            charset=iso-8859-9;
+            }
+            th,.shlRow > td {
+            font-size:xx-small;
+            border: 1px solid black;
+            }
+            
+            .shlHeaderRow > td {
+            font-size:large;
+            border: 1px solid black;
+            padding: 1px;
+            text-align: center;
+            }
+            .shlTable {
+            border-collapse: collapse;
+            }
+            .alignRight{
+            text-align: right;
+            border: 1px solid black;
+            
+            }
+            .alignCenter{
+            text-align: center;
+            }
+            @page {
+            size:portrait;
+            @top-center {
+            content: element(header);
+            }
+            @bottom-center {
+            content: element(footer);
+            }
+            }
+            
+            div.header {
+            position: running(header);
+            }
+            div.footer {
+            position: running(footer);
+            }
+        </style> 
+    </head>
+    
+    <div class="header">
+        <div style="text-align: center;font-family: sans-serif;font-weight: bold;" > <h5>Not to be viewed externally</h5>  </div>
+    </div>
+    <div class="footer">
+        <div style="text-align: center;font-family: sans-serif;font-weight: bold;" > <h5>Not to be viewed externally</h5>  </div>
+    </div>
+    
+    
+
+    <table style = "border: 1px solid black;border-collapse: collapse;width:100%;" border="1" >
+        <tr> <td style = "border: 1px solid black;border-collapse: collapse;"> <div style="text-align: center;font-family: sans-serif;font-weight: bold;" > <h3><u>Account Plan Details</u></h3>  </div> </td> </tr>
+        <tr>
+            <td style = "border: 1px solid black;border-collapse: collapse;">
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Account Plan Name : "/> <apex:outputText value="{!Account_Plan__c.Name}"/> <br/><br/>
+            </td>
+        </tr>
+        
+        <tr> <td style = "border: 1px solid black;border-collapse: collapse;"> <div style="text-align: center;font-family: sans-serif;font-weight: bold;" > <h3><u>Account Info</u></h3>  </div> </td> </tr>
+        <tr>
+            <td style = "border: 1px solid black;border-collapse: collapse;">
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Customer Name : "/> <apex:outputText value="{!Account_Plan__c.Customer_Name__r.Name}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Parent Account : "/> <apex:outputText value="{!Account_Plan__c.Parent_Account__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Sector : "/> <apex:outputText value="{!Account_Plan__c.Sector__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Region : "/> <br/> <apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!Account_Plan__c.Region__c}"/> <br/><br/>
+            </td>
+        </tr>
+        
+        <tr> <td style = "border: 1px solid black;border-collapse: collapse;"> <div style="text-align: center;font-family: sans-serif;font-weight: bold;" > <h3><u>Financial Information</u></h3>  </div> </td> </tr>
+        <tr>
+            <td style = "border: 1px solid black;border-collapse: collapse;">
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Annual Revenue (USD) : "/> <apex:outputText value="{!Account_Plan__c.Annual_Revenue_USD__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Customer Potential Power Demand (MWh) : "/> <apex:outputText value="{!Account_Plan__c.Customer_s_Potential_Power_Demand__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Potential Enterprise Value (USD) : "/> <apex:outputText value="{!Account_Plan__c.Potential_Enterprise_Value_USD__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Potential Value for RES-Revenue (USD) : "/> <apex:outputText value="{!Account_Plan__c.Potential_Value_for_RES_Revenue_USD__c}"/> <br/><br/>
+            </td>
+        </tr>
+        
+        
+        
+        <tr> <td style = "border: 1px solid black;border-collapse: collapse;"> <div style="text-align: center;font-family: sans-serif;font-weight: bold;" > <h3><u>Customer Overview-Understanding the overall view of the customer's business</u></h3>  </div> </td> </tr>
+        <tr>
+            <td style = "border: 1px solid black;border-collapse: collapse;">
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Description of Business : "/> <apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!Account_Plan__c.Description_of_Business__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Relevant existing relationship(s) : "/> <apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!Account_Plan__c.Relevant_existing_relationship_s__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Strengths : "/> <apex:outputText value="{!Account_Plan__c.Strength__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Weaknesses : "/> <apex:outputText value="{!Account_Plan__c.Weaknesses__c}"/> <br/><br/>
+            </td>
+        </tr>
+        
+        
+        <tr> <td style = "border: 1px solid black;border-collapse: collapse;"> <div style="text-align: center;font-family: sans-serif;font-weight: bold;" > <h3><u>Customer Decarbonization &amp; Sustainability Profile-Understanding the ET strategy</u></h3>  </div> </td> </tr>
+        <tr>
+            <td style = "border: 1px solid black;border-collapse: collapse;">
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Key Markets : "/> <apex:outputText value="{!Account_Plan__c.Key_Markets__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Current Energy Mix/Usage (Type/Where) : "/> <apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!Account_Plan__c.Current_Energy_Mix_Usage_Type_Where__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Decarbonization Roadmap/Carbon Strategy : "/> <apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!Account_Plan__c.Decarbonization_Roadmap_Carbon_Strategy__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Customer's Growth Plans : "/> <apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!Account_Plan__c.Customer_s_Growth_Plans__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Customer's view of problems / challenges : "/> <apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!Account_Plan__c.Customers_view_of_problems_challenges__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Shell's view of problems / challenges : "/> <apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!Account_Plan__c.Shell_s_view_of_problems_challenges__c}"/> <br/><br/>
+            </td>
+        </tr>
+        
+        
+        <tr> <td style = "border: 1px solid black;border-collapse: collapse;"> <div style="text-align: center;font-family: sans-serif;font-weight: bold;" > <h3><u>Future State-Understanding our strategic initiatives and approach</u></h3>  </div> </td> </tr>
+        <tr>
+            <td style = "border: 1px solid black;border-collapse: collapse;">
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Strategic Approach - Near Term : "/> <apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!Account_Plan__c.Near_Term__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Strategic Approach - Medium Term : "/> <apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!Account_Plan__c.Medium_term__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Strategic Approach - Long Term : "/> <apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!Account_Plan__c.Long_Term__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Risks/Threats : "/> <apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!Account_Plan__c.Risks_Threats__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Marketing Insights & Levers : "/> <apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!Account_Plan__c.Marketing__c}"/> <br/><br/>
+                
+                <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Additional Notes : "/> <apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';"  value="{!Account_Plan__c.Additional_Notes__c}"/> <br/><br/>
+            </td>
+        </tr>
+        
+    </table>
+
+</apex:page>

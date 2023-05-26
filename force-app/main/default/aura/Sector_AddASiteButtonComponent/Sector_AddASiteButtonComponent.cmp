@@ -1,0 +1,48 @@
+<aura:component Implements="flexipage:availableForRecordHome,force:hasRecordId" controller = "OpportunityProductList">
+    <!--Init handler which is call doInit js function on component Load-->  
+
+    <aura:attribute name="ShowProducts" type="boolean" default="true" />
+    <aura:attribute name="AddSitesnew" type="boolean" default="false" />
+    
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    <aura:handler event="force:refreshView" action="{!c.init}" />
+    
+    
+    <lightning:spinner variant="brand" aura:id="mySpinner" class="slds-hide"/>
+    
+    <aura:if isTrue="{!v.AddSitesnew}">
+        <c:Sector_AddASitezInOpportunity recordId = "{!v.recordId}" showcomponent = "{!v.AddSitesnew}"/>
+    </aura:if>
+    <lightning:card >
+        <div class="slds-page-header slds-page-header_record-home">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media">
+                        <div class="slds-media__body">
+                            <div class="slds-page-header__name">
+                                <div class="slds-page-header__name-title">
+                                    <h1>
+                                        <span class="slds-page-header__title slds-truncate" title="Add Sites">Add Sites</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-page-header__col-actions">
+                    <div class="slds-page-header__controls">
+                        <div class="slds-page-header__control">
+                        </div>
+                        <div class="slds-page-header__control">
+                            <lightning:button label="Add Sites" onclick="{! c.AddSites }"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-page-header__row slds-page-header__row_gutters">
+                <div class="slds-page-header__col-details">
+                </div>
+            </div>
+        </div>
+    </lightning:card>
+</aura:component>

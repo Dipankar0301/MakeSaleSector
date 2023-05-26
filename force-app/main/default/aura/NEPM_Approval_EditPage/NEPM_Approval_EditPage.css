@@ -1,0 +1,6 @@
+.THIS .StylingButton{
+    background-color:rgb(0, 95, 178);
+}
+.THIS .StylingButton:hover{
+    background-color:rgb(21, 137, 238);
+}

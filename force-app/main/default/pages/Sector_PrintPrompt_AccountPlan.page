@@ -1,0 +1,18 @@
+<apex:page standardController="Account_Plan__c" showHeader="false" sidebar="false" lightningStylesheets="true">
+    
+       <script>
+        var printOpened;
+        window.addEventListener('load', function() {
+            window.frames['theIframe'].print();
+            window.focus();
+            printOpened = true;
+        });
+        window.addEventListener('focus', function() {
+            if(printOpened === true)
+                history.back();
+        });
+    </script>
+    <apex:iframe src="/apex/Sector_Print_AccountPlan?Id={!JSENCODE(Account_Plan__c.Id)}#view=fitH" 
+                 scrolling="false" id="theIframe"/> 
+    
+</apex:page>

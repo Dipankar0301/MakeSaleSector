@@ -1,0 +1,147 @@
+<apex:page standardController="NEPM_Deliverable__c" extensions="NEPM_Deliverable_Controller" lightningStylesheets="true" >
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        <head>
+            <apex:includeScript value="/lightning/lightning.out.js"/>
+        </head>
+        <body>
+            <style type="text/css">
+                .mybuttonClass{
+                color:white !important;
+                background:#1b5297 !important;
+                }
+            </style>        
+            <script>
+            function disableOnSubmit(input) {
+                setTimeout('disableAfterTimeout(\'' + input.id + '\');', 1);
+            }
+            function disableAfterTimeout(id) {
+                var toDisable = document.getElementById(id);
+                toDisable.disabled = 'disabled';
+                toDisable.className = 'btnDisabled';
+                toDisable.value = "Uploading...";
+                toDisable.style.color = "#FFFFFF";
+                toDisable.style.background = "#808080"
+            }    
+            </script>
+            <apex:pageMessages ></apex:pageMessages>
+
+            <apex:form rendered="{!showInputFormError}">
+                <div class="EmbassyDI">
+                    <apex:outputPanel id="inputForms">
+                        <div class="slds-form--stacked slds-m-top--small">
+                            <div class="slds-form-element">
+                                <div class="slds-p-horizontal--small slds-m-top--medium slds-size--1-of-1" style="text-align:center">
+                                    <apex:outputText value="{!errorMessage}" escape="false"/>
+                                </div>
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                </div>
+            </apex:form>  
+            <apex:form rendered="{!showInputForm}">
+                <div class="EmbassyDI">
+                    <apex:outputPanel id="inputForms">
+                        <div class="slds-form--stacked slds-m-top--small">
+                            <div class="slds-form-element">
+                                <div class="slds-p-horizontal--small slds-m-top--medium slds-size--1-of-1" style="text-align:center">
+                                    <apex:outputText value="{!errorMessage}" escape="false"/>
+                                </div>
+                                <br/>
+                                    <div class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                        <table>
+                                        <tr>
+                                        <td>
+                                        <apex:outputLabel style="slds-form-element__label" value="{!$ObjectType.NEPM_Project__c.fields.NEPM_Project_Description__c.Label}" rendered="{!Description}"/> 
+                                        </td>
+                                        <td>
+                                        <apex:inputField value="{!nepmProjectlList.NEPM_Project_Description__c}" rendered="{!Description}" required="True" />
+                                        </td>
+                                        </tr>
+                                        <tr>
+                                        <td>
+                                        <apex:outputLabel style="slds-form-element__label" value="{!$ObjectType.NEPM_Project__c.fields.NEPM_Headline_Size_M_USD__c.Label}" rendered="{!HeadlineSize}"/> 
+                                        </td>
+                                        <td>
+                                        <apex:inputField value="{!nepmProjectlList.NEPM_Headline_Size_M_USD__c}" rendered="{!HeadlineSize}" required="True"/>
+                                        </td>
+                                        </tr>
+                                        <tr>
+                                        <td>
+                                        <apex:outputLabel value="{!$ObjectType.NEPM_Project__c.fields.NEPM_Decision_Executive__c.Label}" rendered="{!DE}"/> 
+                                        </td>
+                                        <td>
+                                        <apex:inputField value="{!nepmProjectlList.NEPM_Decision_Executive__c}" rendered="{!DE}" required="True"/>
+                                        </td>
+                                        </tr>                                       
+                                        <tr>
+                                        <td>
+                                        <apex:outputLabel value="{!$ObjectType.NEPM_Project__c.fields.NEPM_Shell_Equity_Share__c.Label}" rendered="{!ShellEquityShare}"/>
+                                        </td>
+                                        <td>
+                                        <apex:inputField value="{!nepmProjectlList.NEPM_Shell_Equity_Share__c}" rendered="{!ShellEquityShare}" required="True"/>
+                                        </td>
+                                        </tr>                                       
+                                        <tr>
+                                        <td>
+                                        <apex:outputLabel value="{!$ObjectType.NEPM_Project__c.fields.NEPM_Region__c.Label}" rendered="{!Region}"/>
+                                        </td>
+                                        <td>
+                                        <apex:inputField value="{!nepmProjectlList.NEPM_Region__c}" rendered="{!Region}" required="True"/>
+                                        </td>
+                                        </tr>                                       
+                                        <tr>
+                                        <td>
+                                        <apex:outputLabel value="{!$ObjectType.NEPM_Project__c.fields.NEPM_Technology__c.Label}" rendered="{!TechnologyProjectType}"/>    
+                                        </td>
+                                        <td>
+                                        <apex:inputField value="{!nepmProjectlList.NEPM_Technology__c}" rendered="{!TechnologyProjectType}" required="True"/>
+                                        </td>
+                                        </tr>                                       
+                                        <tr>
+                                        <td>
+                                        <apex:outputLabel value="{!$ObjectType.NEPM_Project__c.fields.Mandate_Strategy__c.Label}" rendered="{!Strategymandate}"/>       
+                                        </td>
+                                        <td>
+                                        <apex:inputField value="{!nepmProjectlList.Mandate_Strategy__c}" rendered="{!Strategymandate}" required="True"/>
+                                        </td>
+                                        </tr>
+                                        </table>                         
+                                    </div>
+                                </div>
+                                <br/>
+                            </div>
+                        </div>                      
+                    </apex:outputPanel>
+                    <div class="slds-p-top_medium slds-m-top--medium slds-size--1-of-1 slds-align--absolute-center">  
+                        <apex:commandButton styleClass="mybuttonClass" id="Save" value="Save" 
+                                            action="{!SaveProject}"/>
+                    </div>
+                </div>
+            </apex:form>  
+            <apex:form rendered="{!showInputFormSuccess}">
+                <div class="EmbassyDI">
+                    <apex:outputPanel id="inputFormSuccess">
+                        <div class="slds-form--stacked slds-m-top--small">
+                            <div class="slds-form-element">                                
+                                    <apex:outputText value="{!successMessage}" escape="false"/>
+                                                                    
+                            </div>
+                        </div>
+                    </apex:outputPanel>
+                    <br/>
+                    <div class="slds-p-horizontal--small slds-m-top--medium slds-size--1-of-1 slds-align--absolute-center">  
+                        <apex:actionStatus startText=" Processing the stuff " stopText=" Done " id="counterStatus" >
+                             <apex:facet name="start" >Processing... <img src="/apexpages/devmode/img/saveStatus.gif" /> 
+                             </apex:facet> 
+                            <apex:facet name="stop">     
+                                <apex:commandButton styleClass="mybuttonClass" id="done" value="Submit For Approval" 
+                                            action="{!SubmitRecordForApproval}" status="counterStatus"  reRender="counterStatus" oncomplete="javascript:window.top.location.href='/{!currentRecordId}';"/>
+                            </apex:facet> 
+                        </apex:actionStatus> 
+                    </div>
+                </div>
+            </apex:form>
+        </body>
+    </html>
+</apex:page>

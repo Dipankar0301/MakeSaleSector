@@ -1,0 +1,13 @@
+<apex:page standardController="Site__c">
+    
+    <apex:pageBlock rendered="{! OR( NOT(ISBLANK(Site__c.Sector_Country__c)), NOT(ISBLANK(Site__c.Zip_Postal_Code__c)), NOT(ISBLANK(Site__c.State__c)) )}">
+        <apex:map width="100%" height="300px" mapType="roadmap" zoomLevel="17"
+                  center="{!IF( ISBLANK(Site__c.Street__c) , '', Site__c.Street__c ) }  {!IF( ISBLANK(Site__c.Sector_City__c) , '', Site__c.Sector_City__c ) }  {!IF( ISBLANK(Site__c.State__c) , '', Site__c.State__c ) }  {!IF( ISBLANK(Site__c.Sector_Country__c) , '', Site__c.Sector_Country__c ) }  {!IF( ISBLANK(Site__c.Zip_Postal_Code__c) , '', Site__c.Zip_Postal_Code__c ) }">
+            <apex:mapMarker title="{! Site__c.Name }"
+                            position="{!IF( ISBLANK(Site__c.Street__c) , '', Site__c.Street__c ) }  {!IF( ISBLANK(Site__c.Sector_City__c) , '', Site__c.Sector_City__c ) }  {!IF( ISBLANK(Site__c.State__c) , '', Site__c.State__c ) }  {!IF( ISBLANK(Site__c.Sector_Country__c) , '', Site__c.Sector_Country__c ) }  {!IF( ISBLANK(Site__c.Zip_Postal_Code__c) , '', Site__c.Zip_Postal_Code__c ) }"
+                            />
+        </apex:map>
+        <apex:outputLink value="https://www.google.com/maps?q={!IF( ISBLANK(Site__c.Street__c) , '', Site__c.Street__c ) }  {!IF( ISBLANK(Site__c.Sector_City__c) , '', Site__c.Sector_City__c ) }  {!IF( ISBLANK(Site__c.State__c) , '', Site__c.State__c ) }  {!IF( ISBLANK(Site__c.Sector_Country__c) , '', Site__c.Sector_Country__c ) }  {!IF( ISBLANK(Site__c.Zip_Postal_Code__c) , '', Site__c.Zip_Postal_Code__c ) }" >Map</apex:outputLink>
+    </apex:pageBlock>
+    
+</apex:page>

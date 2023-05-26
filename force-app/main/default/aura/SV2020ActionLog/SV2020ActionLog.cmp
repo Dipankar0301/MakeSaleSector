@@ -1,0 +1,16 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+    
+    <aura:attribute name="record" type="Object" default="{
+                                                         'sobjectType' : 'Implementation_Comment__c',
+                                                         'Date__c' : '',
+                                                         'Comment__c' : '' }"/>
+    
+
+        <lightning:layoutItem size="4" padding="around-small">
+            <ui:inputDate aura:id="date" value="{!v.record.Date__c}" displayDatePicker="true" format="dd/MM/yyyy" />
+        </lightning:layoutItem>
+        <lightning:layoutItem size="4" padding="around-small">
+            <ui:inputTextarea rows="1" value="{!v.record.Comment__c}"/>
+        </lightning:layoutItem>
+    
+</aura:component>

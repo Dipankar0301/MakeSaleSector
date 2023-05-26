@@ -1,0 +1,106 @@
+<aura:component  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="OpportunityList" type="Account[]" />
+    <aura:handler name="init" value="{!this}" action="{!c.myAction}" />
+    <aura:handler event="force:refreshView" action="{!c.myAction}" />
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="data1" type="List"/>
+    
+    
+    <aura:attribute name="sortDirection" type="String" default="asc" />
+    <aura:attribute name="defaultSortDirection" type="String" default="asc" />
+    <aura:attribute name="sortedBy" type="String" />
+    
+    
+    <lightning:card iconName="standard:work_capacity_usage" title="Related Sites">
+        <lightning:layout multipleRows="true" horizontalAlign="center">
+            <lightning:button variant="brand" label="New Site" title="Brand action" onclick="{! c.createRecord }" />
+            <lightning:button variant="brand" label="Refresh" title="Brand action" onclick="{! c.refreshPage }" />
+            <lightning:layoutItem padding="around-small" size="12">          
+                <aura:if isTrue="{!not(empty(v.OpportunityList))}">
+                    
+                    
+                    <!--  <lightning:datatable data="{! v.OpportunityList }"
+                                 columns="{! v.columns }"
+                                 keyField="id"
+                                 hideCheckboxColumn="true"
+                                 
+                                 defaultSortDirection="{!v.defaultSortDirection}"
+                                 sortedDirection="{!v.sortDirection}"
+                                 sortedBy="{!v.sortedBy}"
+                                 onsort="{!c.handleSort}"     
+                                 onrowaction="{!c.handleRowAction}"
+                                 /> -->
+                    <div class="slds-scrollable" >
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="slds-text-title_caps" scope="col">
+                                        <div class="slds-truncate" title="Name">Site Name</div>
+                                    </th>
+                                    <th class="slds-text-title_caps" scope="col">
+                                        <div class="slds-truncate" title="Title">Account Name</div>
+                                    </th>
+                                    <th class="slds-text-title_caps" scope="col">
+                                        <div class="slds-truncate" title="Title">Site Purpose</div>
+                                    </th>
+                                    <th class="slds-text-title_caps" scope="col">
+                                        <div class="slds-truncate" title="Title">Site Operator</div>
+                                    </th>
+                                    <th class="slds-text-title_caps" scope="col">
+                                        <div class="slds-truncate" title="Title">Street</div>
+                                    </th>
+                                    <th class="slds-text-title_caps" scope="col">
+                                        <div class="slds-truncate" title="Title">City</div>
+                                    </th>
+                                    <th class="slds-text-title_caps" scope="col">
+                                        <div class="slds-truncate" title="Title">Country</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <aura:iteration  items="{!v.OpportunityList}" var="con">
+                                    <tr class="slds-hint-parent">
+                                        <td data-label="File Name">
+                                            <a href="{!'/'+con.Id}"> <div class="slds-truncate" title="File Name">{!con.Name}</div> </a> 
+                                        </td>
+                                        <td data-label="File Name">
+                                            <a href="{!'/'+con.Account__c}"> <div class="slds-truncate" title="File Name">{!con.Account__r.Name}</div>  </a> 
+                                        </td>
+                                        <td data-label="File Name">
+                                            <div class="slds-truncate" title="File Name">{!con.Site_Purpose__c}</div>  
+                                        </td>
+                                        <td data-label="File Name">
+                                            <div class="slds-truncate" title="File Name">{!con.Site_Operator__c}</div>
+                                        </td>
+                                        <td data-label="File Name">
+                                            <div class="slds-truncate" title="File Name">{!con.Street__c}</div>
+                                        </td>
+                                        <td data-label="File Name">
+                                            <div class="slds-truncate" title="File Name">{!con.Sector_City__c}</div>
+                                        </td>
+                                        <td data-label="File Name">
+                                            <div class="slds-truncate" title="File Name">{!con.Sector_Country__c}</div>
+                                        </td>
+                                        <td>
+                                            <a name ="{!con.Id}" onclick="{!c.editRecord}">
+                                                <lightning:button class="slds-icon slds-icon_small"/>
+                                            <span class="slds-assistive-text">Edit</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                        </table>
+                    </div>
+                    <aura:set attribute="else">
+                        <div Style="text-align : center"> " There are no related Sites"</div>
+                    </aura:set>
+                </aura:if>
+                <br/>
+                <br/>
+                <br/>    
+            </lightning:layoutItem>
+        </lightning:layout>                   
+    </lightning:card>
+</aura:component>

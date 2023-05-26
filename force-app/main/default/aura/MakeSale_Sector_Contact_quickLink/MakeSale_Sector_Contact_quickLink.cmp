@@ -1,0 +1,8 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	
+    <lightning:card iconName="custom:custom19" title="Help">
+    <div aura:id="container" >
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<lightning:formattedUrl value="{!$Label.c.Sector_Data_Privacy_Slide_URL}" label="Data Privacy Guidance" tooltip="Download Data Privacy Slide" /></p>
+    </div>
+    </lightning:card>
+</aura:component>

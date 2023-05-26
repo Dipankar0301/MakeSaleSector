@@ -1,0 +1,9 @@
+<aura:component controller="MakeSales_WarningForUsers" implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
+    <aura:attribute name="variant" type="String" default="linear"/>
+    <aura:attribute name="isEditableUser" type="Boolean" default ="true"/>
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    <aura:attribute name="userID1" type="String"/>
+    
+    
+    
+</aura:component>

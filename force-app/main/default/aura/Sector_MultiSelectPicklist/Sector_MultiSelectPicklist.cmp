@@ -1,0 +1,184 @@
+<aura:component Implements="flexipage:availableForRecordHome,force:hasRecordId" >
+    <!-- search term -->
+    <aura:attribute name="term" type="String" />
+    <!-- currently displayed items -->
+    <aura:attribute name="options" type="List" default="[]" />
+    <!-- all items -->
+    <aura:attribute name="allOptions" type="List" default="[]" />
+    <!-- selected values -->
+    <aura:attribute name="selected" type="List" default="[]" />
+    
+    <!-- load data from somewhere -->
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <!-- update list when term changes -->
+   <!-- <aura:handler name="change" value="{!v.term}" action="{!c.search}" /> --> 
+    
+    
+    
+    <aura:attribute name="ShowModalRegion" type="boolean" default="false"/>
+    <aura:attribute name="ShowModalCountry" type="boolean" default="false"/>
+    <aura:attribute name="ShowModalCity" type="boolean" default="false"/>
+    <aura:attribute name="ShowModalFulfilledby" type="boolean" default="false"/>
+
+    
+    
+    
+    <lightning:recordViewForm recordId="{!v.recordId}" 
+                              objectApiName="Opportunity" >
+        
+        
+        
+        <div class="slds-section slds-is-open" aura:id="fruitsSection">
+            <!--section header-->
+            <h3 class="slds-section__title">
+                <button aria-controls="fruitsList" class="slds-button slds-section__title-action">
+                    <span onclick="{!c.toggleSection}" data-auraId="fruitsSection">
+                        <lightning:icon iconName="utility:switch"
+                                        size="x-small"
+                                        class="slds-section__title-action-icon slds-button__icon_left"
+                                        alternativeText="button icon" 
+                                        />
+                    </span>
+                    <span class="slds-truncate" title="Location Information">Location Information</span>
+                </button>
+            </h3>
+            <!--section body-->
+            <div class="slds-section__content" id="fruitsList">
+                
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col" style = "width: 50%;">
+                        <table>
+                            <tr>
+                                <div class="slds-border_bottom">
+                                    <td >
+                                        <lightning:outputField fieldName="Opportunity_Region__c" />
+                                    </td>
+                                    <td style = "width:5%;">
+                                        <a  onclick="{!c.editregion}">
+                                            <lightning:icon iconName="utility:edit"  class="slds-icon slds-icon_small"  size="x-small" alternativeText="icon"/>
+                                            <span class="slds-assistive-text">Edit Icon</span>
+                                        </a>
+                                    </td>  
+                                </div>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="slds-col" style = "width: 50%;">
+                        
+                        <table>
+                            <tr>
+                                <div class="slds-border_bottom">
+                                    <td >
+                                        <lightning:outputField fieldName="Opportunity_Country__c" />
+                                    </td>
+                                    <td style = "width:5%;">
+                                        <a  onclick="{!c.editcountry}">
+                                            <lightning:icon iconName="utility:edit"  class="slds-icon slds-icon_small"  size="x-small" alternativeText="icon"/>
+                                            <span class="slds-assistive-text">Edit Icon</span>
+                                        </a>
+                                    </td>  
+                                </div>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                
+                
+                
+                <!-- 2nd row -->
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col" style = "width: 50%;">
+                        <table>
+                            <tr>
+                                <div class="slds-border_bottom">
+                                    <td >
+                                        <lightning:outputField fieldName="Opportunity_City__c" />
+                                    </td>
+                                    <td style = "width:5%;">
+                                        <a  onclick="{!c.editcity}">
+                                            <lightning:icon iconName="utility:edit"  class="slds-icon slds-icon_small"  size="x-small" alternativeText="icon"/>
+                                            <span class="slds-assistive-text">Edit Icon</span>
+                                        </a>
+                                    </td>  
+                                </div>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="slds-col" style = "width: 50%;">
+                        
+                        <table>
+                            <tr>
+                                <div class="slds-border_bottom">
+                                    <td >
+                                        <lightning:outputField fieldName="Fulfilled_by__c" />
+                                    </td>
+                                    <td style = "width:5%;">
+                                        <a  onclick="{!c.editfullfulledby}">
+                                            <lightning:icon iconName="utility:edit"  class="slds-icon slds-icon_small"  size="x-small" alternativeText="icon"/>
+                                            <span class="slds-assistive-text">Edit Icon</span>
+                                        </a>
+                                    </td>  
+                                </div>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        
+        
+        
+        <aura:if isTrue="{!v.ShowModalRegion}">
+          <!--  <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container" >
+                    <header class="slds-modal__header">
+                        
+                        <h2 id="modal-heading-01" class="slds-test-heading_medium slds-hyphenate">Edit ISO</h2> 
+                        
+                    </header>
+                    <div style = "height:420px;" class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <lightning:input type="text" value="{!v.term}" label="Filter" />
+                        <lightning:dualListbox value="{!v.selected}" options="{!v.options}" label="ISO"
+                                               sourceLabel="Available" selectedLabel="Selected" />
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning:button variant="neutral"
+                                          label="Cancel"
+                                          onclick="{! c.closeModel }"
+                                          />
+                        <lightning:button variant="brand"
+                                          label="Save"
+                                          onclick="{! c.onRecordSubmit }"
+                                          />
+                    </footer>
+                </div>
+            </section>  -->
+            
+            <c:seachableMultiSelectPicklist  recordId = "{!v.recordId}" fieldlabel = "Opportunity Region" isModalOpen = "{!v.ShowModalRegion}" oppfieldapiname = "Opportunity_Region__c" ></c:seachableMultiSelectPicklist>
+            
+            
+        </aura:if>
+        
+        <aura:if isTrue="{!v.ShowModalCountry}">
+            <c:seachableMultiSelectPicklist  recordId = "{!v.recordId}" fieldlabel = "Opportunity Country" isModalOpen = "{!v.ShowModalCountry}" oppfieldapiname = "Opportunity_Country__c" ></c:seachableMultiSelectPicklist>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.ShowModalCity}">
+            <c:seachableMultiSelectPicklist  recordId = "{!v.recordId}" fieldlabel = "Opportunity City" isModalOpen = "{!v.ShowModalCity}" oppfieldapiname = "Opportunity_City__c" ></c:seachableMultiSelectPicklist>
+        </aura:if>
+        
+        <aura:if isTrue="{!v.ShowModalFulfilledby}">
+            <c:seachableMultiSelectPicklist  recordId = "{!v.recordId}" fieldlabel = "Fulfilled by" isModalOpen = "{!v.ShowModalFulfilledby}" oppfieldapiname = "Fulfilled_by__c" ></c:seachableMultiSelectPicklist>
+        </aura:if>
+        
+        
+        
+        
+    </lightning:recordViewForm>
+    
+    
+    
+</aura:component>

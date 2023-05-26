@@ -1,0 +1,119 @@
+<aura:component controller='Sector_EventCloneButton' implements="force:appHostable,force:lightningQuickActionWithoutHeader,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,lightning:availableForFlowScreens" access="global">
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="event" type="Event" /> 
+    <aura:attribute name="IsPopsa" type="Boolean" default ="false"/>
+    <aura:attribute name="showPopUp" type="Boolean" default ="false"/>
+    <aura:attribute name="custMessage" type="String" />
+    <aura:attribute name ="dateDiffernce" type="String"/>
+    <aura:attribute name="objInfo" type="Event" default="{sobjectType : 'Event'}" />
+    <aura:attribute name="isJapanSales" type="boolean" default="false" />
+    <aura:attribute name="disabledStage" type="boolean" default="false"/>
+    <aura:attribute name="getPickListMap" type="map"/>
+    <aura:attribute name="stageError" type="String" default=""/>
+    <aura:attribute name="row" type="Object"/>
+    
+    <!--NEW FIELDS FOR RECURRING EVENT CLONE-->
+    <aura:attribute name="RecurrSequence" type ="String"/>
+    
+    
+    <!--END OF NEWLY ADDED FIELDS-->    
+    
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    
+    <!--prod fix new-->
+    <aura:attribute name="startDate" type="Date"/>
+    <aura:attribute name="endDate" type="Date"/>
+    
+    <aura:attribute name="AllDayEventCheck" type="Boolean" default="false"/>
+    <aura:attribute Name="selItem" type="object"  access="public" /> 
+    <aura:attribute Name="selItem1" type="object"  access="public" />
+    <aura:attribute Name="selItem2" type="object"  access="public" />
+    <aura:attribute Name="selItem3" type="object"  access="public" />
+    <aura:attribute name="selectedLookUpRecord" type="sObject" default="{}"/>
+    <!--prod fix new-->
+    <aura:handler Name="init" value="{!this}" action="{!c.doInit}"/>
+    <!--<ltng:require styles="/resource/SLDS0122/assets/styles/salesforce-lightning-design-system.min.css"/>`        -->
+    
+       
+    <ltng:require styles="/resource/SLDS0122/assets/styles/salesforce-lightning-design-system.min.css"/>.
+    
+        <aura:if isTrue="{!v.Spinner}">
+            <div aura:id="spinnerId" class="slds-spinner_container">
+                <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </aura:if>
+        <div class="slds-text-heading_small">
+            <div class="slds-align_absolute-center">
+                New Clone
+            </div>
+        </div>
+        <div aura:id="mainDivCmp" class="slds-page-header" style="{!and( v.event.Call_Plan_Record_Type__c =='Call Plan POPSA') ? 'height: 550px': 'height: 550px'}">
+            <aura:if isTrue="{!v.custMessage != ''}">
+                <div class="slds-text-color_error">
+                    {!v.custMessage}
+                </div>
+            </aura:if>  
+            <ui:inputText aura:id="Subject" label="Subject"
+                          class="slds-input"
+                          labelClass="slds-form-element__label"
+                          value="{!v.event.Subject}"
+                          required="true"/>
+            <aura:if isTrue="{!v.AllDayEventCheck}">
+                <lightning:input  aura:id="StartDate" type="date" value="{!v.startDate}"
+                                 label="Start" required="true" name="StartDate"
+                                 onchange = "{!c.updateDateOnly}"/>
+                <lightning:input  aura:id="EndDate" type="date" value="{!v.endDate}"
+                                 label="End" required="true" name="EndDate"
+                                 />
+                <aura:set attribute="else">
+                    <ui:inputDateTime aura:id="StartDateTime" label="Start"
+                                      class="slds-input"
+                                      labelClass="slds-form-element__label"
+                                      value="{!v.event.StartDateTime}"
+                                      required="true" displayDatePicker="true"
+                                      change = "{!c.updateDate}"/>
+                    <ui:inputDateTime aura:id="EndDateTime" label="End"
+                                      class="slds-input"
+                                      labelClass="slds-form-element__label"
+                                      value="{!v.event.EndDateTime}"
+                                      required="true" displayDatePicker="true"/>
+                </aura:set>
+            </aura:if>
+            <ui:inputText aura:id="EventLocation" label="Location"
+                          class="slds-input"
+                          labelClass="slds-form-element__label"
+                          value="{!v.event.Location}"/>
+            <lightning:select aura:id="Type" 
+                              value="{!v.event.Type}"
+                              name="Type" label="Type"
+                              >
+                <option value="Face to Face" label="Face to Face"></option>
+                <option value="Virtual" label="Virtual"></option>
+            </lightning:select>	
+            
+            <ui:inputSelect aura:id="reasonForCall" 
+                            value="{!v.event.Reason_for_Call__c}"
+                            label="Reason For Call"
+                            class="slds-select"
+                            change="{!c.onPicklistChange}"/>
+            
+            <label class="slds-form-element__label">All-DayEvent</label>
+            <lightning:input aura:id="EventAllDay" type="checkbox" label="" value = "{!v.event.IsAllDayEvent}"
+                             checked="{!v.event.IsAllDayEvent}" 
+                             onchange="{!c.IsAllDayEvent}"/>
+            <lightning:input type="checkbox" label="" value = "{!v.event.IsRecurrence2}"
+                             checked="false" class="slds-hidden" />
+            <div class="slds">           
+                <div class="slds-align_absolute-center" style="height: 5rem;">
+                    <lightning:button variant="brand" label="Save" onclick="{!c.saveClick }" />
+                    <lightning:button variant="neutral" label="Cancel" onclick="{!c.cancelClick }" />
+                </div>
+            </div>    
+        </div>
+</aura:component>

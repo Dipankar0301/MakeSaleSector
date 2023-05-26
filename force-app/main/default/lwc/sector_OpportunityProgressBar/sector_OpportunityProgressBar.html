@@ -1,0 +1,24 @@
+<template>
+    <form>
+        <div class="slds-p-top_small slds-p-bottom_medium slds-align_absolute-center slds-theme_default slds-text-heading_medium">
+            <b>Progress Bar Example</b>
+        </div>
+        <div class="slds-box slds-theme_default">
+            <div style="margin-left: 2%;">
+                <div>
+                    <div class="slds-grid slds-grid_align-spread slds-p-bottom_x-small">
+                        <span>Track Progress</span>
+                        <span aria-hidden="true">
+                            <strong>{percentageCompletion}% Complete</strong>
+                        </span>
+                    </div>
+                </div>
+            <lightning-progress-bar 
+                size="medium" 
+                value={percentageCompletion} 
+                variant="circular">
+            </lightning-progress-bar>
+            </div>
+        </div>
+    </form>
+</template>

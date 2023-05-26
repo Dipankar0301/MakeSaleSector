@@ -1,0 +1,4 @@
+<apex:page standardController="Lead">
+    <apex:iframe src="{! IF($Organization.Id == $Label.PROD_ORG_ID, $Label.Sector_SFMC_Preference_URL_PROD + Lead.SFMC_Preference_Center_Key__c , $Label.Sector_SFMC_Preference_URL_Sandbox +Lead.SFMC_Preference_Center_Key__c) }" rendered="{!NOT(ISBLANK(Lead.SFMC_Preference_Center_Key__c))}" scrolling="true"/>
+    <apex:outputText value="{!$Label.Sector_SFMC_KEY_NOTFOUND}" rendered="{!ISBLANK(Lead.SFMC_Preference_Center_Key__c)}" />
+</apex:page>

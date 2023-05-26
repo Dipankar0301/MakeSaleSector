@@ -1,0 +1,14 @@
+<apex:page id="pg" lightningStylesheets="true">
+<apex:form >
+    
+    
+    
+    <div>
+        <apex:pageBlock id="pb">
+            <apex:commandButton value="Report a Bug" onclick="window.open('{!$Label.Sector_Report_a_Bug_URL}'); return false;"/>
+<apex:commandButton value="ShOP" onclick="window.open('{!$Label.Sector_ShOP}'); return false;"/>
+<apex:commandButton value="CRD" onclick="window.open('{!$Label.Sector_CRD}'); return false;"/>
+        </apex:pageBlock>
+</div>
+</apex:form>
+</apex:page>

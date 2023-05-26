@@ -1,0 +1,232 @@
+<apex:page controller="Sector_Print_CallPlanController" readOnly="true" renderAs="PDF" applyBodyTag="false" contentType="iso-8859-9">
+    
+    <head>
+        <style>
+            body { font-family: 'Arial Unicode MS';
+            charset=iso-8859-9;
+            }
+            th,.shlRow > td {
+            font-size:xx-small;
+            border: 1px solid black;
+            }
+            
+            .shlHeaderRow > td {
+            font-size:large;
+            border: 1px solid black;
+            padding: 1px;
+            text-align: center;
+            }
+            .shlTable {
+            border-collapse: collapse;
+            }
+            .alignRight{
+            text-align: right;
+            border: 1px solid black;
+            
+            }
+            .alignCenter{
+            text-align: center;
+            }
+            @page {
+            size:portrait;
+            }
+        </style> 
+    </head>
+        <apex:outputPanel rendered="{!eventrecord.RecordType.DeveloperName == 'Sector_Call_Plan'}">
+            <table style = "border: 1px solid black;border-collapse: collapse;width:100%;" border="1" >
+                <tr> <td style = "border: 1px solid black;border-collapse: collapse;"> <div style="text-align: center;font-family: sans-serif;font-weight: bold;" > <h3><u>Calendar Details</u></h3>  </div> </td></tr>
+                <tr>
+                    <td style = "border: 1px solid black;border-collapse: collapse;">
+                        <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Subject : "/> <apex:outputText value="{!eventrecord.Subject}"/> <br/><br/>
+                        
+                        
+                        <div style="font-family: sans-serif;font-weight: bold; " >Attendees:</div>
+                        <br/>
+                        <table style = "border: 1px solid black;border-collapse: collapse;" width="100%"> 
+                            <tr>
+                                <td style = "border: 1px solid black;border-collapse: collapse;"> <apex:outputText style="font-family: sans-serif;font-weight: bold; " value="Name" /></td>
+                                <td style = "border: 1px solid black;border-collapse: collapse;"> <apex:outputText style="font-family: sans-serif;font-weight: bold; " value="Company" /></td> 
+                            </tr>
+                            <tr>
+                                <td style = "border: 1px solid black;border-collapse: collapse;" width="50%">
+                                    <apex:outputText value="{!eventrecord.Owner.Name + ' (Organizer)'}" />
+                                </td>
+                                <td style = "border: 1px solid black;border-collapse: collapse;" width="50%">
+                                    <apex:outputText value="Shell" />
+                                </td>
+                            </tr>
+                            <apex:repeat value="{!UsersinLead}" var="Users" >
+                                <tr>
+                                    <td style = "border: 1px solid black;border-collapse: collapse;" width="50%">
+                                        <apex:outputText value="{!Users.Name}" />
+                                    </td>
+                                    <td style = "border: 1px solid black;border-collapse: collapse;" width="50%">
+                                        <apex:outputText value="Shell" />
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                            <apex:repeat value="{!contactsinevent}" var="contacts" >
+                                <tr>
+                                    <td style = "border: 1px solid black;border-collapse: collapse;" width="50%">
+                                        <apex:outputText value="{!contacts.Name}" />
+                                    </td>
+                                    <td style = "border: 1px solid black;border-collapse: collapse;" width="50%">
+                                        <apex:outputText value="{!contacts.Account.Name}" />
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                            <apex:repeat value="{!leadsinevent}" var="Leads" >
+                                <tr>
+                                    <td style = "border: 1px solid black;border-collapse: collapse;" width="50%">
+                                        <apex:outputText value="{!Leads.Name}" />
+                                    </td>
+                                    <td style = "border: 1px solid black;border-collapse: collapse;" width="50%">
+                                        <apex:outputText value="{!Leads.Company}" />
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                        </table>
+                        
+                        
+                        
+                       <!-- <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Attendees (Internal): "/> 
+                        <ul>
+                            <li> <apex:outputText value="{!eventrecord.Owner.Name + ' (Organizer)'}" /></li>
+                            <apex:repeat value="{!eventrealtionrecords}" var="eventrealtion" >
+                                <li> <apex:outputText rendered="{!eventrealtion.IsInvitee}" value="{!eventrealtion.Relation.Name}" /></li>
+                            </apex:repeat>
+                        </ul>
+                        <br/><br/>
+                        <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Attendees (External): "></apex:outputLabel>
+                        <ul>
+                            <apex:repeat value="{!eventrealtionrecords}" var="eventrealtion" >
+                                <li> <apex:outputText rendered="{!eventrealtion.IsParent}" value="{!eventrealtion.Relation.Name}" /></li>
+                            </apex:repeat> 
+                        </ul>  -->
+                        <br/><br/>
+                        <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Location : "/><apex:outputText value="{!eventrecord.Location}"/>
+                        <br/><br/>
+                        <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Type : "/><apex:outputText value="{!eventrecord.Type}"/>
+                        <br/><br/>
+                    </td>
+                </tr>
+                <tr> <td style = "border: 1px solid black;border-collapse: collapse;"> <div style="text-align: center;font-family: sans-serif;font-weight: bold;" > <h3><u>Event Details</u></h3>  </div> </td></tr>
+                <tr>
+                    <td style = "border: 1px solid black;border-collapse: collapse;">
+                        <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Start : "></apex:outputLabel>
+                        <apex:outputText rendered="{!!eventrecord.IsAllDayEvent}" value=" {!eventrecord.StartDateTime}"/>
+                        <apex:outputText rendered="{!eventrecord.IsAllDayEvent}" value=" {!eventrecord.ActivityDate}"/><br/><br/>
+                        <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="End : "></apex:outputLabel>
+                        <apex:outputText rendered="{!!eventrecord.IsAllDayEvent}" value=" {!eventrecord.EndDateTime}"/>
+                        <apex:outputText rendered="{!eventrecord.IsAllDayEvent}" value=" {!eventrecord.EndDate}"/><br/><br/>
+                        <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Related To : "></apex:outputLabel><apex:outputText value="{!eventrecord.What.Name}"/><br/><br/>
+                        <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Reason for Call : "></apex:outputLabel><apex:outputText value="{!eventrecord.Reason_for_Call__c}"/><br/><br/>
+                    </td>
+                </tr>
+                <tr> <td style = "border: 1px solid black;border-collapse: collapse;"> <div style="text-align: center;font-family: sans-serif;font-weight: bold;" > <h3><u>Call Plan Details</u></h3>  </div> </td></tr>
+                <tr>
+                    <td style = "border: 1px solid black;border-collapse: collapse;">
+                        
+                        <apex:outputPanel rendered="{!eventrecord.Call_Plan_Record_Type__c == $Label.Sector_Call_Plan_Type_POPSA }">
+                            <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Purpose/Objective : "></apex:outputLabel><apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!callplanrecord.Purpose_Objective__c}"/><br/><br/>
+                            <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Premise/Stakeholder : "></apex:outputLabel><apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!callplanrecord.Premise_Stakeholder__c}"/><br/><br/>
+                            <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Anticipate : "></apex:outputLabel><apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!callplanrecord.Anticipate__c}"/><br/><br/>
+                            <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Strategy/Approach : "></apex:outputLabel><apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!callplanrecord.Strategy_Approach__c}"/><br/><br/>
+                        </apex:outputPanel>
+                            <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Agenda : "></apex:outputLabel><apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!callplanrecord.Agenda__c}"/><br/><br/>
+                            <apex:outputLabel style="font-family: sans-serif;font-weight: bold;" value="Minutes and Actions : "></apex:outputLabel><apex:outputText escape="false" Style="charset:UTF-8; font-family: 'UTF-8';" value="{!callplanrecord.Minutes_and_Action__c}"/><br/><br/>
+                    </td>
+                </tr>
+            </table>
+        </apex:outputPanel>
+        
+
+        <apex:outputPanel rendered="{!eventrecord.RecordType.DeveloperName == 'Generic'}">
+            <apex:outputPanel ><u>Calender Details</u></apex:outputPanel><br/>
+            <table border="0" width="100%">
+                <tr>
+                    <td width="50%"><apex:outputLabel value="Assigned To : "></apex:outputLabel><apex:outputText value="{!eventrecord.Owner.Name}"/></td>
+                    <td width="50%"><apex:outputLabel value="All-Day Event : ">
+                        <apex:outputPanel rendered="{!eventrecord.IsAllDayEvent}" >
+                            <img src="/img/checkbox_checked.gif"/>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!!eventrecord.IsAllDayEvent}" >
+                            <img src="/img/checkbox_unchecked.gif"/>
+                        </apex:outputPanel>
+                        </apex:outputLabel>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="50%"><apex:outputLabel value="Subject : "/> <apex:outputText value="{!eventrecord.Subject}"/></td>
+                    <td width="50%"><apex:outputLabel value="Private : ">
+                        <apex:outputPanel rendered="{!eventrecord.IsPrivate}" >
+                            <img src="/img/checkbox_checked.gif"/>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!!eventrecord.IsPrivate}" >
+                            <img src="/img/checkbox_unchecked.gif"/>
+                        </apex:outputPanel>
+                        </apex:outputLabel>
+                    </td>
+                </tr>
+                <apex:outputPanel rendered="{!!eventrecord.IsAllDayEvent}" >
+                    <tr>
+                        <td width="50%"><apex:outputLabel value="Start : "></apex:outputLabel><apex:outputText value=" {!eventrecord.StartDateTime}"/></td>
+                        <td width="50%"><apex:outputLabel value="End : "></apex:outputLabel><apex:outputText value=" {!eventrecord.EndDateTime}"/></td>
+                    </tr>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!eventrecord.IsAllDayEvent}" >
+                    <tr>
+                        <td width="50%"><apex:outputLabel value="Start : "></apex:outputLabel><apex:outputText value=" {!eventrecord.ActivityDate}"/></td>
+                        <td width="50%"><apex:outputLabel value="End : "></apex:outputLabel><apex:outputText value=" {!eventrecord.EndDate}"/></td>
+                    </tr>
+                </apex:outputPanel>
+                <tr>
+                    <td width="50%"><apex:outputLabel value="Type : "/><apex:outputText value="{!eventrecord.Type}"/></td>
+                    <td width="50%"><apex:outputLabel value="Attendee : "/>    
+                        <ul>
+                            <li> <apex:outputText value="{!eventrecord.Owner.Name + ' (Organizer)'}" /></li>
+                            <apex:repeat value="{!eventrealtionrecords}" var="eventrealtion" >
+                                <li> <apex:outputText rendered="{!eventrealtion.IsInvitee}" value="{!eventrealtion.Relation.Name}" /></li>
+                            </apex:repeat>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+            <table border="0" width="100%">
+                <tr>
+                    <td width="100%"><apex:outputLabel value="Description : "/><apex:outputText escape="false" value="{!SUBSTITUTE(JSENCODE(eventrecord.Description),'\r\n','<br/>')}"/></td>
+                </tr>
+            </table>
+            
+            <br/>
+            <apex:outputPanel ><u>System Information</u></apex:outputPanel><br/>
+            
+            <table border="0" width="100%">
+                <tr>
+                    <td width="50%"><apex:outputLabel value="Related To : "></apex:outputLabel><apex:outputText value="{!eventrecord.What.Name}"/></td>
+                </tr>
+                <tr>
+                    <td width="50%"><apex:outputLabel value="Name : "></apex:outputLabel>
+                        <ul>
+                            <apex:repeat value="{!eventrealtionrecords}" var="eventrealtion" >
+                                <li> <apex:outputText rendered="{!eventrealtion.IsParent}" value="{!eventrealtion.Relation.Name}" /></li>
+                            </apex:repeat> 
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="50%"><apex:outputLabel value="Repeat : ">
+                        <apex:outputPanel rendered="{!eventrecord.IsRecurrence2}" >
+                            <img src="/img/checkbox_checked.gif"/>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!!eventrecord.IsRecurrence2}" >
+                            <img src="/img/checkbox_unchecked.gif"/>
+                        </apex:outputPanel>
+                        </apex:outputLabel>
+                    </td>
+                </tr>
+            </table>
+            <br/>
+        </apex:outputPanel>
+    
+</apex:page>

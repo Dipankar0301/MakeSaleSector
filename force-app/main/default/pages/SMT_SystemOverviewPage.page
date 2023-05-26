@@ -1,0 +1,177 @@
+<apex:page controller="SMT_ChartController" docType="html-5.0" standardStylesheets="false" title="System Overview" applyHtmlTag="false"     
+           sidebar="false"     
+           showHeader="false"     
+           >
+
+   
+    <style> 
+        @page {
+      margin: 0.3cm 0.2cm;
+      size: A4;
+      padding: 10px;
+      }
+        
+    .minhold {
+      z-index: 10;
+    background-color: #ffffff;
+    padding: 0 !important;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    border: 1px solid #ddd;
+    margin-top: 6px;
+    margin-left: 0.4%;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    -moz-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    background-clip: padding-box;
+    opacity: 0.97;
+    filter: alpha(opacity=97);
+    width: 99%;
+    float: left;
+    
+}
+        
+            </style>
+  
+<!-- --------------------- -->
+ 
+ <div class="minhold">
+            <apex:panelGrid columns="4" id="theGrid">
+            <apex:chart data="{!MyData}" height="230" width="290" colorSet="#0b6fce,#c9cf7e,#14332c"  resizable="false">
+                <apex:legend position="top"/>
+
+                <apex:axis type="Numeric" position="left" fields="CustomObjectLimit"
+                           title="Limit" />
+                <apex:axis type="Category" position="bottom" fields="Attribute"
+                           title="Custom Objects">
+                </apex:axis>
+                <apex:barSeries orientation="vertical" axis="left" xField="Attribute" yField="CustomObjectLimit" colorsProgressWithinSeries="true">
+                    
+                    <apex:chartLabel field="CustomObjectLimit" display="outside" font="30" orientation="horizontal" />
+                </apex:barSeries>
+            </apex:chart>
+            <apex:chart data="{!DataStorage}" height="230" width="290" colorSet="#0b6fce,#c9cf7e,#14332c">
+                <apex:legend position="top"/>
+                <apex:axis type="Numeric" position="left" fields="storageLimit"
+                           title="Limit (GB)" />
+                <apex:axis type="Category" position="bottom" fields="storage"
+                           title="Data Storage" >
+                </apex:axis>
+                
+                <apex:barSeries orientation="vertical" axis="left" xField="Attribute" yField="storageLimit" colorsProgressWithinSeries="true">
+                    <apex:chartLabel field="storageLimit" display="outside" font="30" orientation="horizontal" />
+                </apex:barSeries>
+            </apex:chart>
+                
+                <apex:chart data="{!Businessrules}" height="230" width="290" colorSet="#0b6fce,#c9cf7e,#14332c">
+                <apex:legend position="top"/>
+                <apex:axis type="Numeric" position="left" fields="RulesLimit"
+                           title="Limit" />
+                <apex:axis type="Category" position="bottom" fields="rule"
+                           title="Business Rules">
+                </apex:axis>
+                <apex:barSeries orientation="vertical" axis="left" xField="Attribute" yField="RulesLimit" colorsProgressWithinSeries="true">
+                    <apex:chartLabel field="RulesLimit" display="outside" font="30" orientation="horizontal" />
+                </apex:barSeries>
+            </apex:chart>
+                
+            <apex:chart data="{!CustomApps}" height="230" width="290" colorSet="#0b6fce,#c9cf7e,#14332c">
+                <apex:legend position="top"/>
+                <apex:axis type="Numeric" position="left" fields="AppLimit"
+                           title="Limit" />
+                <apex:axis type="Category" position="bottom" fields="apps"
+                           title="Custom Applications">
+                </apex:axis>
+                <apex:barSeries orientation="vertical" axis="left" xField="Attribute" yField="AppLimit" colorsProgressWithinSeries="true">
+                    <apex:chartLabel field="AppLimit" display="outside" font="30" orientation="horizontal" />
+                </apex:barSeries>
+            </apex:chart>
+            </apex:panelGrid>
+            <!--Grid2-->
+            <apex:panelGrid columns="4" id="theGrid2">
+            
+            <apex:chart data="{!ActiveSites}" height="230" width="290" colorSet="#0b6fce,#c9cf7e,#14332c">
+                <apex:legend position="top"/>
+                <apex:axis type="Numeric" position="left" fields="SiteLimit"
+                           title="Limit" />
+                <apex:axis type="Category" position="bottom" fields="sites"
+                           title="Salesforce Active Sites">
+                </apex:axis>
+                <apex:barSeries orientation="vertical" axis="left" xField="Attribute" yField="SiteLimit" colorsProgressWithinSeries="true">
+                    <apex:chartLabel field="SiteLimit" display="outside" font="30" orientation="horizontal" />
+                </apex:barSeries>
+            </apex:chart>
+        
+            <apex:chart data="{!ActiveFlows}" height="230" width="290" colorSet="#0b6fce,#c9cf7e,#14332c">
+                <apex:legend position="top"/>
+                <apex:axis type="Numeric" position="left" fields="FlowsLimit"
+                           title="Limit" />
+                <apex:axis type="Category" position="bottom" fields="flows"
+                           title="Active Flows">
+                </apex:axis>
+                <apex:barSeries orientation="vertical" axis="left" xField="Attribute" yField="FlowsLimit" colorsProgressWithinSeries="true">
+                    <apex:chartLabel field="FlowsLimit" display="outside" font="30" orientation="horizontal" />
+                </apex:barSeries>
+            </apex:chart>
+        
+        
+            <apex:chart data="{!CustomTabs}" height="230" width="290" colorSet="#0b6fce,#c9cf7e,#14332c">
+                <apex:legend position="top"/>
+                <apex:axis type="Numeric" position="left" fields="TabsLimit"
+                           title="Limit" />
+                <apex:axis type="Category" position="bottom" fields="tabs"
+                           title="Custom Tabs">
+                </apex:axis>
+                <apex:barSeries orientation="vertical" axis="left" xField="Attribute" yField="TabsLimit" colorsProgressWithinSeries="true">
+                    <apex:chartLabel field="TabsLimit" display="outside" font="30" orientation="horizontal" />
+                </apex:barSeries>
+            </apex:chart>
+        
+        
+            <apex:chart data="{!VFPages}" height="230" width="290" colorSet="#669999,#ff9966,#70dbdb">
+                <apex:legend position="top"/>
+                <apex:axis type="Numeric" position="left" fields="VisualforceClassTrigger"
+                           title="Limit" />
+                <apex:axis type="Category" position="bottom" fields="vfs"
+                           title="VFs Classes Triggers">
+                </apex:axis>
+                
+                <apex:barSeries orientation="vertical" axis="left" xField="vfs" yField="VisualforceClassTrigger" colorsProgressWithinSeries="true">
+                    <apex:chartLabel field="VisualforceClassTrigger" display="outside" font="30" orientation="horizontal" />
+                </apex:barSeries>
+            </apex:chart>
+        
+       
+            </apex:panelGrid>
+            
+    <apex:panelGrid columns="3" id="theGrid3">
+      <!-- Apex code usage in chars -->
+        
+            <apex:chart data="{!CodeUsage}" height="250" width="380" colorSet="#0b6fce,#c9cf7e,#14332c">
+                <apex:legend position="top"/>
+                <apex:axis type="Numeric" position="left" fields="CodeLimit"
+                           title="Limit (Chars)" />
+                <apex:axis type="Category" position="bottom" fields="codeusage"
+                           title="Apex Code Usage">
+                    
+                </apex:axis>
+                
+                <apex:barSeries orientation="vertical" axis="left" xField="codeusage" yField="CodeLimit" colorsProgressWithinSeries="true">
+                    
+                    <apex:chartLabel field="CodeLimit" display="rotate" font="30" orientation="horizontal" />
+                </apex:barSeries>
+            </apex:chart>
+        
+            <apex:chart height="230" width="320" data="{!pieData}">
+               
+                 <apex:pieSeries dataField="CodeCoverageLimit" labelField="codecoverage" showInLegend="true">
+                    <apex:chartLabel field="CodeCoverageLimit" display="rotate" font="30" />
+                 </apex:pieSeries>
+                 <h1 style="font-size:17px;margin-left:20%">Test Class Code Coverage (%)</h1>
+                 <apex:legend position="top">
+                 </apex:legend>
+            </apex:chart>
+     </apex:panelGrid>
+     </div> 
+
+</apex:page>

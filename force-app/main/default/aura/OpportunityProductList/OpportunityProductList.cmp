@@ -1,0 +1,337 @@
+<aura:component Implements="flexipage:availableForRecordHome,force:hasRecordId" controller = "OpportunityProductList">
+    <!--Init handler which is call doInit js function on component Load-->  
+    
+    <aura:attribute name="modalWindowAddYears" type="boolean" default="false" /> 
+    <aura:attribute name="modalWindowQuickFill" type="boolean" default="false" />
+    <aura:attribute name="modalWindow" type="boolean" default="false" />
+    <aura:attribute name="removemodalWindow" type="boolean" default="false" />
+    <aura:attribute name="ShowProducts" type="boolean" default="true" />
+    <aura:attribute name="AddProductsnew" type="boolean" default="false" />
+    <aura:attribute name="EditProductsnew" type="boolean" default="false" />
+    
+    <aura:attribute name="ShowQuickFillButton" type="boolean" default="false" />
+    
+    <aura:attribute name="valuestartyear" type="String" />
+    <aura:attribute name="valueendyear" type="String"  />
+    <aura:attribute name="optionsstartyear" type="List"  />
+    <aura:attribute name="optionsendyear" type="List"  />
+    
+    <aura:attribute name="yearsinselect" type="String[]" />
+    
+    <aura:attribute name="newYear" type="String"  />
+    
+    <aura:attribute name="removeyear" type="String"  />
+    
+    <aura:attribute name="ProductDetails" type="SObject"  />
+
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    <aura:handler event="force:refreshView" action="{!c.init}" />
+    
+    
+     <aura:attribute name="showendyear" type="boolean" default="true" />
+    
+    
+    <lightning:spinner variant="brand" aura:id="mySpinner" class="slds-hide"/>
+    
+    
+    
+        <aura:if isTrue="{!v.modalWindowAddYears}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close" onclick= "{!c.closeModelAddyears}" alternativeText ="close" variant="bare-inverse" class ="slds-modal__close"/>
+                    
+                    <h2 id="modal-heading-01" class="slds-test-heading_medium slds-hyphenate">Add Years</h2> 
+                    
+                </header>
+                <div style = "height:200px;" class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <!--    <lightning:select name="select" label="Year of Opportunity" value = "{!v.newYear}" required="true"  >
+                        <aura:iteration items="{!v.yearsinselect}" var="eachyear" >
+                            <option text="{!eachyear}"></option>
+                        </aura:iteration>
+                    </lightning:select>  -->
+                    
+                    
+                   
+                    
+                    
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col">
+                            <span>
+                                
+                                <lightning:select name="startyear" label="Start Year" value = "{!v.valuestartyear}" onchange="{! c.handlestartyearChange }" >
+                                    <aura:iteration items="{!v.optionsstartyear}" var="eachstartyear" >
+                                        <option text="{!eachstartyear.value}" value="{!eachstartyear.value}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+                                
+                            <!-- <lightning:combobox name="startyear" label="Start Year" value="{! v.valuestartyear }" 
+                                                 options="{! v.optionsstartyear }" 
+                                        onchange="{! c.handlestartyearChange }"/> -->
+                            </span>
+                        </div>
+                        <div class="slds-col">
+                            <span>
+                                
+                                <aura:if isTrue="{!v.showendyear}">
+                                <lightning:select name="endyear" label="End Year" value = "{!v.valueendyear}" onchange="{! c.handleendyearChange }" >
+                                    <aura:iteration items="{!v.optionsendyear}" var="eachendyear" >
+                                        <option text="{!eachendyear.value}" value="{!eachendyear.value}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+                                </aura:if>
+                                
+                           <!-- <lightning:combobox name="endyear" label="End Year" value="{! v.valueendyear }"  
+                                                options="{! v.optionsendyear }" onchange="{! c.handleendyearChange }"  /> -->
+                            </span>
+                        </div>
+                    </div>
+                    
+                </div>  
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      onclick="{! c.closeModelAddyears }"/>
+                    <lightning:button variant="brand"
+                                      label="Submit"
+                                      onclick="{! c.onRecordSubmitaddYears }"/>
+                </footer>
+            </div>
+        </section>
+    </aura:if> 
+    
+    
+    
+    
+    
+    <aura:if isTrue="{!v.modalWindowQuickFill}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close" onclick= "{!c.closeModel}" alternativeText ="close" variant="bare-inverse" class ="slds-modal__close"/>
+                    
+                    <h2 id="modal-heading-01" class="slds-test-heading_medium slds-hyphenate">Quick Fill</h2> 
+                    
+                </header>
+                <div style = "height:100px;" class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning:formattedRichText value="{!$Label.c.Sector_Forecasting_QuickFill}"/> 
+                </div>  
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      onclick="{! c.closeModelQuickFill }"/>
+                    <lightning:button variant="brand"
+                                      label="Proceed"
+                                      onclick="{! c.onRecordSubmitQuickFill }"/>
+                </footer>
+            </div>
+        </section>
+    </aura:if> 
+    
+    
+    
+    
+    
+    <aura:if isTrue="{!v.modalWindow}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close" onclick= "{!c.closeModel}" alternativeText ="close" variant="bare-inverse" class ="slds-modal__close"/>
+                    
+                    <h2 id="modal-heading-01" class="slds-test-heading_medium slds-hyphenate">Add Year</h2> >
+                    
+                </header>
+                <div style = "height:200px;" class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning:select name="select" label="Year of Opportunity" value = "{!v.newYear}" required="true"  >
+                        <aura:iteration items="{!v.yearsinselect}" var="eachyear" >
+                            <option text="{!eachyear}"></option>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>  
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      onclick="{! c.closeModel }"/>
+                    <lightning:button variant="brand"
+                                      label="Submit"
+                                      onclick="{! c.onRecordSubmit }"/>
+                </footer>
+            </div>
+        </section>
+    </aura:if> 
+    
+    <aura:if isTrue="{!v.AddProductsnew}">
+        <c:Sector_AddProducts recordId = "{!v.recordId}" showcomponent = "{!v.AddProductsnew}" />
+    </aura:if>
+    
+    <aura:if isTrue="{!v.EditProductsnew}">
+        <c:Sector_EditProducts recordId = "{!v.recordId}" showcomponent = "{!v.EditProductsnew}" />
+    </aura:if>
+    
+    
+    <aura:if isTrue="{!v.removemodalWindow}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    
+                    <h2 id="modal-heading-01" class="slds-test-heading_medium slds-hyphenate">Remove Year</h2> 
+                    
+                </header>
+                <div style = "height:80px;" class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    Please click Submit to remove {!v.removeyear} to each products.
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      onclick="{! c.closeModel }"/>
+                    <lightning:button variant="brand"
+                                      label="Submit"
+                                      onclick="{! c.removeyear }"/>
+                </footer>
+                <!-- </lightning:recordEditForm>  -->
+            </div>
+        </section>
+    </aura:if>  
+    
+    
+    
+    <lightning:card >
+        <div>
+            <b>Note:</b> Blue rows indicates the annual forecasting for that year yet to be saved. Once you click "Save" these annual years will be saved.    
+        </div>
+        <br/>
+        
+        <div class="slds-page-header slds-page-header_record-home">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media">
+                        <div class="slds-media__body">
+                            <div class="slds-page-header__name">
+                                <div class="slds-page-header__name-title">
+                                    <h1>
+                                        <span class="slds-page-header__title slds-truncate" title="Annual Forecasting">Annual Forecasting</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-page-header__col-actions">
+                    <div class="slds-page-header__controls">
+                        <div class="slds-page-header__control">
+                        </div>
+                        <div class="slds-page-header__control">
+                            
+                            <aura:if isTrue="{!v.ShowProducts}">
+                                
+                                <!--lightning:button label="Add Year" onclick="{! c.AddYear }"/-->
+                                <lightning:button label="Add Years" onclick="{! c.AddYears }"/>
+                                <aura:if isTrue="{!v.ShowQuickFillButton}">
+                                    <lightning:button label="Quick Fill" onclick="{! c.QuickFillProducts }"/>
+                                </aura:if>
+                            </aura:if>
+                            <lightning:button label="Add Products" onclick="{! c.AddProducts }"/>
+                            <aura:if isTrue="{!v.ShowProducts}">
+                                <lightning:button label="Edit Products" onclick="{! c.EditProducts }"/>
+                            </aura:if>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-page-header__row slds-page-header__row_gutters">
+                <div class="slds-page-header__col-details">                    
+                </div>
+            </div>
+        </div>
+        
+        <aura:if isTrue="{!v.ShowProducts}">
+            <!-- Product year wise table start -->
+            
+        
+            <aura:iteration items="{!v.ProductDetails}" var="productta">
+                <h2 id="element-with-table-label" class="slds-text-heading_medium slds-m-bottom_xx-small"><a href="{!'/'+productta.ProductId}">{!productta.ProductFamily} ({!productta.ProductName}) - {!productta.QuantityUnitOfMeasure}</a></h2> 
+                
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label" >
+                    <thead>
+                        <tr class="slds-line-height_reset"  >
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Year">Year</div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Annual Volume">Annual<br/>Volume</div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Annual Revenue (USD$)">Annual<br/>Revenue<br/> (USD$)</div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Annual Gross Margin (USD$)">Annual<br/> Gross <br/>Margin<br/> (USD$)</div>
+                            </th>
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Annual CO2 Emissions (Tonnes)">Annual<br/> CO2e <br/>Emissions<br/>(Tonnes)</div>
+                            </th> 
+                            <th class="" scope="col">
+                                <div class="slds-truncate" title="Annual CO2 Emissions Reduction (Tonnes)">Annual<br/> CO2e <br/>Emissions<br/> Reduction <br/>(Tonnes)</div>
+                            </th> 
+                          <!--  <th class="" scope="col">
+                                <div class="slds-truncate" title="Unit of Measure">Unit of Measure</div>
+                            </th> -->
+                            <th class="" scope="col">
+                                <div class="slds-truncate" ></div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <aura:iteration items="{!productta.ProductDetails}" var="productyeartable">
+                            <tr class="slds-hint-parent" style = "{!productyeartable.RowSaved ? '' : 'background-color: lightcyan'}">
+                                <td data-label="Year" scope="row">
+                                    <div class="slds-truncate" title="{!productyeartable.YearOfProduct}">{!productyeartable.YearOfProduct}</div>
+                                </td>
+                                <td data-label="Annual Volume">
+                                    <div class="slds-truncate"><lightning:input type="number" step="0.01" value="{!productyeartable.SalesVolume}" updateOn="keyup"/></div>
+                                </td>
+                                <td data-label="Annual Revenue (USD$)">
+                                    <div class="slds-truncate"><lightning:input type="number" step="0.01" value="{!productyeartable.SalesRevenue}" updateOn="keyup"/></div>
+                                </td>
+                                <td data-label="Annual Gross Margin (USD$)">
+                                    <div class="slds-truncate"><lightning:input type="number" step="0.01" value="{!productyeartable.SalesProfit}" updateOn="keyup"/></div>
+                                </td>
+                                <td data-label="Annual CO2 Emissions (Tonnes)">
+                                    <div class="slds-truncate"><lightning:input type="number" step="0.01" value="{!productyeartable.AnnualCo2Emission}" updateOn="keyup"/></div>
+                                </td> 
+                                <td data-label="Annual CO2 Emissions Reduction (Tonnes)">
+                                    <div class="slds-truncate"><lightning:input type="number" step="0.01" value="{!productyeartable.pCo2Emission}" updateOn="keyup"/></div>
+                                </td> 
+                              <!--  <td data-label="Unit of Measure">
+                                    <div class="slds-truncate"><lightning:input type="text" step="0.01" value="{!productta.QuantityUnitOfMeasure}" disabled='true' /></div>
+                                </td> -->
+                                <td data-label="">
+                                    <div class="slds-truncate">
+                                        <a data-myvalue="{!productyeartable.YearOfProduct}" onclick="{!c.removeRow}">
+                                            <lightning:icon iconName="utility:delete" />
+                                            <span class="slds-assistive-text">Delete Icon</span>
+                                        </a>    
+                                    </div>
+                                </td>  
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+                </table>
+                <div style = "height:20px;" />
+            </aura:iteration>
+            <!-- Product year wise table start -->
+            
+            
+            <!-- Produt year wise table end -->
+            
+            <div class="slds-col modal-footer slds-modal__footer">        
+                <lightning:button variant="neutral" label="Cancel" onclick="{! c.cancelClick }" />      
+                <lightning:button variant="brand" label="Save" onclick="{! c.saveproductdetails }" />
+            </div>
+        </aura:if>
+        
+    </lightning:card>
+    
+    
+    
+</aura:component>

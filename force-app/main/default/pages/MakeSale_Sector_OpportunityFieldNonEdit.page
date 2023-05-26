@@ -1,0 +1,4 @@
+<apex:page standardcontroller="Opportunity" lightningStylesheets="true">
+    <apex:pageMessage rendered="{!Opportunity.HasOpportunityLineItem}"  summary="{!$Label.Sector_Opportunity_NonEditOppProduct}" severity="info" strength="3" />
+        <apex:pageMessages />
+</apex:page>

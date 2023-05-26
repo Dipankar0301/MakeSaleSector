@@ -1,0 +1,26 @@
+<template>
+    <div>
+        <lightning-card icon-name="custom:custom01" title="Add Details into PTObj">
+            <lightning-input type="text" label="Enter Name" value={name} onchange={addName} ></lightning-input>
+            <!--<lightning-input type="email" label="Enter Email" value={email} onchange={addEmail} ></lightning-input>-->
+            <lightning-input type="number" label="Enter Phone Number" value={phoneNumber} onchange={addPhoneNumber} ></lightning-input>
+            <!--<lightning-input type="Date" label="Enter Date of Joining" value={doj} onchange={addDoj} ></lightning-input>-->
+            
+            <lightning-button label="Add Details" type="submit" variant="brand" onclick={addPtObjDetails}></lightning-button>
+
+        </lightning-card>
+    </div>
+    <div>
+        <lightning-card icon-name="custom:custom02" title="Added Details">
+            <template if:true={outputObject}>
+                <br/>
+                {outputObject.Name}<br/>
+                {outputObject.Name__c}<br/>
+                {outputObject.Mobile_Number1__c}<br/>
+            </template>
+<template if:true={error}>
+                <p>{error}</p>
+            </template>
+</lightning-card>
+</div>
+</template>

@@ -1,0 +1,22 @@
+<apex:page standardController="Opportunity" extensions="Sector_New_OpportunityController" 
+           recordSetVar="opportunities" sidebar="false" lightningStylesheets="true">
+    <apex:form >
+        <apex:pageBlock title="Opportunity Detail">
+            <apex:pageBlockbuttons >
+                <apex:commandButton value="Save" action="{!saverecord}"/> 
+            </apex:pageBlockbuttons>
+            <apex:pageBlockSection title="Opportunity Information" columns="2" collapsible="true">
+                <apex:inputField value="{!opp.Name}"/>
+                <apex:inputField value="{!opp.AccountId}"/>
+                <apex:inputField value="{!opp.CloseDate}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Opportunity Information 2" columns="2" collapsible="true">
+                <apex:inputField value="{!opp.Description}"/>
+                <apex:inputField value="{!opp.LeadSource}"/>
+                <apex:inputField value="{!opp.NextStep}"/>
+                <apex:inputField value="{!opp.Type}"/>
+                <apex:inputField value="{!opp.StageName}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

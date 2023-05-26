@@ -1,0 +1,75 @@
+<aura:component controller ="dsad_SalesPath_Popup"  implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" >
+    <aura:attribute name="variant" type="String" default="linear"/>
+    <aura:attribute name="hideUpdateButton" type="Boolean" default="TRUE"/>
+    <aura:attribute name="selectedStage" type="String"/>
+    <aura:attribute name="approved" type="Boolean"/>
+    <aura:attribute name="stageApproved" type="Boolean"/>
+    <aura:attribute name="modalWindow" type="Boolean"/>
+    <aura:handler event="force:refreshView" action="{!c.refresh}"/>
+
+    <lightning:path aura:id="path" recordId="{!v.recordId}"
+                    variant="{!v.variant}"
+                    hideUpdateButton="{!v.hideUpdateButton}"
+                    onselect="{!c.handleSelect}"
+                    />
+    <aura:method name="callServer" action="{!c.saveChildRecord}"></aura:method>
+    <aura:if isTrue="{!v.modalWindow =='showApprovalPopup'}">
+        <div class="demo-only" style="height: 640px;">
+            <section role="dialog" tabindex="-1" aria-label="Meaningful description of the modal content" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Do you want to Approve?</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <aura:if isTrue="{!v.selectedStage =='Assess (post PCI)'}">
+                            You changed the project stage to Assess, but your PCI is not marked as approved. 
+                            Do you want to change it to approved?
+                        </aura:if>
+                        <aura:if isTrue="{!v.selectedStage =='Define (post PCN)'}">
+                            You changed the project stage to Define, but your PCN is not marked as approved. 
+                            Do you want to change it to approved?
+                        </aura:if>
+                        <aura:if isTrue="{!v.selectedStage =='Execute (post GIP)'}">
+                            You changed the project stage to Execute, but your GIP is not marked as approved. 
+                            Do you want to change it to approved?
+                        </aura:if>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <div class="slds-align_absolute-center">
+                            <lightning:button variant="brand" label="No"  onclick="{! c.donotUpdateDeliverable}" />
+                            <lightning:button variant="brand" label="Yes"  onclick="{! c.saveChildRecord }" />
+                        </div>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:if>
+<!--popup-->
+    <aura:if isTrue="{!v.modalWindow =='showStatusPopup'}">
+        <div class="demo-only" style="height: 640px;">
+            <section role="dialog" tabindex="-1" aria-label="Meaningful description of the modal content" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Do you want to change status?</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <aura:if isTrue="{!v.selectedStage =='Operate'}">
+                            You changed the project stage to Operate. 
+                            Do you want to change the status to Complete?
+                        </aura:if>                        
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <div class="slds-align_absolute-center">
+                            <lightning:button variant="brand" label="No"  onclick="{! c.donotUpdateDeliverable}" />
+                            <lightning:button variant="brand" label="Yes"  onclick="{! c.changeStatus }" />
+                        </div>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:if>
+    <!-- Modal Popup  -->
+    
+</aura:component>

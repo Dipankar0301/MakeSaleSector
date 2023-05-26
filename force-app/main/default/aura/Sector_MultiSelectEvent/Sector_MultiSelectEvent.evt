@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="Sector event used for scroll in Opportunity page" >
+    <aura:attribute name= "message" type="String"/>
+</aura:event>

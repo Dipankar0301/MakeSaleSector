@@ -1,0 +1,26 @@
+<template>
+
+   <!-- <lightning-combobox
+    label= {typeAttributes.label}
+    value= {typeAttributes.value} 
+    options= {typeAttributes.options}
+    onchange={handlechangeyear}
+    ></lightning-combobox>   -->
+
+  <!-- <div class="slds-form-element">
+        <div class="slds-form-element__control">
+          <div class="slds-select_container">
+            <select data-id = "dropdown" class="slds-select" id="select-01" onchange={handleSelect}>
+                <template for:each = {typeAttributes.options} for:item="listViewItem">
+                    <option key={listViewItem.value} value={listViewItem.value}>{listViewItem.label}</option>
+                 </template>
+            </select>
+          </div>
+        </div>
+      </div> --> 
+
+      <c-sectorcombobox  label= {typeAttributes.label}
+      value= {typeAttributes.value} 
+      options= {typeAttributes.options} opplineid = {typeAttributes.opplineid}  columnstate = {typeAttributes.columnstate} ></c-sectorcombobox>
+
+</template>

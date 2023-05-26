@@ -1,0 +1,12 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="Sector_CallPlanListView">
+	<aura:handler name="init" value="{!this}" action="{!c.doinit}"/>
+    <aura:attribute name="urlPDF" type="String" />
+    <aura:attribute name="printType" type="String" />
+    <aura:attribute name="row" type="Sector_CallPlanListView.evtClPlnWrapper" />
+    
+    <div>
+        
+    <iframe src="{!v.urlPDF + v.row.EventId }" width="100%" height="600px;"/>
+        
+    </div>
+</aura:component>

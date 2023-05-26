@@ -1,0 +1,29 @@
+<template>
+    <div>
+        <table border="2">
+            <tr style="background-color: burlywood; color:darkslategray;"><th> Product Id</th><th>Product Name</th></tr>
+                <tr style="background-color: gold; color:white" 
+                for:item="prod" for:each={products} key={prod.productId} for:index="i">
+                    <td>{prod.productId}</td><td>{prod.productName}</td>
+                    <td>
+                        <lightning-button label="Delete" value={i} onclick={delProduct}></lightning-button>
+                    </td>
+                </tr>
+        </table>
+    </div>
+    <div style="background-color: fuchsia;">
+        <lightning-input label="Enter Product Id" value={pid} onchange={changeid}></lightning-input>
+        <lightning-input label="Enter Product Name" value={pname} onchange={changename}></lightning-input>
+        <lightning-button label="Add Product" onclick={addProductDeatils}></lightning-button>
+
+    </div>
+    <div style="background-color: yellow;">
+        <lightning-input label="Enter product Id to Search" value={ppid} onchange={searchppid}></lightning-input>
+        <lightning-button label="Search Product" onclick={searchProduct}></lightning-button>
+        
+    </div>
+    <div>
+        {sname} 
+        {sid}
+    </div>
+</template>

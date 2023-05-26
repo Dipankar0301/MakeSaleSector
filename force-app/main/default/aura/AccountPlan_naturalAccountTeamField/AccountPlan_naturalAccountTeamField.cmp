@@ -1,0 +1,34 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="ContactList" type="Contact[]" />
+    
+    <aura:attribute name="Field" type="String[]" default="['Additional_Account_Team_Members__c']" />
+    <aura:attribute name="URL" type="String[]" default="['Link_to_MS_Teams__c']" />
+    
+    <div class="c-container">
+        <lightning:layout>
+            <lightning:layoutItem size="6" padding="around-small">
+                <div class="custom-box">
+                <lightning:recordForm recordId="{!v.recordId}" 
+                                                  objectApiName="Account_Plan__c"
+                                                  mode="view"
+                                                  fields="{!v.Field}" />
+                </div>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6" padding="around-small">
+                <div class="custom-box">
+                <lightning:recordForm recordId="{!v.recordId}" 
+                                                  objectApiName="Account_Plan__c"
+                                                  mode="view"
+                                                  fields="{!v.URL}" />
+                </div>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+    
+    
+        
+        
+    
+         
+</aura:component>
